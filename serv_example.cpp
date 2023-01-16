@@ -44,8 +44,24 @@ int main(int argc, char* argv[]) {
         return 3;
     }
 
+	fd_set current_sockets, ready_sockets;
+	FD_ZERO(&current_sockets);
+	FD_SET(sockfd, &current_sockets);
+
     // handle connections
     while (true) {
+		ready_sockets = current_sockets;
+		if (select(FD_SETSIZE, &ready_sockets, NULL, NULL, NULL) < 0) {
+			perror("ERROR\n");
+			exit(1);
+		}
+		for (int i = 0; i < FD_SETSIZE; i++) {
+			if (FD_ISSET(i, &ready_sockets)) {
+				if (i = sockfd) {
+					
+				}
+			}
+		}
         client_len = sizeof(client_addr);
         new_sockfd = accept(sockfd, (struct sockaddr *) &client_addr, (socklen_t *) &client_len);
         if (new_sockfd < 0) {
