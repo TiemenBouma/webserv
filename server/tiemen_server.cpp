@@ -95,16 +95,31 @@ int	accept_new_connection(int server_sock) {
 }
 
 void handle_connection(int client_socket) {
-	    char buffer[BUFFER_SIZE];
+	    
+		char buffer[BUFFER_SIZE];
 	        // read request
         memset(buffer, 0, BUFFER_SIZE);
         read(client_socket, buffer, BUFFER_SIZE - 1);
-        std::cout << "SERVER: Received request: " << buffer << std::endl;
-		write(1, buffer, strlen(buffer));
+        std::cout << "SERVER: Received request: " << std::endl;
+		std::string http_request(buffer);
+		std::cout << http_request << std::endl;
 		std::cout << std::endl;
 
         // send response
-        std::string response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 12\r\n\r\nHello, Client!";
+        std::string response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 14\r\n\r\nHello, Client!";
         write(client_socket, response.c_str(), response.size());
         close(client_socket);
+}
+
+int error_check(int succes, std::string msg) {
+	if (!succes)
+		std::cout << msg << std::endl;
+		exit ;
+}
+
+int perror_check(int succes, std::string msg) {
+	if (!succes)
+		perror(msg.c_str());
+		//std::cout << msg << std::endl;
+		exit ;
 }
