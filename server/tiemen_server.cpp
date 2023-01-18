@@ -99,12 +99,12 @@ void handle_connection(int client_socket) {
 	        // read request
         memset(buffer, 0, BUFFER_SIZE);
         read(client_socket, buffer, BUFFER_SIZE - 1);
-        std::cout << "Received request: " << buffer << std::endl;
+        std::cout << "SERVER: Received request: " << buffer << std::endl;
 		write(1, buffer, strlen(buffer));
 		std::cout << std::endl;
 
         // send response
-        std::string response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 12\r\n\r\nHello, World!";
+        std::string response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 12\r\n\r\nHello, Client!";
         write(client_socket, response.c_str(), response.size());
         close(client_socket);
 }
