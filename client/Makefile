@@ -1,8 +1,8 @@
-NAME := client
+NAME := clients
 FLAGS := -Wall  -Wextra 
 #-std=c++98
 
-SRC = 	multi_client_test.cpp
+SRC = 	multi_client.cpp
 
 OBJ = $(SRC:%.cpp=obj/%.o)
 
