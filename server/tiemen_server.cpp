@@ -16,15 +16,14 @@ const int BUFFER_SIZE = 1024;
 typedef struct sockaddr_in SA_IN;
 typedef struct sockaddr SA;
 
-int	init_server(int port, int backlog);
+int	init_server(int port, int max_connections);
 int	accept_new_connection(int server_sock);
 void handle_connection(int client_socket);
 
-int main(int argc, char* argv[]) {
+int main() {
     int server_socket, client_socket;
-    SA_IN server_addr; 
-	SA_IN client_addr;
-    int client_len;
+    //SA_IN server_addr; 
+	//SA_IN client_addr;
 
 
 	server_socket = init_server(PORT, MAX_CONNECTIONS);
@@ -56,8 +55,8 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
-int	init_server(int port, int backlog) {
-	int server_socket, client_socket;
+int	init_server(int port, int max_connections) {
+	int server_socket;
     SA_IN server_addr; 
 
 	server_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -68,7 +67,7 @@ int	init_server(int port, int backlog) {
 
 	 // set server address
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(PORT);
+    server_addr.sin_port = htons(port);
     server_addr.sin_addr.s_addr = INADDR_ANY;
 
     // bind socket to address
@@ -78,7 +77,7 @@ int	init_server(int port, int backlog) {
     }
 
     // listen for connections
-    if (listen(server_socket, MAX_CONNECTIONS) < 0) {
+    if (listen(server_socket, max_connections) < 0) {
         std::cerr << "Error: " << strerror(errno) << std::endl;
         return 3;
     }
