@@ -15,13 +15,12 @@ int get_request(Request &req, Response &resp) {
 	if (file.is_open()) {
 		std::string buf;
 		while (getline(file, buf)) {
-			resp.text += buf;
+			resp.text += buf + "\n";
 		}
 		file.close();
 	} else {
 		std::cout << "Error opening file" << std::endl;
 	}
-	std::cout << "DEBUG2: " << resp.text << std::endl;
-
+	//std::cout << resp.text << std::endl;
 	return 0;
 }

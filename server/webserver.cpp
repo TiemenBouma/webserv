@@ -1,34 +1,7 @@
-#include <iostream>
-#include <string>
-#include <cstring>
-#include <cstdio>
-#include <cerrno>
-#include <csignal>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include "Request.hpp"
-#include "Response.hpp"
-
-int get_request(Request &req, Response &resp);
-
-const int PORT = 8080;
-const int MAX_CONNECTIONS = FD_SETSIZE - 1;
-const int BUFFER_SIZE = 1024;
-typedef struct sockaddr_in SA_IN;
-typedef struct sockaddr SA;
-
-int	init_server(int port, int max_connections);
-int	accept_new_connection(int server_sock);
-void handle_connection(int client_socket);
+#include "../includes/webserver.h"
 
 int main() {
 	int server_socket, client_socket;
-	//SA_IN server_addr; 
-	//SA_IN client_addr;
-
 
 	server_socket = init_server(PORT, MAX_CONNECTIONS);
 
@@ -110,6 +83,7 @@ void handle_connection(int client_socket) {
 
 		// Here we need a function to decide what response we do
 		//now an example just with GET
+		execute_request()
 		Response resp;
 		get_request(client_request, resp);
 
