@@ -17,11 +17,11 @@ obj/%.o : %.cpp
 	c++ -c $(FLAGS) $< -o $@
 
 clean:
-	rm -f $(OBJ)
-	rm -rf obj/
+	$(RM) $(OBJ)
+	$(RM) -r obj/
 
 fclean: clean
-	rm -f $(NAME)
+	$(RM) $(NAME)
 
 re: fclean all
 
