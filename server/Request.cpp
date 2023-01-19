@@ -13,7 +13,7 @@ Request::Request(const char* request) {
 	// Ensure the request is using HTTP/1.1
 	if (_http_version != "HTTP/1.1") {
 		_valid_request = false;
-		_error_log =  "Invalid request. Only HTTP/1.1 is supported.";
+		_error_log += "Invalid request. Only HTTP/1.1 is supported.\n";
 	}
 
 	// Extract the headers and body of the request
@@ -24,15 +24,16 @@ Request::Request(const char* request) {
 		}	
 		_headers += line + "\n";
 	}
-	std::cout << "BEBUG2" << std::endl;
-	if (static_cast<size_t>(request_stream.tellg()) < request_stream.str().length())
+	if (request_stream.tellg() == LLONG_MAX || request_stream.tellg() < 0) {
+		_valid_request = true;
+		_error_log +=  "No body in HTTP request.\n";
+	}
+	else if (static_cast<long long>(request_stream.tellg()) < static_cast<long long>(request_stream.str().length()))
 		_body = request_stream.str().substr(request_stream.tellg());
 	else {
 		_valid_request = false;
-		_error_log =  "Invalid request. tellg() out of range";
+		_error_log +=  "Invalid request. tellg() out of range\n";
 	}
-	//_body = request_stream.str().substr(request_stream.tellg());
-	std::cout << "BEBUG3" << std::endl;
 }
 
 std::string	Request::get_method() const {return _method;}
@@ -45,7 +46,7 @@ std::string	Request::get_error_log() const {return _error_log;}
 
 std::ostream & operator<<(std::ostream &os, const Request &other) {
 	os << other.get_method() << " " << other.get_url() << " " << other.get_http_version() 
-		<< std::endl << other.get_headers() << "IS VALID:" << other.get_valid_request() 
+		<< std::endl << other.get_headers() << "IS VALID:" << other.get_valid_request() << std::endl
 		<< "ERROR LOG:" << other.get_error_log() << std::endl;
 	return os;
 }

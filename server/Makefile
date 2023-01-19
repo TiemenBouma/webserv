@@ -1,8 +1,9 @@
 NAME := webserver
 FLAGS := -Wall -Werror -Wextra -std=c++98
 
-SRC = 	tiemen_server.cpp \
-		Request.cpp
+SRC = 	webserver.cpp \
+		Request.cpp \
+		request_get.cpp 
 
 OBJ = $(SRC:%.cpp=obj/%.o)
 
