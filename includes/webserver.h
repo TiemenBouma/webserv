@@ -11,8 +11,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-#include "Request.hpp"
-#include "Response.hpp"
+#include "../server/Request.hpp"
+#include "../server/Response.hpp"
 
 
 const int PORT = 8080;
@@ -25,5 +25,6 @@ int	init_server(int port, int max_connections);
 int	accept_new_connection(int server_sock);
 void handle_connection(int client_socket);
 int get_request(Request &req, Response &resp);
+int execute_request(Request &req, Response &resp);
 
 #endif

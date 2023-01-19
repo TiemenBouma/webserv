@@ -3,7 +3,8 @@ FLAGS := -Wall -Werror -Wextra -std=c++98
 
 SRC = 	webserver.cpp \
 		Request.cpp \
-		request_get.cpp 
+		request_get.cpp \
+		request_execute.cpp
 
 OBJ = $(SRC:%.cpp=obj/%.o)
 

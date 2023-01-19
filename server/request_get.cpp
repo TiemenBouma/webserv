@@ -10,14 +10,22 @@ int get_request(Request &req, Response &resp) {
 	if (req.get_url() == "/")
 		file.open("../homepage.html");
 	else
-		file.open(req.get_url());
+		file.open(".." + req.get_url());
 
 	if (file.is_open()) {
-		std::string buf;
-		while (getline(file, buf)) {
-			resp.text += buf + "\n";
+		if (htmp en text) {
+			char * buf[2000000];
+			while (getline(file, buf)) {
+				resp.text += buf; + "\n";
+			}
+			file.close();
+
 		}
-		file.close();
+		if (plaatje) {
+			 ret = read(file, buff, 2000000)
+			 if ret != 2000000)
+			 	break ;
+		}
 	} else {
 		std::cout << "Error opening file" << std::endl;
 	}

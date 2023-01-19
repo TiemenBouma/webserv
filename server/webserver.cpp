@@ -79,16 +79,16 @@ void handle_connection(int client_socket) {
 		read(client_socket, buffer, BUFFER_SIZE - 1);
 		std::cout << "SERVER: Received request: " << std::endl;
 		Request client_request(buffer);
-		//std::cout << std::endl << client_request << std::endl;
+		Response resp;
+		std::cout << std::endl << client_request << std::endl;
 
 		// Here we need a function to decide what response we do
 		//now an example just with GET
-		execute_request()
-		Response resp;
-		get_request(client_request, resp);
+		execute_request(client_request, resp);
+		//get_request(client_request, resp);
 
 		// send response
-		std::string response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: 200\r\n\r\n";
+		std::string response = "HTTP/1.1 200 OK\r\nContent-Type: text/png\r\nContent-Length: 200000000000\r\n\r\n";
 		response += resp.text;
 		write(client_socket, response.c_str(), response.size());
 		close(client_socket);
