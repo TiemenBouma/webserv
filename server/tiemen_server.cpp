@@ -9,6 +9,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include "Request.hpp"
 
 const int PORT = 8080;
 const int MAX_CONNECTIONS = FD_SETSIZE - 1;
@@ -21,8 +22,8 @@ int	accept_new_connection(int server_sock);
 void handle_connection(int client_socket);
 
 int main() {
-    int server_socket, client_socket;
-    //SA_IN server_addr; 
+	int server_socket, client_socket;
+	//SA_IN server_addr; 
 	//SA_IN client_addr;
 
 
@@ -32,8 +33,8 @@ int main() {
 	FD_ZERO(&current_sockets);
 	FD_SET(server_socket, &current_sockets);
 
-    // handle connections
-    while (true) {
+	// handle connections
+	while (true) {
 		ready_sockets = current_sockets;
 		if (select(FD_SETSIZE, &ready_sockets, NULL, NULL, NULL) < 0) {
 			perror("ERROR\n");
@@ -51,36 +52,36 @@ int main() {
 				}
 			}
 		}
-    }
-    return 0;
+	}
+	return 0;
 }
 
 int	init_server(int port, int max_connections) {
 	int server_socket;
-    SA_IN server_addr; 
+	SA_IN server_addr; 
 
 	server_socket = socket(AF_INET, SOCK_STREAM, 0);
-    if (server_socket < 0) {
-        std::cerr << "Error: " << strerror(errno) << std::endl;
-        return 1;
-    }
+	if (server_socket < 0) {
+		std::cerr << "Error: " << strerror(errno) << std::endl;
+		exit(1);
+	}
 
-	 // set server address
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(port);
-    server_addr.sin_addr.s_addr = INADDR_ANY;
+		// set server address
+	server_addr.sin_family = AF_INET;
+	server_addr.sin_port = htons(port);
+	server_addr.sin_addr.s_addr = INADDR_ANY;
 
-    // bind socket to address
-    if (bind(server_socket, (SA *) &server_addr, sizeof(server_addr)) < 0) {
-        std::cerr << "Error: " << strerror(errno) << std::endl;
-        return 2;
-    }
+	// bind socket to address
+	if (bind(server_socket, (SA *) &server_addr, sizeof(server_addr)) < 0) {
+		std::cerr << "Error: " << strerror(errno) << std::endl;
+		exit(2);
+	}
 
-    // listen for connections
-    if (listen(server_socket, max_connections) < 0) {
-        std::cerr << "Error: " << strerror(errno) << std::endl;
-        return 3;
-    }
+	// listen for connections
+	if (listen(server_socket, max_connections) < 0) {
+		std::cerr << "Error: " << strerror(errno) << std::endl;
+		exit(3);
+	}
 	return server_socket;
 }
 
@@ -95,31 +96,35 @@ int	accept_new_connection(int server_sock) {
 }
 
 void handle_connection(int client_socket) {
-	    
-		char buffer[BUFFER_SIZE];
-	        // read request
-        memset(buffer, 0, BUFFER_SIZE);
-        read(client_socket, buffer, BUFFER_SIZE - 1);
-        std::cout << "SERVER: Received request: " << std::endl;
-		std::string http_request(buffer);
-		std::cout << http_request << std::endl;
-		std::cout << std::endl;
 
-        // send response
-        std::string response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 14\r\n\r\nHello, Client!";
-        write(client_socket, response.c_str(), response.size());
-        close(client_socket);
+		char buffer[BUFFER_SIZE];
+			// read request
+		memset(buffer, 0, BUFFER_SIZE);
+		read(client_socket, buffer, BUFFER_SIZE - 1);
+		std::cout << "SERVER: Received request: " << std::endl;
+		std::cout << "BEBUG" << std::endl;
+		Request client_request(buffer);
+		std::cout << "BEBUG1" << std::endl;
+		std::cout << client_request << std::endl;
+		// std::string http_request(buffer);
+		// std::cout << http_request << std::endl;
+		// std::cout << std::endl;
+
+		// send response
+		std::string response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 14\r\n\r\nHello, Client!";
+		write(client_socket, response.c_str(), response.size());
+		close(client_socket);
 }
 
 int error_check(int succes, std::string msg) {
 	if (!succes)
 		std::cout << msg << std::endl;
-		exit ;
+		exit(1) ;
 }
 
 int perror_check(int succes, std::string msg) {
 	if (!succes)
 		perror(msg.c_str());
 		//std::cout << msg << std::endl;
-		exit ;
+		exit(1) ;
 }

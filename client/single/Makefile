@@ -1,8 +1,8 @@
-NAME := webserver
-FLAGS := -Wall -Werror -Wextra -std=c++98
+NAME := one_client
+FLAGS := -Wall  -Wextra 
+#-std=c++98
 
-SRC = 	tiemen_server.cpp \
-		Request.cpp
+SRC = 	simple_client.cpp
 
 OBJ = $(SRC:%.cpp=obj/%.o)
 
