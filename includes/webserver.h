@@ -13,6 +13,9 @@
 #include <unistd.h>
 #include "../server/Request.hpp"
 #include "../server/Response.hpp"
+#include <stdlib.h> // for exit()
+#include <climits>
+
 
 
 const int PORT = 8080;

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <climits>
 #include "Request.hpp"
 
 Request::Request(const char* request) {
