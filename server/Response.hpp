@@ -26,4 +26,6 @@ public:
 	void	set_body(const std::string &body);
 
 	std::string	serialize() const;
+
+	void parse_request(Request &req)
 };

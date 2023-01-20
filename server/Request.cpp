@@ -37,11 +37,28 @@ Request::Request(const char* request) {
 	}
 }
 
+void Request::sort_headers() {
+	std::stringstream headers_stream(_headers);
+	std::string line;
+	while (std::getline(headers_stream, line)) {
+		if (line.find("Content-Type") != std::string::npos) {
+			_header_content_type = line.substr(line.find(":") + 2);
+		}
+		else if (line.find("Content-Length") != std::string::npos) {
+			_header_content_length = line.substr(line.find(":") + 2);
+		}
+	}
+}
+
 std::string	Request::get_method() const {return _method;}
 std::string	Request::get_url() const {return _url;} 
 std::string	Request::get_http_version() const {return _http_version;} 
 std::string	Request::get_headers() const {return _headers;} 
 std::string	Request::get_body() const {return _body;} 
+
+std::string	Request::get_content_type() const {return _header_content_type;}
+std::string	Request::get_content_length() const {return _header_content_length;}
+
 bool	Request::get_valid_request() const {return _valid_request;} 
 std::string	Request::get_error_log() const {return _error_log;} 
 
