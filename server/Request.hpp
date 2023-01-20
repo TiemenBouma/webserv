@@ -1,3 +1,7 @@
+#ifndef REQUEST_HPP
+#define REQUEST_HPP
+
+
 #include <string>
 
 
@@ -36,3 +40,5 @@ private:
 
 };
 std::ostream & operator<<(std::ostream &os, const Request &other);
+
+#endif

@@ -11,16 +11,19 @@ int get_request(Request &req, Response &resp) {
 
 	std::ifstream file;
 	std::string data;
+	std::string file_dir;
 
-	if (req.get_url() == "/")
-		file.open("../homepage.html");
-	else {
-		std::string file_dir = ".." + req.get_url();
+	if (req.get_url() == "/") {
+		file_dir = "../homepage.html";
 		file.open(file_dir.c_str());
-		std::cout << "DEBUG: " << file_dir << std::endl;
+	}
+	else {
+		file_dir = ".." + req.get_url();
+		file.open(file_dir.c_str());
 	}
 
 	if (file.is_open()) {
+		resp.set_header_content_type(file_dir);
 		char buf[2000000];
 		while (1) {
 			file.read((char *)buf, 2000000);
@@ -29,6 +32,7 @@ int get_request(Request &req, Response &resp) {
 				break;
 		}
 		resp.set_body(data);
+		resp.set_header_content_length(data.length());
 		file.close();
 	} else {
 		std::cout << "Error opening file 404 error" << std::endl;
