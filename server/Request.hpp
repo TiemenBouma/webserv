@@ -3,12 +3,13 @@
 
 
 #include <string>
+#include <vector>
 
 
 class Request 
 {
 public:
-	Request(const char * request);
+	Request(std::stringstream & request_data);
 
 	void sort_headers();
 	

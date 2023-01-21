@@ -17,9 +17,10 @@
 #include <climits>
 
 
-
+#define MIME_TYPES_FILE "../data/MIME_TYPES.txt"
+#define HOMEPAGE_FILE "../data/homepage.html"
 const int PORT = 8080;
-const int MAX_CONNECTIONS = FD_SETSIZE - 1;
+const int MAX_CONNECTIONS = FD_SETSIZE - 100;
 const int BUFFER_SIZE = 1024;
 typedef struct sockaddr_in SA_IN;
 typedef struct sockaddr SA;

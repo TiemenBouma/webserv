@@ -6,6 +6,8 @@
 
 class Response {
 private:
+	int _client_socket;
+
 	std::string _http_version;
 	std::string _status_code;
 	std::string _status_message;
@@ -19,6 +21,7 @@ public:
 	Response &operator=(const Response &other);
 	~Response();
 
+	int			get_client_socket() const;
 	std::string	get_http_version() const;
 	std::string	get_status_code() const;
 	std::string	get_status_message() const;
@@ -27,6 +30,7 @@ public:
 	std::string	get_header_content_length() const;
 	std::string	get_body() const;
 
+	void	set_client_socket(int client_socket);
 	void	set_http_version(const std::string &http_version);
 	void	set_status_code(const std::string &status_code);
 	void	set_status_message(const std::string &status_message);
@@ -35,10 +39,12 @@ public:
 	//I want to decide what the content type is
 	void	set_header_content_type(const std::string &file_dir);
 	//I want to decide what the content length is
-	void	set_header_content_length(size_t header_content_length);
+	void	set_header_content_length(std::ifstream &file);
 
 
-	std::string	serialize() const;
+	std::string	serialize() const; //general serialize
+	std::string	serialize_headers() const; //for get request
+	void write_to_socket(const char *buffer, size_t size) const;
 
 	void parse_request(Request &req);
 };

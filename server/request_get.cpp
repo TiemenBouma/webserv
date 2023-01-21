@@ -1,41 +1,57 @@
 #include "Request.hpp"
+#include "../includes/webserver.h"
 #include "Response.hpp"
 #include <fstream>
 #include <string>
 #include <iostream>
 
+
+
 int get_request(Request &req, Response &resp) {
-		// Open the file in input mode
-	//std::string main_dir = ;
-	//std::string url = ;
+    std::ifstream file;
+    std::string file_dir;
 
-	std::ifstream file;
-	std::string data;
-	std::string file_dir;
+	//DETERMINE THE FILE TO OPEN
+    if (req.get_url() == "/") {
+        file_dir = HOMEPAGE_FILE;
+    } else {
+        file_dir = "../data" + req.get_url();
+    }
 
-	if (req.get_url() == "/") {
-		file_dir = "../homepage.html";
-		file.open(file_dir.c_str());
-	}
-	else {
-		file_dir = ".." + req.get_url();
-		file.open(file_dir.c_str());
-	}
+    // Open the file in binary mode
+    file.open(file_dir.c_str(), std::ios::binary);
 
-	if (file.is_open()) {
-		resp.set_header_content_type(file_dir);
-		char buf[2000000];
-		while (1) {
-			file.read((char *)buf, 2000000);
-			data += buf;
-			if(file.eof())
-				break;
-		}
-		resp.set_body(data);
-		resp.set_header_content_length(data.length());
-		file.close();
-	} else {
-		std::cout << "Error opening file 404 error" << std::endl;
-	}
-	return 0;
+
+    if (file.is_open()) {
+        // Determine the MIME type of the file
+	std::cout << "DEBUG: open file" << std::endl;
+        resp.set_header_content_type(file_dir);
+	std::cout << "DEBUG: after open file" << std::endl;
+
+        // Get the file size
+		resp.set_header_content_length(file);
+
+
+		//WRITE THE HEADERS
+		std::cout << "SERVER: Sending GET response: \n" << std::endl;
+		std::string response = resp.serialize_headers();
+		std::cout << "DEBUG:" << response << std::endl;
+		resp.write_to_socket(response.c_str(), response.size());
+
+		//write/send the body of the response in chunks for speed
+        const std::streamsize BUFSIZE = 8192;
+        char buffer[BUFSIZE];
+        std::streamsize n;
+        while ((n = file.read(buffer, BUFSIZE).gcount()) > 0) {
+			std::cout << "DEBUG: writing body: " << buffer <<  std::endl;
+            resp.write_to_socket(buffer, n);
+        }
+
+		//END OF GET REQUEST
+        file.close();
+    } else {
+        std::cout << "Error opening file 404 error" << std::endl;
+        return 404;
+    }
+    return 200;
 }
