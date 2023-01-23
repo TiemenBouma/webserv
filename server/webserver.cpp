@@ -1,10 +1,16 @@
 #include "../includes/webserver.h"
 #include <vector>
 #include <sstream>
+#include <map>
+#include <string>
+#include <vector>
 
 int main() {
 	int server_socket, client_socket;
-
+	std::map<std::string, std::vector<std::string> > mime_types;
+	std::map<std::string, std::string>  mime_types_rev;
+	init_mime_types(mime_types);
+	init_mime_types_reverse(mime_types_rev);
 	server_socket = init_server(PORT, MAX_CONNECTIONS);
 
 	fd_set current_sockets, ready_sockets;
@@ -25,7 +31,7 @@ int main() {
 					client_socket = accept_new_connection(server_socket);
 					FD_SET(client_socket, &current_sockets);
 				} else {
-					handle_connection(i);
+					handle_connection(i, mime_types, mime_types_rev);
 					FD_CLR(i, &current_sockets);
 				}
 			}
@@ -91,7 +97,8 @@ int read_request(int client_socket, std::stringstream & request_data) {
 	}
 }
 
-void handle_connection(int client_socket) {
+void handle_connection(int client_socket, std::map<std::string, std::vector<std::string> > & mime_types
+		, std::map<std::string, std::string>  mime_types_rev) {
 	std::cout << "DEBUG: Handling connection" << std::endl;
 	// READ REQUEST
 	std::stringstream request_data;
@@ -103,7 +110,7 @@ void handle_connection(int client_socket) {
 
 	//PARSE REQUEST in Request class constructor
 	Request client_request(request_data);
-	Response resp;
+	Response resp(mime_types, mime_types_rev);
 	resp.set_client_socket(client_socket);
 
 	// Here we need a function to decide what response we do

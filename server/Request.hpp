@@ -15,7 +15,7 @@ public:
 	
 
 	std::string	get_method() const;
-	std::string	get_url() const;
+	std::string	get_path() const;
 	std::string	get_http_version() const;
 	std::string	get_headers() const;
 	std::string	get_body() const;

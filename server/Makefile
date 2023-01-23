@@ -7,7 +7,8 @@ SRC = 	webserver.cpp \
 		request_execute.cpp \
 		request_post.cpp \
 		request_delete.cpp \
-		Response.cpp
+		Response.cpp \
+		init_mime_types.cpp 
 
 
 OBJ = $(SRC:%.cpp=obj/%.o)

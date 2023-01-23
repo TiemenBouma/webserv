@@ -4,10 +4,8 @@
 #include <climits>
 #include "Request.hpp"
 
+// Constructor for the Request class does the initial parsing.
 Request::Request(std::stringstream & request_data) {
-
-	//std::stringstream request_data(request_data);
-
 	// Extract the method, URL, and version from the first line of the request
 	request_data >> _method >> _url >> _http_version;
 
@@ -25,11 +23,14 @@ Request::Request(std::stringstream & request_data) {
 		}	
 		_headers += line + "\n";
 	}
+
+	//CHeck if this IF ESLE is correct
 	if (request_data.tellg() == LLONG_MAX || request_data.tellg() < 0) {
 		_valid_request = true;
 		_error_log +=  "No body in HTTP request.\n";
 	}
-	else if (static_cast<long long>(request_data.tellg()) < static_cast<long long>(request_data.str().length()))
+	else if (static_cast<long long>(request_data.tellg()) < 
+			static_cast<long long>(request_data.str().length()))
 		_body = request_data.str().substr(request_data.tellg());
 	else {
 		_valid_request = false;
@@ -37,6 +38,7 @@ Request::Request(std::stringstream & request_data) {
 	}
 }
 
+// Sort the headers into their respective variables, easier to add other headers. Just add if else.
 void Request::sort_headers() {
 	std::stringstream headers_stream(_headers);
 	std::string line;
@@ -51,7 +53,7 @@ void Request::sort_headers() {
 }
 
 std::string	Request::get_method() const {return _method;}
-std::string	Request::get_url() const {return _url;} 
+std::string	Request::get_path() const {return _url;} 
 std::string	Request::get_http_version() const {return _http_version;} 
 std::string	Request::get_headers() const {return _headers;} 
 std::string	Request::get_body() const {return _body;} 
@@ -63,7 +65,7 @@ bool	Request::get_valid_request() const {return _valid_request;}
 std::string	Request::get_error_log() const {return _error_log;} 
 
 std::ostream & operator<<(std::ostream &os, const Request &other) {
-	os << other.get_method() << " " << other.get_url() << " " << other.get_http_version() 
+	os << other.get_method() << " " << other.get_path() << " " << other.get_http_version() 
 		<< std::endl << other.get_headers() << "IS VALID:" << other.get_valid_request() << std::endl
 		<< "ERROR LOG:" << other.get_error_log() << std::endl;
 	return os;

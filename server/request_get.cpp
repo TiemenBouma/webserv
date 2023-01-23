@@ -10,10 +10,10 @@ int get_request(Request &req, Response &resp) {
     std::string file_dir;
 
 	//DETERMINE THE FILE TO OPEN
-    if (req.get_url() == "/") {
+    if (req.get_path() == "/") {
         file_dir = HOMEPAGE_FILE;
     } else {
-        file_dir = "../data" + req.get_url();
+        file_dir = "../data" + req.get_path();
     }
 
     // Open the file in binary mode
