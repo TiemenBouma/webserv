@@ -5,8 +5,6 @@
 #include <string>
 #include <iostream>
 
-
-
 int get_request(Request &req, Response &resp) {
     std::ifstream file;
     std::string file_dir;
@@ -32,10 +30,10 @@ int get_request(Request &req, Response &resp) {
 		resp.set_header_content_length(file);
 
 
-		//WRITE THE HEADERS
+		//WRITE/SEND THE HEADERS
 		std::cout << "SERVER: Sending GET response: \n" << std::endl;
 		std::string response = resp.serialize_headers();
-		std::cout << "DEBUG:" << response << std::endl;
+		std::cout << "DEBUG send response:" << response << std::endl;
 		resp.write_to_socket(response.c_str(), response.size());
 
 		//write/send the body of the response in chunks for speed
