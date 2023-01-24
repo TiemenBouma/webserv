@@ -5,7 +5,8 @@
 #include <sstream>
 #include <map>
 
-Response::Response(std::map<std::string, std::vector<std::string> > &mime_types, std::map<std::string, std::string>   &mime_types_rev)
+Response::Response(std::map<std::string, std::vector<std::string> > &mime_types, std::map<std::string, 
+	std::string>   &mime_types_rev)
 :	_client_socket(0), 
 	_http_version("HTTP/1.1"), 
 	_status_code("200"), 
@@ -78,10 +79,10 @@ void  Response::set_header_content_type(const std::string &file_dir) {
 	if (file_dir.find(".") != std::string::npos) {
 		std::string ext = file_dir.substr(file_dir.find_last_of('.') + 1);
 		
-		std::map<std::string, std::vector<std::string> >::iterator it = _mime_types->find(ext);
-		if (it != _mime_types->end()) {
-			std::vector<std::string> extensions = it->second;
-			_header_content_type = "Content-Type: " + extensions[0];
+		std::map<std::string, std::string>::iterator it = _mime_types_rev->find(ext);
+		if (it != _mime_types_rev->end()) {
+			std::string extensions = it->second;
+			_header_content_type = "Content-Type: " + extensions;
 		} else {
 			std::cout << "No mime type found for extension: " << ext << std::endl;
 			_header_content_type = "Content-Type: text/html";

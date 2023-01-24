@@ -3,9 +3,11 @@
 #include <string>
 #include <climits>
 #include "Request.hpp"
+#include <map>
 
 // Constructor for the Request class does the initial parsing.
-Request::Request(std::stringstream & request_data) {
+Request::Request(std::stringstream & request_data, std::map<std::string, std::vector<std::string> > &mime_types, std::map<std::string, std::string>   &mime_types_rev) 
+: _mime_types(&mime_types), _mime_types_rev(&mime_types_rev) {
 	// Extract the method, URL, and version from the first line of the request
 	request_data >> _method >> _url >> _http_version;
 
@@ -50,6 +52,21 @@ void Request::sort_headers() {
 			_header_content_length = line.substr(line.find(":") + 2);
 		}
 	}
+}
+
+std::vector<std::string>	Request::get_extention() const {
+	std::vector<std::string> extention;
+	std::string mime_type;
+	mime_type = _header_content_type.substr(_header_content_type.find(":") + 2);
+	
+	std::map<std::string, std::vector<std::string> >::iterator it = _mime_types->find(mime_type);
+	if (it != _mime_types->end()) {
+			extention = it->second;
+	} else {
+			std::cout << "No extension found for: " << mime_type << std::endl;
+			extention.push_back("html");
+	}
+	return extention;
 }
 
 std::string	Request::get_method() const {return _method;}

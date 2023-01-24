@@ -21,6 +21,7 @@ int main() {
 	while (true) {
 		ready_sockets = current_sockets;
 		if (select(FD_SETSIZE, &ready_sockets, NULL, NULL, NULL) < 0) {
+			//PERROR NOT ALLOWED IN THIS PART OF SERVER?
 			perror("ERROR\n");
 			exit(1);
 		}
@@ -79,10 +80,11 @@ int	accept_new_connection(int server_sock) {
 	return client_socket;
 }
 
+//read request from client might needs improvement to first read the header and then see how many bytes to read the body.
 int read_request(int client_socket, std::stringstream & request_data) {
 	uint8_t buffer[BUFFER_SIZE];
 	while (1) {
-		std::cout << "DEBUG: Reading request" << std::endl;
+		
 		int bytes_read = read(client_socket, buffer, BUFFER_SIZE);
 		if (bytes_read < 0) {
 			std::cerr << "Error read: " << strerror(errno) << std::endl;
@@ -95,6 +97,7 @@ int read_request(int client_socket, std::stringstream & request_data) {
 		}
 		request_data << buffer;
 	}
+
 }
 
 void handle_connection(int client_socket, std::map<std::string, std::vector<std::string> > & mime_types
@@ -102,19 +105,24 @@ void handle_connection(int client_socket, std::map<std::string, std::vector<std:
 	std::cout << "DEBUG: Handling connection" << std::endl;
 	// READ REQUEST
 	std::stringstream request_data;
+	std::cout << "DEBUG: Reading request" << std::endl;
 	read_request(client_socket, request_data);
-	//DEBUG
-	// std::cout << "BEDUG" << std::endl;
-	// std::string request = request_data.str();
-	// std::cout << "DEBUG: Request: " << request << std::endl;
+	std::cout << "DEBUG: Reading request finished" << std::endl;
+
 
 	//PARSE REQUEST in Request class constructor
-	Request client_request(request_data);
-	Response resp(mime_types, mime_types_rev);
-	resp.set_client_socket(client_socket);
+	std::cout << "DEBUG: Parsing request" << std::endl;
+	Request client_request(request_data, mime_types, mime_types_rev);
+	std::cout << "DEBUG: Parsing request finiched" << std::endl;
+	
+	//Construct Response
+
+	Response server_resp(mime_types, mime_types_rev);
+	server_resp.set_client_socket(client_socket);
 
 	// Here we need a function to decide what response we do
 	//now an example just with GET
-	execute_request(client_request, resp);
+	std::cout << "DEBUG: Executing request" << std::endl;
+	execute_request(client_request, server_resp);
 	close(client_socket);
 }

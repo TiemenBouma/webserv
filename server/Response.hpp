@@ -20,7 +20,7 @@ private:
 	std::map<std::string, std::string>  * _mime_types_rev;
 
 public:
-	Response(std::map<std::string, std::vector<std::string> > &mime_types, std::map<std::string, std::string>  mime_types_rev);
+	Response(std::map<std::string, std::vector<std::string> > &mime_types, std::map<std::string, std::string>   &mime_types_rev);
 	Response(const Response &other);
 	Response &operator=(const Response &other);
 	~Response();
