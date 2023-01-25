@@ -1,11 +1,9 @@
 #ifndef REQUEST_HPP
 #define REQUEST_HPP
 
-
 #include <string>
 #include <vector>
 #include <map>
-
 
 class Request 
 {
@@ -40,7 +38,7 @@ private:
 	std::string _header_content_length;
 
 	std::map<std::string, std::vector<std::string> > *_mime_types;
-	std::map<std::string, std::string>  * _mime_types_rev;
+	//std::map<std::string, std::string>  * _mime_types_rev;
 
 	bool _valid_request;
 	std::string _error_log;

@@ -41,9 +41,9 @@ public:
 	void	set_status_message(const std::string &status_message);
 	void	add_header(const std::string &header);
 	void	set_body(const std::string &body);
-	//I want to decide what the content type is
+	//[INFO] deciding content type
 	void	set_header_content_type(const std::string &file_dir);
-	//I want to decide what the content length is
+	//[INFO] calculating content length
 	void	set_header_content_length(std::ifstream &file);
 
 

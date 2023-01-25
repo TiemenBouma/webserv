@@ -5,19 +5,20 @@
 #include "Request.hpp"
 #include <map>
 
-// Constructor for the Request class does the initial parsing.
+// [INFO] Constructor for the Request class does the initial parsing.
 Request::Request(std::stringstream & request_data, std::map<std::string, std::vector<std::string> > &mime_types, std::map<std::string, std::string>   &mime_types_rev) 
-: _mime_types(&mime_types), _mime_types_rev(&mime_types_rev) {
-	// Extract the method, URL, and version from the first line of the request
+: _mime_types(&mime_types)/*, _mime_types_rev(&mime_types_rev)*/ {
+	(void)mime_types_rev;
+	// [INFO] Extract the method, URL, and version from the first line of the request
 	request_data >> _method >> _url >> _http_version;
 
-	// Ensure the request is using HTTP/1.1
+	// [INFO] Ensure the request is using HTTP/1.1
 	if (_http_version != "HTTP/1.1") {
 		_valid_request = false;
 		_error_log += "Invalid request. Only HTTP/1.1 is supported.\n";
 	}
 
-	// Extract the headers and body of the request
+	// [INFO] Extract the headers and body of the request
 	std::string line;
 	while (std::getline(request_data, line)) {
 		if (line.empty()) {
@@ -26,7 +27,7 @@ Request::Request(std::stringstream & request_data, std::map<std::string, std::ve
 		_headers += line + "\n";
 	}
 
-	//CHeck if this IF ESLE is correct
+	//[CHECK] check if this IF ESLE is correct
 	if (request_data.tellg() == LLONG_MAX || request_data.tellg() < 0) {
 		_valid_request = true;
 		_error_log +=  "No body in HTTP request.\n";
@@ -40,7 +41,7 @@ Request::Request(std::stringstream & request_data, std::map<std::string, std::ve
 	}
 }
 
-// Sort the headers into their respective variables, easier to add other headers. Just add if else.
+//[INFO] Sort the headers into their respective variables, easier to add other headers. Just add if else.
 void Request::sort_headers() {
 	std::stringstream headers_stream(_headers);
 	std::string line;
