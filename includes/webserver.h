@@ -11,8 +11,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-#include "../server/Request.hpp"
-#include "../server/Response.hpp"
+#include "../src/Request.hpp"
+#include "../src/Response.hpp"
 #include <stdlib.h> // for exit()
 #include <climits>
 
