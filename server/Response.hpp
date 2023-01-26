@@ -2,6 +2,7 @@
 #define RESPONSE_HPP
 
 #include <string>
+#include <map>
 #include "Request.hpp"
 
 class Response {
@@ -15,8 +16,11 @@ private:
 	std::string _header_content_type;
 	std::string _header_content_length;
 	std::string _body;
+	std::map<std::string, std::vector<std::string> > *_mime_types;
+	std::map<std::string, std::string>  * _mime_types_rev;
+
 public:
-	Response();
+	Response(std::map<std::string, std::vector<std::string> > &mime_types, std::map<std::string, std::string>   &mime_types_rev);
 	Response(const Response &other);
 	Response &operator=(const Response &other);
 	~Response();
@@ -29,6 +33,7 @@ public:
 	std::string	get_header_content_type() const;
 	std::string	get_header_content_length() const;
 	std::string	get_body() const;
+	std::map <std::string, std::vector<std::string> > get_mime_types() const;
 
 	void	set_client_socket(int client_socket);
 	void	set_http_version(const std::string &http_version);
@@ -36,9 +41,9 @@ public:
 	void	set_status_message(const std::string &status_message);
 	void	add_header(const std::string &header);
 	void	set_body(const std::string &body);
-	//I want to decide what the content type is
+	//[INFO] deciding content type
 	void	set_header_content_type(const std::string &file_dir);
-	//I want to decide what the content length is
+	//[INFO] calculating content length
 	void	set_header_content_length(std::ifstream &file);
 
 
