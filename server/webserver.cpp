@@ -1,34 +1,9 @@
-#include <iostream>
-#include <string>
-#include <cstring>
-#include <cstdio>
-#include <cerrno>
-#include <csignal>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include "Request.hpp"
-#include "Response.hpp"
-
-int get_request(Request &req, Response &resp);
-
-const int PORT = 8080;
-const int MAX_CONNECTIONS = FD_SETSIZE - 1;
-const int BUFFER_SIZE = 1024;
-typedef struct sockaddr_in SA_IN;
-typedef struct sockaddr SA;
-
-int	init_server(int port, int max_connections);
-int	accept_new_connection(int server_sock);
-void handle_connection(int client_socket);
+#include "../includes/webserver.h"
+#include <vector>
+#include <sstream>
 
 int main() {
 	int server_socket, client_socket;
-	//SA_IN server_addr; 
-	//SA_IN client_addr;
-
 
 	server_socket = init_server(PORT, MAX_CONNECTIONS);
 
@@ -65,7 +40,7 @@ int	init_server(int port, int max_connections) {
 
 	server_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (server_socket < 0) {
-		std::cerr << "Error: " << strerror(errno) << std::endl;
+		std::cerr << "Error socket: " << strerror(errno) << std::endl;
 		exit(1);
 	}
 
@@ -76,13 +51,13 @@ int	init_server(int port, int max_connections) {
 
 	// bind socket to address
 	if (bind(server_socket, (SA *) &server_addr, sizeof(server_addr)) < 0) {
-		std::cerr << "Error: " << strerror(errno) << std::endl;
+		std::cerr << "Error bind: " << strerror(errno) << std::endl;
 		exit(2);
 	}
 
 	// listen for connections
 	if (listen(server_socket, max_connections) < 0) {
-		std::cerr << "Error: " << strerror(errno) << std::endl;
+		std::cerr << "Error listen: " << strerror(errno) << std::endl;
 		exit(3);
 	}
 	return server_socket;
@@ -98,37 +73,41 @@ int	accept_new_connection(int server_sock) {
 	return client_socket;
 }
 
+int read_request(int client_socket, std::stringstream & request_data) {
+	uint8_t buffer[BUFFER_SIZE];
+	while (1) {
+		std::cout << "DEBUG: Reading request" << std::endl;
+		int bytes_read = read(client_socket, buffer, BUFFER_SIZE);
+		if (bytes_read < 0) {
+			std::cerr << "Error read: " << strerror(errno) << std::endl;
+			return (1);
+		}
+		if (bytes_read == 0 || bytes_read < BUFFER_SIZE) {
+			if (bytes_read > 0)
+				request_data << buffer;
+			return 0;
+		}
+		request_data << buffer;
+	}
+}
+
 void handle_connection(int client_socket) {
+	std::cout << "DEBUG: Handling connection" << std::endl;
+	// READ REQUEST
+	std::stringstream request_data;
+	read_request(client_socket, request_data);
+	//DEBUG
+	// std::cout << "BEDUG" << std::endl;
+	// std::string request = request_data.str();
+	// std::cout << "DEBUG: Request: " << request << std::endl;
 
-		char buffer[BUFFER_SIZE];
-			// read request
-		memset(buffer, 0, BUFFER_SIZE);
-		read(client_socket, buffer, BUFFER_SIZE - 1);
-		std::cout << "SERVER: Received request: " << std::endl;
-		Request client_request(buffer);
-		//std::cout << std::endl << client_request << std::endl;
+	//PARSE REQUEST in Request class constructor
+	Request client_request(request_data);
+	Response resp;
+	resp.set_client_socket(client_socket);
 
-		// Here we need a function to decide what response we do
-		//now an example just with GET
-		Response resp;
-		get_request(client_request, resp);
-
-		// send response
-		std::string response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: 200\r\n\r\n";
-		response += resp.text;
-		write(client_socket, response.c_str(), response.size());
-		close(client_socket);
-}
-
-int error_check(int succes, std::string msg) {
-	if (!succes)
-		std::cout << msg << std::endl;
-		exit(1) ;
-}
-
-int perror_check(int succes, std::string msg) {
-	if (!succes)
-		perror(msg.c_str());
-		//std::cout << msg << std::endl;
-		exit(1) ;
+	// Here we need a function to decide what response we do
+	//now an example just with GET
+	execute_request(client_request, resp);
+	close(client_socket);
 }

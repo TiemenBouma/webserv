@@ -3,7 +3,12 @@ FLAGS := -Wall -Werror -Wextra -std=c++98
 
 SRC = 	webserver.cpp \
 		Request.cpp \
-		request_get.cpp 
+		request_get.cpp \
+		request_execute.cpp \
+		request_post.cpp \
+		request_delete.cpp \
+		Response.cpp
+
 
 OBJ = $(SRC:%.cpp=obj/%.o)
 
@@ -17,11 +22,11 @@ obj/%.o : %.cpp
 	c++ -c $(FLAGS) $< -o $@
 
 clean:
-	rm -f $(OBJ)
-	rm -rf obj/
+	$(RM) $(OBJ)
+	$(RM) -r obj/
 
 fclean: clean
-	rm -f $(NAME)
+	$(RM) $(NAME)
 
 re: fclean all
 
