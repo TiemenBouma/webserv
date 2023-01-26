@@ -26,19 +26,19 @@ typedef struct s_location {
 	std::string 				index;
 } t_location;
 
-typedef struct s_server {
-	int 						listen_port;
-	std::string 				root;
-	std::string 				cgi_path;
-	std::string 				name;
-	std::vector<t_location> 	locations;
-	std::map<int, std::string>	error_pages;
-	std::string 				error_page;
-	int							error_number;
-	long						size_string;
-	std::string					redir_src;
-	std::string					redir_dst;
-} t_server;
+// typedef struct s_server {
+// 	int 						listen_port;
+// 	std::string 				root;
+// 	std::string 				cgi_path;
+// 	std::string 				name;
+// 	std::vector<t_location> 	locations;
+// 	std::map<int, std::string>	error_pages;
+// 	std::string 				error_page;
+// 	int							error_number;
+// 	long						size_string;
+// 	std::string					redir_src;
+// 	std::string					redir_dst;
+// } t_server;
 
 typedef struct s_settings {
 	std::vector<t_server> 		servers;
