@@ -1,5 +1,6 @@
-NAME := webserver
-FLAGS := -Wall -Werror -Wextra -std=c++98
+NAME 	:= webserver
+FLAGS 	:= -Wall -Werror -Wextra -std=c++98
+INC		:= -I ../includes
 
 SRC = 	webserver.cpp \
 		Request.cpp \
@@ -10,8 +11,9 @@ SRC = 	webserver.cpp \
 		Response.cpp \
 		init_mime_types.cpp 
 
-
 OBJ = $(SRC:%.cpp=obj/%.o)
+
+CONF = ../data/default.conf
 
 all: $(NAME)
 
@@ -30,5 +32,8 @@ fclean: clean
 	$(RM) $(NAME)
 
 re: fclean all
+
+test: all
+	./$(NAME) $(CONF)
 
 .PHONY: clean fclean re
