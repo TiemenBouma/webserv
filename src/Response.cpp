@@ -3,24 +3,34 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <map>
 
-Response::Response() {
-	_http_version = "HTTP/1.1";
-	_status_code = "200";
-	_status_message = "OK";
-	_headers = "";
-	_body = "";
-}
+Response::Response(std::map<std::string, std::vector<std::string> > &mime_types, std::map<std::string, 
+	std::string>   &mime_types_rev)
+:	_client_socket(0), 
+	_http_version("HTTP/1.1"), 
+	_status_code("200"), 
+	_status_message("OK"), 
+	_headers(""), 
+	_header_content_type(""), 
+	_header_content_length(""), 
+	_body(""),
+	_mime_types(&mime_types),
+	_mime_types_rev(&mime_types_rev) {}
 
-Response::Response(const Response &other) {
-	_http_version = other.get_http_version();
-	_status_code = other.get_status_code();
-	_status_message = other.get_status_message();
-	_headers = other.get_headers();
-	_header_content_length = other.get_header_content_length();
-	_header_content_type = other.get_header_content_type();
-	_body = other.get_body();
-}
+
+Response::Response(const Response &other) 
+:
+	_client_socket(other.get_client_socket()),
+	_http_version(other.get_http_version()),
+	_status_code(other.get_status_code()),
+	_status_message(other.get_status_message()),
+	_headers(other.get_headers()),
+	_header_content_type(other.get_header_content_type()),
+	_header_content_length(other.get_header_content_length()),
+	_body(other.get_body()),
+	_mime_types(other._mime_types),
+	_mime_types_rev(other._mime_types_rev) {}
 
 Response &Response::operator=(const Response &other) {
 	_http_version = other.get_http_version();
@@ -67,29 +77,17 @@ void Response::write_to_socket(const char *buffer, size_t size) const {
 
 void  Response::set_header_content_type(const std::string &file_dir) {
 	if (file_dir.find(".") != std::string::npos) {
-
-		std::string ext = 	"/" + 
-							file_dir.substr(file_dir.find_last_of('.') + 1) +
-							";";
-		std::ifstream extentions;
-		extentions.open(MIME_TYPES_FILE, std::ifstream::in);
-		if (extentions.fail()) 
-			std::cout << "Error opening file" << std::endl;
-		std::string line;
-		while (getline(extentions, line)) {
-			if (line.find(ext) != std::string::npos) {
-				_header_content_type = "Content-Type: " + line.substr(0, line.find(";"));
-				//_header_content_type.erase(_header_content_type.find(";"));
-				add_header(_header_content_type);
-				extentions.close();
-				return ;
-			}
+		std::string ext = file_dir.substr(file_dir.find_last_of('.') + 1);
+		
+		std::map<std::string, std::string>::iterator it = _mime_types_rev->find(ext);
+		if (it != _mime_types_rev->end()) {
+			std::string extensions = it->second;
+			_header_content_type = "Content-Type: " + extensions;
+		} else {
+			std::cout << "No mime type found for extension: " << ext << std::endl;
+			_header_content_type = "Content-Type: text/html";
 		}
-	}
-	else {
-		_header_content_type += "Content-Type: text/html";
 		add_header(_header_content_type);
-		return ;
 	}
 }
 

@@ -1,21 +1,22 @@
 #ifndef REQUEST_HPP
 #define REQUEST_HPP
 
-
 #include <string>
 #include <vector>
-
+#include <map>
 
 class Request 
 {
 public:
-	Request(std::stringstream & request_data);
+	Request(std::stringstream & request_data, std::map<std::string, std::vector<std::string> > &mime_types, 
+		std::map<std::string, std::string>   &mime_types_rev);
 
 	void sort_headers();
+	std::vector<std::string>	get_extention() const ;
 	
 
 	std::string	get_method() const;
-	std::string	get_url() const;
+	std::string	get_path() const;
 	std::string	get_http_version() const;
 	std::string	get_headers() const;
 	std::string	get_body() const;
@@ -35,6 +36,9 @@ private:
 
 	std::string _header_content_type;
 	std::string _header_content_length;
+
+	std::map<std::string, std::vector<std::string> > *_mime_types;
+	//std::map<std::string, std::string>  * _mime_types_rev;
 
 	bool _valid_request;
 	std::string _error_log;
