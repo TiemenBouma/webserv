@@ -6,6 +6,7 @@
 #include <map>
 
 class ConfigServer {
+public:
 	int 						listen_port;
 	std::string 				server_name;
 	std::map<int, std::string>	error_pages;
@@ -14,6 +15,7 @@ class ConfigServer {
 	std::string 				cgi_path;
 	std::string					redir_src;
 	std::string					redir_dst;
+	t_location					loc;
 
 };
 
@@ -43,3 +45,5 @@ typedef struct s_settings {
 } t_settings;
 
 #endif
+
+void error_config(std::string msg, )
