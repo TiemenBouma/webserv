@@ -20,11 +20,13 @@
 #define MIME_TYPES_FILE "../data/MIME_TYPES.txt"
 #define HOMEPAGE_FILE "../data/homepage.html"
 #define ROOT_DIR "../data/"
-const int PORT = 8080;
+// const int PORT = 8080;
+
 const int MAX_CONNECTIONS = FD_SETSIZE - 100;
-const int BUFFER_SIZE = 1024;
 typedef struct sockaddr_in SA_IN;
 typedef struct sockaddr SA;
+
+const int BUFFER_SIZE = 1024;
 
 //INITIALIZATION
 int	init_server(int port, int max_connections);
@@ -40,7 +42,8 @@ int execute_request(Request &req, Response &resp);
 int get_request(Request &req, Response &resp);
 int post_request(Request &client_request, Response &resp);
 
-
-
+//PASRING
+int start_webserver(int portno);
+void error_msg(const char *msg, int code);
 
 #endif

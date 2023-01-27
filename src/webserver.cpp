@@ -5,42 +5,6 @@
 #include <string>
 #include <vector>
 
-int main() {
-	int server_socket, client_socket;
-	std::map<std::string, std::vector<std::string> > mime_types;
-	std::map<std::string, std::string>  mime_types_rev;
-	init_mime_types(mime_types);
-	init_mime_types_reverse(mime_types_rev);
-	server_socket = init_server(PORT, MAX_CONNECTIONS);
-
-	fd_set current_sockets, ready_sockets;
-	FD_ZERO(&current_sockets);
-	FD_SET(server_socket, &current_sockets);
-
-	// [INFO]handle connections
-	while (true) {
-		ready_sockets = current_sockets;
-		if (select(FD_SETSIZE, &ready_sockets, NULL, NULL, NULL) < 0) {
-			//[CHECK]PERROR NOT ALLOWED IN THIS PART OF SERVER?
-			perror("ERROR\n");
-			exit(1);
-		}
-		for (int i = 0; i < FD_SETSIZE; i++) {
-			if (FD_ISSET(i, &ready_sockets)) {
-				if (i == server_socket) {
-					//[INFO]this is a new connection that we can accept
-					client_socket = accept_new_connection(server_socket);
-					FD_SET(client_socket, &current_sockets);
-				} else {
-					handle_connection(i, mime_types, mime_types_rev);
-					FD_CLR(i, &current_sockets);
-				}
-			}
-		}
-	}
-	return 0;
-}
-
 int	init_server(int port, int max_connections) {
 	int server_socket;
 	SA_IN server_addr; 
@@ -51,7 +15,7 @@ int	init_server(int port, int max_connections) {
 		exit(1);
 	}
 
-		//[INFO] set server address
+	//[INFO] set server address
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_port = htons(port);
 	server_addr.sin_addr.s_addr = INADDR_ANY;
@@ -80,7 +44,7 @@ int	accept_new_connection(int server_sock) {
 	return client_socket;
 }
 
-//[CHECK]read request from client might needs improvement to first read the header and then see how many bytes to read the body.
+//[CHECK] read request from client might needs improvement to first read the header and then see how many bytes to read the body.
 int read_request(int client_socket, std::stringstream & request_data) {
 	uint8_t buffer[BUFFER_SIZE];
 	while (1) {
@@ -97,7 +61,6 @@ int read_request(int client_socket, std::stringstream & request_data) {
 		}
 		request_data << buffer;
 	}
-
 }
 
 void handle_connection(int client_socket, std::map<std::string, std::vector<std::string> > & mime_types
@@ -109,14 +72,12 @@ void handle_connection(int client_socket, std::map<std::string, std::vector<std:
 	read_request(client_socket, request_data);
 	std::cout << "DEBUG: Reading request finished" << std::endl;
 
-
-	//[INFO]PARSE REQUEST in Request class constructor
+	//[INFO] PARSE REQUEST in Request class constructor
 	std::cout << "DEBUG: Parsing request" << std::endl;
 	Request client_request(request_data, mime_types, mime_types_rev);
 	std::cout << "DEBUG: Parsing request finiched" << std::endl;
-	
-	//[INFO]Construct Response
 
+	//[INFO] Construct Response
 	Response server_resp(mime_types, mime_types_rev);
 	server_resp.set_client_socket(client_socket);
 
@@ -125,4 +86,41 @@ void handle_connection(int client_socket, std::map<std::string, std::vector<std:
 	std::cout << "DEBUG: Executing request" << std::endl;
 	execute_request(client_request, server_resp);
 	close(client_socket);
+}
+
+int start_webserver(int portno) {
+	int server_socket, client_socket;
+	std::map<std::string, std::vector<std::string> > mime_types;
+	std::map<std::string, std::string>  mime_types_rev;
+	init_mime_types(mime_types);
+	init_mime_types_reverse(mime_types_rev);
+	server_socket = init_server(portno, MAX_CONNECTIONS);
+
+	fd_set current_sockets, ready_sockets;
+	FD_ZERO(&current_sockets);
+	FD_SET(server_socket, &current_sockets);
+
+	// [INFO]handle connections
+	//std::cout << portno << std::endl;
+	while (true) {
+		ready_sockets = current_sockets;
+		if (select(FD_SETSIZE, &ready_sockets, NULL, NULL, NULL) < 0) {
+			//[CHECK]PERROR NOT ALLOWED IN THIS PART OF SERVER?
+			perror("ERROR\n");
+			exit(1);
+		}
+		for (int i = 0; i < FD_SETSIZE; i++) {
+			if (FD_ISSET(i, &ready_sockets)) {
+				if (i == server_socket) {
+					//[INFO]this is a new connection that we can accept
+					client_socket = accept_new_connection(server_socket);
+					FD_SET(client_socket, &current_sockets);
+				} else {
+					handle_connection(i, mime_types, mime_types_rev);
+					FD_CLR(i, &current_sockets);
+				}
+			}
+		}
+	}
+	return 0;
 }
