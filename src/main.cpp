@@ -6,7 +6,7 @@
 /*   By: swofferh <swofferh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/01/25 14:53:58 by swofferh      #+#    #+#                 */
-/*   Updated: 2023/01/27 17:28:04 by swofferh      ########   odam.nl         */
+/*   Updated: 2023/01/27 17:38:36 by swofferh      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,12 @@ int	main(int argc, char *argv[])
 	std::string line;
 	ConfigFile configData;
 
-	// this checks the state of the configFile ifstream.
+	// [INFO] this checks the state of the configFile ifstream.
 	// std::cout << configFile.good() << std::endl;
 	// std::cout << configFile.eof() << std::endl;
 	// std::cout << configFile.fail() << std::endl;
 	// std::cout << configFile.bad() << std::endl;
+
 	// [INFO] server nneds a config file
 	if (argc != 2)
 	{

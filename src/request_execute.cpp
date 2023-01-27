@@ -10,7 +10,6 @@ int execute_request(Request &client_req, Response &server_resp, ConfigFile confi
 		post_request(client_req, server_resp, configData);
 	}
 	// else if (client_req.get_method() == "DELETE")
-
 	// else
 	// 	error;
 	return 0;
