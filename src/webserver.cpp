@@ -4,38 +4,79 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <sys/poll.h>
+#include <sys/time.h>
+#include <sys/types.h>
+
+// int main() {
+// 	int server_socket, client_socket;
+// 	std::map<std::string, std::vector<std::string> > mime_types;
+// 	std::map<std::string, std::string>  mime_types_rev;
+// 	init_mime_types(mime_types);
+// 	init_mime_types_reverse(mime_types_rev);
+// 	server_socket = init_server(PORT, MAX_CONNECTIONS);
+
+// 	fd_set current_sockets, ready_sockets;
+// 	FD_ZERO(&current_sockets);
+// 	FD_SET(server_socket, &current_sockets);
+
+// 	// [INFO]handle connections
+// 	while (true) {
+// 		ready_sockets = current_sockets;
+// 		if (select(FD_SETSIZE, &ready_sockets, NULL, NULL, NULL) < 0) {
+// 			//[CHECK]PERROR NOT ALLOWED IN THIS PART OF SERVER?
+// 			perror("ERROR\n");
+// 			exit(1);
+// 		}
+// 		for (int i = 0; i < FD_SETSIZE; i++) {
+// 			if (FD_ISSET(i, &ready_sockets)) {
+// 				if (i == server_socket) {
+// 					//[INFO]this is a new connection that we can accept
+// 					client_socket = accept_new_connection(server_socket);
+// 					FD_SET(client_socket, &current_sockets);
+// 				} else {
+// 					handle_connection(i, mime_types, mime_types_rev);
+// 					FD_CLR(i, &current_sockets);
+// 				}
+// 			}
+// 		}
+// 	}
+// 	return 0;
+// }
+
 
 int main() {
+	int amount_of_servers = 2; //
 	int server_socket, client_socket;
-	std::map<std::string, std::vector<std::string> > mime_types;
-	std::map<std::string, std::string>  mime_types_rev;
+	std::map<std::string, std::vector<std::string > > mime_types;
+	std::map<std::string, std::string> mime_types_rev;
 	init_mime_types(mime_types);
 	init_mime_types_reverse(mime_types_rev);
-	server_socket = init_server(PORT, MAX_CONNECTIONS);
+	server_socket = init_server(PORT, MAX_CONNECTIONS); // Needs to be redone below to add all the servers.
+	nfds_t size = 3;
 
-	fd_set current_sockets, ready_sockets;
-	FD_ZERO(&current_sockets);
-	FD_SET(server_socket, &current_sockets);
+	struct pollfd init_fds = {-1, POLLIN, 0};
+
+	std::vector<struct pollfd> fds(amount_of_servers, init_fds);
+	//here below we need to initilize all the server sockets.
+	fds[0].fd = server_socket;
+	fds[0].events = POLLIN;
 
 	// [INFO]handle connections
 	while (true) {
-		ready_sockets = current_sockets;
-		if (select(FD_SETSIZE, &ready_sockets, NULL, NULL, NULL) < 0) {
-			//[CHECK]PERROR NOT ALLOWED IN THIS PART OF SERVER?
-			perror("ERROR\n");
+		if (poll(&*fds.begin(), size, -1) < 0) {
+			std::cerr <<"Error: Poll\n";
 			exit(1);
 		}
 		for (int i = 0; i < FD_SETSIZE; i++) {
-			if (FD_ISSET(i, &ready_sockets)) {
-				if (i == server_socket) {
-					//[INFO]this is a new connection that we can accept
-					client_socket = accept_new_connection(server_socket);
-					FD_SET(client_socket, &current_sockets);
-				} else {
-					handle_connection(i, mime_types, mime_types_rev);
-					FD_CLR(i, &current_sockets);
-				}
-			}
+			if (!fds[i].revents & POLLIN)
+				continue;	
+			//[INFO]this is a new connection that we can accept
+			client_socket = accept_new_connection(server_socket);
+			fds[i].fd = client_socket;
+			fds[i].events = POLLIN;
+			handle_connection(fds[i].fd, mime_types, mime_types_rev);
+			fds[i].fd = -1;
 		}
 	}
 	return 0;
