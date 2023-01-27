@@ -1,0 +1,13 @@
+
+PARSER checklist
+
+(x) parse root and port
+() parse location and autoindex
+() skipping tabs
+() error handling 
+    - check if port is number
+
+
+MASTER checklist
+
+() makefile program name
