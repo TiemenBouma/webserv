@@ -5,7 +5,7 @@
 #include <string>
 #include <iostream>
 
-int get_request(Request &client_req, Response &server_resp) {
+int get_request(Request &client_req, Response &server_resp, ConfigFile configData)  {
     std::ifstream file;
     std::string file_dir;
 
@@ -13,7 +13,7 @@ int get_request(Request &client_req, Response &server_resp) {
     if (client_req.get_path() == "/") {
         file_dir = HOMEPAGE_FILE;
     } else {
-        file_dir = "../data" + client_req.get_path();
+        file_dir = configData.root + client_req.get_path();
     }
 
     //[INFO] Open the file in binary mode

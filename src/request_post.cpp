@@ -6,13 +6,13 @@
 
 //Not sure how to implement POST request jet. 
 //For now it opens the file in URL and appends the body to it.
-int post_request(Request &client_request, Response &resp) {
+int post_request(Request &client_request, Response &resp, ConfigFile configData) {
 	std::string body = client_request.get_body();
 	std::string path = client_request.get_path();
 	//in extentions we have all extentions poible fo that mime type, not using extention atm.
 	std::vector<std::string> extention = client_request.get_extention();
 
-	std::string file_path = ROOT_DIR + path;
+	std::string file_path = configData.root + path;
 	std::cout << "DEBUG: file_path: " << file_path << std::endl;
 	std::cout << "DEBUG: body POST req: " << body << std::endl;
 	std::ofstream file;

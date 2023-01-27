@@ -13,14 +13,10 @@
 #include <unistd.h>
 #include "../src/Request.hpp"
 #include "../src/Response.hpp"
+#include "../src/config.hpp"
 #include <stdlib.h> // for exit()
 #include <climits>
 #include <map>
-
-#define MIME_TYPES_FILE "../data/MIME_TYPES.txt"
-#define HOMEPAGE_FILE "../data/homepage.html"
-#define ROOT_DIR "../data/"
-// const int PORT = 8080;
 
 const int MAX_CONNECTIONS = FD_SETSIZE - 100;
 typedef struct sockaddr_in SA_IN;
@@ -36,14 +32,14 @@ void init_mime_types_reverse(std::map<std::string, std::string> & mime_types_rev
 //SERVER RUNTIME
 int	accept_new_connection(int server_sock);
 void handle_connection(int client_socket, std::map<std::string, std::vector<std::string> > & mime_types, std::map<std::string, std::string>  mime_types_rev);
-int execute_request(Request &req, Response &resp);
+int execute_request(Request &req, Response &resp, ConfigFile configData);
 
 //GET POST DELETE
-int get_request(Request &req, Response &resp);
-int post_request(Request &client_request, Response &resp);
+int get_request(Request &req, Response &resp, ConfigFile configData);
+int post_request(Request &client_request, Response &resp, ConfigFile configData);
 
 //PASRING
-int start_webserver(int portno);
+int start_webserver(ConfigFile configData);
 void error_msg(const char *msg, int code);
 
 #endif

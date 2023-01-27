@@ -6,23 +6,22 @@
 /*   By: swofferh <swofferh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/01/25 14:53:58 by swofferh      #+#    #+#                 */
-/*   Updated: 2023/01/27 16:15:43 by svos          ########   odam.nl         */
+/*   Updated: 2023/01/27 17:28:04 by swofferh      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream> // std::
-#include <fstream> 
-#include <string>
-#include <fcntl.h>
+#include <fstream>	// ifstream
+#include <string>	// stoi
+#include <fcntl.h> 
 #include "config.hpp"
-
 #include "../includes/webserver.h"
 
 int	main(int argc, char *argv[])
 {
 	std::ifstream configFile(argv[1]);
 	std::string line;
-	ConfigServer configData;
+	ConfigFile configData;
 
 	// this checks the state of the configFile ifstream.
 	// std::cout << configFile.good() << std::endl;
@@ -38,10 +37,16 @@ int	main(int argc, char *argv[])
 	// read in the config file
     while (std::getline(configFile, line)) {
         if (line.find("	listen") == 0) {
-            configData.listen_port = stoi(line.substr(line.find(" ") + 1));
+            configData.port = stoi(line.substr(line.find(" ") + 1));
         }
-    }
-	start_webserver(configData.listen_port);
+		if (line.find("	root") == 0) {
+            configData.root = line.substr(line.find(" ") + 1);
+		}
+		if (line.find("	location") == 0) {
+            configData.root = line.substr(line.find(" ") + 1);
+		}
+	}
+	start_webserver(configData);
 	return (0);
 }
 

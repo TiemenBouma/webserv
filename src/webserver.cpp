@@ -1,4 +1,5 @@
 #include "../includes/webserver.h"
+#include "config.hpp" // ConfigFille Class
 #include <vector>
 #include <sstream>
 #include <map>
@@ -64,7 +65,7 @@ int read_request(int client_socket, std::stringstream & request_data) {
 }
 
 void handle_connection(int client_socket, std::map<std::string, std::vector<std::string> > & mime_types
-		, std::map<std::string, std::string>  mime_types_rev) {
+		, std::map<std::string, std::string>  mime_types_rev, ConfigFile configData) {
 	std::cout << "DEBUG: Handling connection" << std::endl;
 	// [INFO] READ REQUEST
 	std::stringstream request_data;
@@ -84,24 +85,23 @@ void handle_connection(int client_socket, std::map<std::string, std::vector<std:
 	// [INFO] Here we need a function to decide what response we do
 	//now an example just with GET
 	std::cout << "DEBUG: Executing request" << std::endl;
-	execute_request(client_request, server_resp);
+	execute_request(client_request, server_resp, configData);
 	close(client_socket);
 }
 
-int start_webserver(int portno) {
+int start_webserver(ConfigFile configData) {
 	int server_socket, client_socket;
 	std::map<std::string, std::vector<std::string> > mime_types;
 	std::map<std::string, std::string>  mime_types_rev;
 	init_mime_types(mime_types);
 	init_mime_types_reverse(mime_types_rev);
-	server_socket = init_server(portno, MAX_CONNECTIONS);
+	server_socket = init_server(configData.port, MAX_CONNECTIONS);
 
 	fd_set current_sockets, ready_sockets;
 	FD_ZERO(&current_sockets);
 	FD_SET(server_socket, &current_sockets);
 
 	// [INFO]handle connections
-	//std::cout << portno << std::endl;
 	while (true) {
 		ready_sockets = current_sockets;
 		if (select(FD_SETSIZE, &ready_sockets, NULL, NULL, NULL) < 0) {
@@ -116,7 +116,7 @@ int start_webserver(int portno) {
 					client_socket = accept_new_connection(server_socket);
 					FD_SET(client_socket, &current_sockets);
 				} else {
-					handle_connection(i, mime_types, mime_types_rev);
+					handle_connection(i, mime_types, mime_types_rev, configData);
 					FD_CLR(i, &current_sockets);
 				}
 			}
