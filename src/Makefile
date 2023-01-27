@@ -1,6 +1,10 @@
-NAME 	:= webserver
+NAME 	:= webserv
 FLAGS 	:= -Wall -Werror -Wextra -std=c++98
 INC		:= -I ../includes
+CONF 	:= ../data/config.cfg
+
+CC = c++
+RM = rm -rf
 
 SRC = 	webserver.cpp \
 		Request.cpp \
@@ -9,24 +13,23 @@ SRC = 	webserver.cpp \
 		request_post.cpp \
 		request_delete.cpp \
 		Response.cpp \
-		init_mime_types.cpp 
+		init_mime_types.cpp \
+		main.cpp 
 
 OBJ = $(SRC:%.cpp=obj/%.o)
-
-CONF = ../data/default.conf
 
 all: $(NAME)
 
 $(NAME) : $(OBJ)
-	c++ $(FLAGS) $(OBJ) -o $(NAME)
+	$(CC) $(FLAGS) $(INC) $(OBJ) -o $(NAME)
 
 obj/%.o : %.cpp
 	@mkdir -p $(dir $@)
-	c++ -c $(FLAGS) $< -o $@
+	$(CC) -c $(FLAGS) $< -o $@
 
 clean:
 	$(RM) $(OBJ)
-	$(RM) -r obj/
+	$(RM) obj/
 
 fclean: clean
 	$(RM) $(NAME)
