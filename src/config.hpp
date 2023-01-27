@@ -5,26 +5,26 @@
 #include <vector>
 #include <map>
 
-class ConfigServer {
-public:
-	int 						listen_port;
-	std::string 				server_name;
-	std::map<int, std::string>	error_pages;
-	long						size_content;
-	std::string 				root;
-	std::string 				cgi_path;
-	std::string					redir_src;
-	std::string					redir_dst;
-	t_location					loc;
-
-};
-
 typedef struct s_location {
 	std::string location;
 	bool 		autoindex;
 	std::vector<std::string>	unaccepted_methods;
 	std::string 				index;
 } t_location;
+
+class ConfigServer {
+public:
+	std::string 				listen_port;
+	std::string 				root;
+	std::string 				server_name;
+	std::map<int, std::string>	error_pages;
+	long						size_content;
+	std::string 				cgi_path;
+	std::string					redir_src;
+	std::string					redir_dst;
+	t_location					loc;
+
+};
 
 // typedef struct s_server {
 // 	int 						listen_port;
@@ -40,10 +40,8 @@ typedef struct s_location {
 // 	std::string					redir_dst;
 // } t_server;
 
-typedef struct s_settings {
-	std::vector<t_server> 		servers;
-} t_settings;
+// typedef struct s_settings {
+// 	std::vector<t_server> 		servers;
+// } t_settings;
 
 #endif
-
-void error_config(std::string msg, )
