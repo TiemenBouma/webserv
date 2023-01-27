@@ -14,7 +14,7 @@ typedef struct s_location {
 
 class ConfigServer {
 public:
-	std::string 				listen_port;
+	int 						listen_port;
 	std::string 				root;
 	std::string 				server_name;
 	std::map<int, std::string>	error_pages;

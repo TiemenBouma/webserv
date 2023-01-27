@@ -6,7 +6,7 @@
 /*   By: swofferh <swofferh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/01/25 14:53:58 by swofferh      #+#    #+#                 */
-/*   Updated: 2023/01/27 15:23:03 by swofferh      ########   odam.nl         */
+/*   Updated: 2023/01/27 16:15:43 by svos          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,15 @@
 
 int	main(int argc, char *argv[])
 {
-	std::ifstream configFile(argv[2]);
+	std::ifstream configFile(argv[1]);
 	std::string line;
 	ConfigServer configData;
 
+	// this checks the state of the configFile ifstream.
+	// std::cout << configFile.good() << std::endl;
+	// std::cout << configFile.eof() << std::endl;
+	// std::cout << configFile.fail() << std::endl;
+	// std::cout << configFile.bad() << std::endl;
 	// [INFO] server nneds a config file
 	if (argc != 2)
 	{
@@ -31,13 +36,12 @@ int	main(int argc, char *argv[])
 		std::exit(EXIT_FAILURE);
     }
 	// read in the config file
-    while (getline(configFile, line)) {
+    while (std::getline(configFile, line)) {
         if (line.find("	listen") == 0) {
-            configData.listen_port = line.substr(line.find(" "));
+            configData.listen_port = stoi(line.substr(line.find(" ") + 1));
         }
     }
-		std::cout << line << std::endl;
-	start_webserver(8080);
+	start_webserver(configData.listen_port);
 	return (0);
 }
 
