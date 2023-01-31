@@ -14,6 +14,7 @@ SRC = 	webserver.cpp \
 		request_delete.cpp \
 		Response.cpp \
 		init_mime_types.cpp \
+		Config.cpp \
 		main.cpp 
 
 OBJ = $(SRC:%.cpp=obj/%.o)

@@ -6,7 +6,7 @@
 /*   By: swofferh <swofferh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/01/25 14:53:58 by swofferh      #+#    #+#                 */
-/*   Updated: 2023/01/27 16:15:43 by svos          ########   odam.nl         */
+/*   Updated: 2023/01/31 12:35:31 by svos          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int	main(int argc, char *argv[])
 {
 	std::ifstream configFile(argv[1]);
 	std::string line;
+	std::string	fullInput;
 	ConfigServer configData;
 
 	// this checks the state of the configFile ifstream.
@@ -40,6 +41,12 @@ int	main(int argc, char *argv[])
         if (line.find("	listen") == 0) {
             configData.listen_port = stoi(line.substr(line.find(" ") + 1));
         }
+		fullInput += line;
+    }
+	if (configData.check_brackets(fullInput, fullInput.begin()) <= 0)
+	{
+		std::cerr << "Error. Config file has unblanced brackets." << std::endl;
+		std::exit(EXIT_FAILURE);
     }
 	start_webserver(configData.listen_port);
 	return (0);

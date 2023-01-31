@@ -1,3 +1,27 @@
+#include "config.hpp"
+#include <iostream>
+
+//	Checks if curly brackets in config file are placed correctly.
+//	returns 1 for success, 0 or -1 when failed.
+int	ConfigServer::check_brackets(std::string config, std::string::iterator it)
+{
+	std::cout << "entered function" << std::endl;
+	for (; it != config.end(); it++)
+	{
+		std::cout << "iterating over: " << *it << std::endl;
+		if (*it == '{')
+		{
+			if (ConfigServer::check_brackets(config, it + 1) != 0)
+				return (-1);
+		}
+		if (*it == '}')
+			return (0);
+	}
+	std::cout << "entered check_brackets function" << std::endl;
+	(void) config;
+	return (1);
+}
+
 // std::vector<std::string> tokenize(std::string conf) {
 // 	std::string::size_type 		end;
 // 	std::vector<std::string>	tokens;
