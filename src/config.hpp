@@ -24,7 +24,9 @@ public:
 	std::string					redir_dst;
 	t_location					loc;
 
-	int check_brackets(std::string	config, std::string::iterator it);
+	int check_brackets(std::string	config);
+	int	parse_config(std::string	config);
+	// int check_brackets(std::string	config, std::string::iterator it);
 };
 
 // typedef struct s_server {

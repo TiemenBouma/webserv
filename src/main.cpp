@@ -6,7 +6,7 @@
 /*   By: swofferh <swofferh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/01/25 14:53:58 by swofferh      #+#    #+#                 */
-/*   Updated: 2023/01/31 12:35:31 by svos          ########   odam.nl         */
+/*   Updated: 2023/01/31 15:48:45 by svos          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,7 @@ int	main(int argc, char *argv[])
 	// std::cout << configFile.bad() << std::endl;
 	// [INFO] server nneds a config file
 	if (argc != 2)
-	{
-		std::cerr << "Error. Need a config file" << std::endl;
-		std::exit(EXIT_FAILURE);
-    }
+		error_msg("Expected: ./webserv config_file", EXIT_FAILURE);
 	// read in the config file
     while (std::getline(configFile, line)) {
         if (line.find("	listen") == 0) {
@@ -43,11 +40,8 @@ int	main(int argc, char *argv[])
         }
 		fullInput += line;
     }
-	if (configData.check_brackets(fullInput, fullInput.begin()) <= 0)
-	{
-		std::cerr << "Error. Config file has unblanced brackets." << std::endl;
-		std::exit(EXIT_FAILURE);
-    }
+	if (configData.check_brackets(fullInput) == 0)
+		error_msg("incorrect brackets", EXIT_FAILURE);
 	start_webserver(configData.listen_port);
 	return (0);
 }
