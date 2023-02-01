@@ -23,10 +23,41 @@ public:
 	std::string					redir_src;
 	std::string					redir_dst;
 	t_location					loc;
+	std::vector<std::string>	tokens;
 
-	int check_brackets(std::string	config);
-	int	parse_config(std::string	config);
+	int check_brackets(std::string config);
+	int	parse_config(std::string config, ConfigServer data);
+	int	skipspace(std::string::iterator it);
+	int	parse_keyword(std::string::iterator it, ConfigServer data);
+	int	ConfigServer::cmp_token(std::string::iterator it, std::vector<std::string> tokens);
+
+	ConfigServer();
+
+	class NoBracketAferServer: public std::exception
+		{
+			public:
+				const char *	what() const throw()
+				{
+					return ("no bracket near server keyword.");
+				}
+		};
+	class UnbalancedBrackets: public std::exception
+		{
+			public:
+				const char *	what() const throw()
+				{
+					return ("The brackets of the config file are unbalanced.");
+				}
+		};
 	// int check_brackets(std::string	config, std::string::iterator it);
+};
+
+enum	token_types
+{
+	LISTEN,
+	ROOT,
+	CGI,
+	SERVER_NAME
 };
 
 // typedef struct s_server {

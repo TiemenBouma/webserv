@@ -1,6 +1,15 @@
 #include "config.hpp"
 #include <iostream>
 #include <stack>
+#include "../includes/webserver.h"
+
+ConfigServer::ConfigServer()
+{
+	tokens.push_back("listen");
+	tokens.push_back("root");
+	tokens.push_back("cgi");
+	tokens.push_back("server_name");
+}
 
 int	ConfigServer::check_brackets(std::string config)
 {
@@ -30,9 +39,43 @@ int	ConfigServer::check_brackets(std::string config)
 	return (0);
 }
 
-int	ConfigServer::parse_config(std::string config)
+int	ConfigServer::skipspace(std::string::iterator it)
+{
+	int	ret = 0;
+	while (*it == '\t' || *it == '\n' || *it == ' ')
+	{
+		it++;
+		ret++;
+	}
+	return (ret);
+}
+
+int	ConfigServer::parse_config(std::string config, ConfigServer data)
 {
 	//look for the string 'server', then go in server parser. parse server stuf. if string location is found, go in location parser.
+	std::string::iterator	it = config.begin();
+
+	it += config.find("server") + 6;
+	it += skipspace(it);
+	if (*it != '{')
+		throw(NoBracketAferServer());
+	it += 1;
+	it += skipspace(it);
+	std::cout << data.tokens[1] << std::endl;
+	parse_keyword(it, data);
+	return (0);
+}
+
+int	ConfigServer::cmp_token(std::string::iterator it, std::vector<std::string> tokens)
+{
+	
+}
+
+int	ConfigServer::parse_keyword(std::string::iterator it, ConfigServer data)
+{
+	if (cmp_token(it, data.tokens) == 0)
+	(void)it;
+	return (0);
 }
 
 //	Checks if curly brackets in config file are placed correctly.
