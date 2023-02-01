@@ -6,7 +6,7 @@
 /*   By: swofferh <swofferh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/01/25 14:53:58 by swofferh      #+#    #+#                 */
-/*   Updated: 2023/01/31 15:48:45 by svos          ########   odam.nl         */
+/*   Updated: 2023/02/01 15:50:22 by swofferh      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	main(int argc, char *argv[])
 	return (0);
 }
 
-int error_smg(const char *msg, int code)
+void error_msg(const char *msg, int code)
 {
 	perror(msg);
     exit(code);

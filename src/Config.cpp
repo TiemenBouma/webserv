@@ -30,10 +30,10 @@ int	ConfigServer::check_brackets(std::string config)
 	return (0);
 }
 
-int	ConfigServer::parse_config(std::string config)
-{
-	//look for the string 'server', then go in server parser. parse server stuf. if string location is found, go in location parser.
-}
+// int	ConfigServer::parse_config(std::string config)
+// {
+// 	//look for the string 'server', then go in server parser. parse server stuf. if string location is found, go in location parser.
+// }
 
 //	Checks if curly brackets in config file are placed correctly.
 //	returns 1 for success, 0 or -1 when failed.
