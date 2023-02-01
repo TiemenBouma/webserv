@@ -1,5 +1,6 @@
 #ifndef WEBSERVER_H
 #define WEBSERVER_H
+#include "config.hpp"
 #include <iostream>
 #include <string>
 #include <cstring>
@@ -28,7 +29,7 @@ typedef struct sockaddr_in SA_IN;
 typedef struct sockaddr SA;
 
 //INITIALIZATION
-int	init_server(int port, int max_connections);
+void	init_server(std::vector<ConfigServer> &servers);
 void init_mime_types(std::map<std::string, std::vector<std::string> > & mime_types) ;
 void init_mime_types_reverse(std::map<std::string, std::string> & mime_types_rev);
 

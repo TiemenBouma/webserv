@@ -1,4 +1,5 @@
 #include "../includes/webserver.h"
+#include "config.hpp"
 #include <vector>
 #include <sstream>
 #include <map>
@@ -44,37 +45,39 @@
 // 	return 0;
 // }
 
+void	add_server_ports(std::vector<struct pollfd> fds, std::vector<ConfigServer> servers) {
+	for (size_t i = 0; i < servers.size(); i++) {
+		fds[i].fd = servers[i].listen_port;
+	}
+}
 
 int main() {
-	int amount_of_servers = 2; //
+	std::vector<ConfigServer> servers;
 	int server_socket, client_socket;
 	std::map<std::string, std::vector<std::string > > mime_types;
 	std::map<std::string, std::string> mime_types_rev;
 	init_mime_types(mime_types);
 	init_mime_types_reverse(mime_types_rev);
-	server_socket = init_server(PORT, MAX_CONNECTIONS); // Needs to be redone below to add all the servers.
+	init_server(servers);
 	nfds_t size = 3;
 
 	struct pollfd init_fds = {-1, POLLIN, 0};
-
-	std::vector<struct pollfd> fds(amount_of_servers, init_fds);
-	//here below we need to initilize all the server sockets.
-	fds[0].fd = server_socket;
-	fds[0].events = POLLIN;
+	std::vector<struct pollfd> fds(servers.size(), init_fds);
+	add_server_ports(fds, servers);
 
 	// [INFO]handle connections
 	while (true) {
-		if (poll(&*fds.begin(), size, -1) < 0) {
+		if (poll(&*fds.begin(), fds.size(), -1) < 0) {
 			std::cerr <<"Error: Poll\n";
 			exit(1);
 		}
 		for (int i = 0; i < FD_SETSIZE; i++) {
 			if (!fds[i].revents & POLLIN)
-				continue;	
+				continue;
 			//[INFO]this is a new connection that we can accept
-			client_socket = accept_new_connection(server_socket);
-			fds[i].fd = client_socket;
-			fds[i].events = POLLIN;
+			servers[i].client_socs.push_back(accept_new_connection(servers[i].server_soc));
+			fds[i].fd = servers[i].client_socs.back();
+			//fds[i].events = POLLIN;
 			handle_connection(fds[i].fd, mime_types, mime_types_rev);
 			fds[i].fd = -1;
 		}
@@ -82,33 +85,32 @@ int main() {
 	return 0;
 }
 
-int	init_server(int port, int max_connections) {
-	int server_socket;
-	SA_IN server_addr; 
+void	init_server(std::vector<ConfigServer> &servers) {
+	SA_IN server_addr;
+	for (size_t i = 0; i < servers.size(); i++) {
+		servers[i].server_soc = socket(AF_INET, SOCK_STREAM, 0);
+		if (servers[i].server_soc < 0) {
+			std::cerr << "Error socket: " << strerror(errno) << std::endl;
+			exit(1);
+		}
 
-	server_socket = socket(AF_INET, SOCK_STREAM, 0);
-	if (server_socket < 0) {
-		std::cerr << "Error socket: " << strerror(errno) << std::endl;
-		exit(1);
+			//[INFO] set server address
+		server_addr.sin_family = AF_INET;
+		server_addr.sin_port = htons(servers[i].listen_port);
+		server_addr.sin_addr.s_addr = INADDR_ANY;
+
+		//[INFO] bind socket to address
+		if (bind(servers[i].server_soc, (SA *) &server_addr, sizeof(server_addr)) < 0) {
+			std::cerr << "Error bind: " << strerror(errno) << std::endl;
+			exit(2);
+		}
+
+		//[INFO] listen for connections
+		if (listen(servers[i].server_soc, MAX_CONNECTIONS) < 0) {
+			std::cerr << "Error listen: " << strerror(errno) << std::endl;
+			exit(3);
+		}
 	}
-
-		//[INFO] set server address
-	server_addr.sin_family = AF_INET;
-	server_addr.sin_port = htons(port);
-	server_addr.sin_addr.s_addr = INADDR_ANY;
-
-	//[INFO] bind socket to address
-	if (bind(server_socket, (SA *) &server_addr, sizeof(server_addr)) < 0) {
-		std::cerr << "Error bind: " << strerror(errno) << std::endl;
-		exit(2);
-	}
-
-	//[INFO] listen for connections
-	if (listen(server_socket, max_connections) < 0) {
-		std::cerr << "Error listen: " << strerror(errno) << std::endl;
-		exit(3);
-	}
-	return server_socket;
 }
 
 int	accept_new_connection(int server_sock) {
@@ -138,7 +140,6 @@ int read_request(int client_socket, std::stringstream & request_data) {
 		}
 		request_data << buffer;
 	}
-
 }
 
 void handle_connection(int client_socket, std::map<std::string, std::vector<std::string> > & mime_types
