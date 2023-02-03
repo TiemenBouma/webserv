@@ -5,9 +5,20 @@
 #include <vector>
 #include <map>
 
+enum request_state {
+	RS_START,
+	RS_READ_ONCE,
+	RS_PROCESSING,
+	RS_WRITING,
+	RS_DONE,
+	RS_CANCELLED
+};
+
 class Request 
 {
 public:
+	int		state;
+	
 	Request(std::stringstream & request_data, std::map<std::string, std::vector<std::string> > &mime_types, 
 		std::map<std::string, std::string>   &mime_types_rev);
 

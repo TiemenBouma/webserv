@@ -1,5 +1,6 @@
 #include "../includes/webserver.h"
-#include "config.hpp"
+#include "Config.hpp"
+#include "Connection.hpp"
 #include <vector>
 #include <sstream>
 #include <map>
@@ -51,11 +52,68 @@ void	add_server_ports(std::vector<struct pollfd> fds, std::vector<ConfigServer> 
 	}
 }
 
+void	receive_request(Connection &connection) {
+	char								buffer[1024] = {0};
+	long								read_ret;
+	std::string							value;
+	struct pollfd 						poll_fd;
+
+	poll_fd.events = POLLIN | POLLOUT;
+	poll_fd.revents = 0;
+	poll_fd.fd = connection._socket;
+	read_ret = 1;
+
+	poll(&poll_fd, 1, 0);
+	if (poll_fd.revents & POLLHUP) {
+		//connection ended can close up
+		//code
+		return ;
+	}
+	if (connection._request.state == RS_START) {
+		if (poll_fd.revents & POLLIN) {
+			read_ret = read(connection._socket, buffer, 1024 * 8);
+			if (read_ret < 0) {
+				connection._request.state = RS_CANCELLED;
+				return;
+			}
+			if (!read_ret) {
+				connection._request.state = RS_CANCELLED;
+				return;
+			}
+			connection._request.state = RS_READ_ONCE;
+			connection._request.whole_request += std::string(buffer, buffer + read_ret);
+		}
+		return;
+	}
+	if (connection._request.state == RS_READ_ONCE) {
+		if (poll_fd.revents & POLLIN) {
+			read_ret = read(socket, buffer, BUFSIZE);
+			if (read_ret < 0) {
+				//maybe this should just remove the connection?
+				//we are not allowed to check errno
+				connection._request.state = RS_CANCELLED;
+				return;
+			}
+			if (!read_ret) {
+				connection._request.state = RS_CANCELLED;
+				return;
+			}
+
+			connection._request.state = RS_READ_ONCE;
+			connection._request.whole_request += std::string(buffer, buffer + read_ret);
+		}
+	}
+
+}
+
 int main() {
-	std::vector<ConfigServer> servers;
-	int server_socket, client_socket;
-	std::map<std::string, std::vector<std::string > > mime_types;
-	std::map<std::string, std::string> mime_types_rev;
+	std::vector<ConfigServer>							servers;
+	std::vector<Connection>								connections;
+	int 												server_socket, 
+														client_socket;
+	std::map<std::string, std::vector<std::string > >	mime_types;
+	std::map<std::string, std::string> 					mime_types_rev;
+	int 												total_ports = servers.size();
 	init_mime_types(mime_types);
 	init_mime_types_reverse(mime_types_rev);
 	init_server(servers);
@@ -67,16 +125,25 @@ int main() {
 
 	// [INFO]handle connections
 	while (true) {
+
 		if (poll(&*fds.begin(), fds.size(), -1) < 0) {
-			std::cerr <<"Error: Poll\n";
+			std::cerr <<"Error: Poll: Exit webserver.\n";
 			exit(1);
 		}
-		for (int i = 0; i < FD_SETSIZE; i++) {
+		for (size_t i = 0; i < total_ports; i++) {
+			Connection new_connection(servers[i]);
+			new_connection.fd = accept_new_connection(servers[i].server_soc);
+			fcntl(new_connection.fd, F_SETFL, O_NONBLOCK);
+			connections.push_back(new_connection);
+		}
+		int size_conn = connections.size();
+		for (int i = 0; i < size_conn; i++) {
 			if (!fds[i].revents & POLLIN)
 				continue;
+			receive_request(connections[i]);
 			//[INFO]this is a new connection that we can accept
-			servers[i].client_socs.push_back(accept_new_connection(servers[i].server_soc));
-			fds[i].fd = servers[i].client_socs.back();
+			//servers[i].client_socs.push_back(accept_new_connection(servers[i].server_soc));
+			//fds[i].fd = servers[i].client_socs.back();
 			//fds[i].events = POLLIN;
 			handle_connection(fds[i].fd, mime_types, mime_types_rev);
 			fds[i].fd = -1;

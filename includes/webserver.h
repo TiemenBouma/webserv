@@ -1,6 +1,6 @@
 #ifndef WEBSERVER_H
 #define WEBSERVER_H
-#include "config.hpp"
+#include "Config.hpp"
 #include <iostream>
 #include <string>
 #include <cstring>
@@ -17,6 +17,8 @@
 #include <stdlib.h> // for exit()
 #include <climits>
 #include <map>
+#include <fcntl.h>
+
 
 
 #define MIME_TYPES_FILE "../data/MIME_TYPES.txt"
