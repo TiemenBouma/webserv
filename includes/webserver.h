@@ -1,6 +1,6 @@
 #ifndef WEBSERVER_H
 #define WEBSERVER_H
-#include "Config.hpp"
+#include "../src/classes/Config.hpp"
 #include <iostream>
 #include <string>
 #include <cstring>
@@ -12,8 +12,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-#include "../src/Request.hpp"
-#include "../src/Response.hpp"
+#include "../src/classes/Request.hpp"
+#include "../src/classes/Response.hpp"
 #include <stdlib.h> // for exit()
 #include <climits>
 #include <map>
@@ -32,11 +32,14 @@ typedef struct sockaddr SA;
 
 //INITIALIZATION
 void	init_server(std::vector<ConfigServer> &servers);
+void	add_server_ports(std::vector<struct pollfd> fds, std::vector<ConfigServer> servers);
+
 void init_mime_types(std::map<std::string, std::vector<std::string> > & mime_types) ;
 void init_mime_types_reverse(std::map<std::string, std::string> & mime_types_rev);
 
 //SERVER RUNTIME
 int	accept_new_connection(int server_sock);
+void	receive_request(Connection &connection);
 void handle_connection(int client_socket, std::map<std::string, std::vector<std::string> > & mime_types, std::map<std::string, std::string>  mime_types_rev);
 int execute_request(Request &req, Response &resp);
 

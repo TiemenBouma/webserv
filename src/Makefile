@@ -1,14 +1,18 @@
 NAME := webserver
 FLAGS := -Wall -Werror -Wextra -std=c++98
 
-SRC = 	webserver.cpp \
-		Request.cpp \
+SRC = 	classes/Request.cpp \
+		classes/Response.cpp \
+		classes/Connection.cpp \
+		webserver.cpp \
 		request_get.cpp \
 		request_execute.cpp \
 		request_post.cpp \
 		request_delete.cpp \
-		Response.cpp \
-		init_mime_types.cpp 
+		init_mime_types.cpp \
+		webserver_init.cpp  \
+		webserver_handle_connection.cpp \
+		webserver_receive_request.cpp 
 
 
 OBJ = $(SRC:%.cpp=obj/%.o)

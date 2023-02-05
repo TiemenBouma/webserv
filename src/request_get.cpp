@@ -1,6 +1,6 @@
-#include "Request.hpp"
+#include "classes/Request.hpp"
 #include "../includes/webserver.h"
-#include "Response.hpp"
+#include "classes/Response.hpp"
 #include <fstream>
 #include <string>
 #include <iostream>

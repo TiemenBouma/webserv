@@ -10,6 +10,14 @@
 // 	std::vector<ConfigServer>		servers;
 // };
 
+class Location {
+	public:
+	std::string					location;
+	bool 						autoindex;
+	std::vector<std::string>	unaccepted_methods;
+	std::string 				index;
+};
+
 class ConfigServer {
 public:
 	//TO BE PARSED
@@ -28,13 +36,6 @@ public:
 
 };
 
-class Location {
-	public:
-	std::string					location;
-	bool 						autoindex;
-	std::vector<std::string>	unaccepted_methods;
-	std::string 				index;
-};
 
 
 #endif
