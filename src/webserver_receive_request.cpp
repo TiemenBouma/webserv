@@ -1,4 +1,5 @@
 #include "../includes/webserver.h"
+#include <poll.h>
 
 void	receive_request(Connection &connection) {
 	char								buffer[1024 * 8] = {0};

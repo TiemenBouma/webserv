@@ -1,4 +1,5 @@
 #include "../includes/webserver.h"
+#include <poll.h>
 
 void	init_server(std::vector<ConfigServer> &servers) {
 	SA_IN server_addr;
@@ -28,8 +29,8 @@ void	init_server(std::vector<ConfigServer> &servers) {
 	}
 }
 
-void	add_server_ports(std::vector<struct pollfd> fds, std::vector<ConfigServer> servers) {
+void	add_server_ports(std::vector<struct pollfd> &fds, std::vector<ConfigServer> &servers) {
 	for (size_t i = 0; i < servers.size(); i++) {
-		fds[i].fd = servers[i].listen_port;
+		fds.at(i).fd = servers[i].server_soc;
 	}
 }

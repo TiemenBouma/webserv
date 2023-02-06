@@ -18,6 +18,7 @@ class Request
 public:
 	int			state;
 	std::string	whole_request;
+	Request();
 	
 	Request(std::stringstream & request_data, std::map<std::string, std::vector<std::string> > &mime_types, 
 		std::map<std::string, std::string>   &mime_types_rev);

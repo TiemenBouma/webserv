@@ -5,6 +5,11 @@
 #include "Request.hpp"
 #include <map>
 
+Request::Request() {
+	_valid_request = false;
+	_error_log = "No request data.\n";
+}
+
 // [INFO] Constructor for the Request class does the initial parsing.
 Request::Request(std::stringstream & request_data, std::map<std::string, std::vector<std::string> > &mime_types, std::map<std::string, std::string>   &mime_types_rev) 
 : _mime_types(&mime_types)/*, _mime_types_rev(&mime_types_rev)*/ {

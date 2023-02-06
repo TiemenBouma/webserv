@@ -1,6 +1,6 @@
 #include "../includes/webserver.h"
-#include "Config.hpp"
-#include "Connection.hpp"
+#include "classes/Config.hpp"
+#include "classes/Connection.hpp"
 #include <vector>
 #include <sstream>
 #include <map>
@@ -47,11 +47,11 @@ int	accept_new_connection(int server_sock) {
 int main() {
 	std::vector<ConfigServer>							servers;
 	std::vector<Connection>								connections;
-	int 												server_socket, 
-														client_socket;
+	// int 												server_socket, 
+	// 													client_socket;
 	std::map<std::string, std::vector<std::string > >	mime_types;
 	std::map<std::string, std::string> 					mime_types_rev;
-	int 												total_ports = servers.size();
+	size_t 												total_ports = servers.size();
 	init_mime_types(mime_types);
 	init_mime_types_reverse(mime_types_rev);
 	init_server(servers);

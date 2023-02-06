@@ -5,6 +5,19 @@
 #include <sstream>
 #include <map>
 
+Response::Response() {
+	_client_socket = 0;
+	_http_version = "HTTP/1.1";
+	_status_code = "200";
+	_status_message = "OK";
+	_headers = "";
+	_header_content_type = "";
+	_header_content_length = "";
+	_body = "";
+	_mime_types = NULL;
+	_mime_types_rev = NULL;
+}
+
 Response::Response(std::map<std::string, std::vector<std::string> > &mime_types, std::map<std::string, 
 	std::string>   &mime_types_rev)
 :	_client_socket(0), 

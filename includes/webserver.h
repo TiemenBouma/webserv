@@ -14,6 +14,8 @@
 #include <unistd.h>
 #include "../src/classes/Request.hpp"
 #include "../src/classes/Response.hpp"
+#include "../src/classes/Connection.hpp"
+
 #include <stdlib.h> // for exit()
 #include <climits>
 #include <map>
@@ -32,7 +34,7 @@ typedef struct sockaddr SA;
 
 //INITIALIZATION
 void	init_server(std::vector<ConfigServer> &servers);
-void	add_server_ports(std::vector<struct pollfd> fds, std::vector<ConfigServer> servers);
+void	add_server_ports(std::vector<struct pollfd> &fds, std::vector<ConfigServer> &servers);
 
 void init_mime_types(std::map<std::string, std::vector<std::string> > & mime_types) ;
 void init_mime_types_reverse(std::map<std::string, std::string> & mime_types_rev);
