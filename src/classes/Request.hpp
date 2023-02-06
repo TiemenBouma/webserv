@@ -7,8 +7,9 @@
 
 enum request_state {
 	REQUEST_START,
-	REQUEST_PROCESSING,
-	REQUEST_WRITING,
+	REQUEST_READING_HEADERS,
+	REQUEST_READING_BODY,
+	REQUEST_READING_DONE,
 	REQUEST_DONE,
 	REQUEST_CANCELLED
 };
@@ -16,14 +17,23 @@ enum request_state {
 class Request 
 {
 public:
-	int			state;
-	std::string	whole_request;
+	int			_state;
+	std::string	_buff_request;
+	std::string	_whole_request;
+	size_t		_whole_request_at;
+	size_t		_left_in_buff;
+	size_t		_size_headers;
+	size_t		_content_length;
+	size_t		_read_ret;
 	Request();
+	void set_method(std::stringstream &req_stream);
+	void set_method_url_version();
+	void set_headers();
+	void set_body();
 	
 	Request(std::stringstream & request_data, std::map<std::string, std::vector<std::string> > &mime_types, 
 		std::map<std::string, std::string>   &mime_types_rev);
 
-	void sort_headers();
 	std::vector<std::string>	get_extention() const ;
 	
 

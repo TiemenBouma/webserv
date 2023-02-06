@@ -1,5 +1,5 @@
 NAME := webserver
-FLAGS := -Wall -Werror -Wextra -std=c++98
+FLAGS := -Wall -Werror -Wextra -std=c++98 -Wimplicit-fallthrough
 
 SRC = 	classes/Request.cpp \
 		classes/Response.cpp \

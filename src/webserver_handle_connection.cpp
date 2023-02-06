@@ -1,11 +1,9 @@
 #include "../includes/webserver.h"
 
-void handle_connection(int client_socket, std::map<std::string, std::vector<std::string> > & mime_types
-		, std::map<std::string, std::string>  mime_types_rev) {
-	(void)mime_types;
-	(void)mime_types_rev;
-	
-	std::cout << "DEBUG: Handling connection" << std::endl;
+void handle_connection(Connection &connection) {
+
+
+	//std::cout << "DEBUG: Handling connection" << std::endl;
 						// [INFO] READ REQUEST
 						//std::stringstream request_data;
 						//std::cout << "DEBUG: Reading request" << std::endl;
@@ -25,7 +23,7 @@ void handle_connection(int client_socket, std::map<std::string, std::vector<std:
 
 	// [INFO] Here we need a function to decide what response we do
 	//now an example just with GET
-	std::cout << "DEBUG: Executing request" << std::endl;
+	//std::cout << "DEBUG: Executing request" << std::endl;
 	//execute_request(client_request, server_resp);
-	close(client_socket);
+	close(connection._socket);
 }
