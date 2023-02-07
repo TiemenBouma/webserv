@@ -14,7 +14,7 @@ void	receive_request(Connection &connection) {
 	std::string							value;
 	struct pollfd 						poll_fd;
 
-	std::cout << "[DEBUG]: receive_request" << std::endl;
+	//std::cout << "[DEBUG]: receive_request" << std::endl;
 	poll_fd.events = POLLIN | POLLOUT;
 	poll_fd.revents = 0;
 	poll_fd.fd = connection._socket;

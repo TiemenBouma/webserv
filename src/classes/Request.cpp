@@ -72,15 +72,17 @@ Request::Request(std::stringstream & request_data, std::map<std::string, std::ve
 void Request::set_method_url_version() {
 		// [INFO] Extract the method, URL, and version from the first line of the request
 	_state = REQUEST_READING_HEADERS;
+	std::stringstream first_line(_whole_request.substr(0, _whole_request.find('\n')));
+	first_line >> _method >> _url >> _http_version;
+	_whole_request_at = _whole_request.find('\n') + 1;
+	// _method = _whole_request.substr(_whole_request_at, _whole_request.find(' '));
+	// _whole_request_at = _whole_request.find(' ', _whole_request_at) + 1;
 
-	_method = _whole_request.substr(_whole_request_at, _whole_request.find(" "));
-	_whole_request_at = _whole_request.find(" ", _whole_request_at) + 1;
+	// _url = _whole_request.substr(_whole_request_at, _whole_request.find(' ', _whole_request_at));
+	// _whole_request_at = _whole_request.find(' ', _whole_request_at) + 1;
 
-	_url = _whole_request.substr(_whole_request_at, _whole_request.find(" "));
-	_whole_request_at = _whole_request.find(" ", _whole_request_at) + 1;
-
-	_http_version = _whole_request.substr(_whole_request_at, _whole_request.find("\n"));
-	_whole_request_at = _whole_request.find("\n", _whole_request_at) + 1;
+	// _http_version = _whole_request.substr(_whole_request_at, _whole_request.find("\n"));
+	// _whole_request_at = _whole_request.find("\n", _whole_request_at) + 1;
 
 	if (_method != "GET" || _method != "POST" || _method != "DELETE") {
 		_valid_request = false;

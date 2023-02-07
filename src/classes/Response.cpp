@@ -1,25 +1,11 @@
 #include "Response.hpp"
-#include "./../../includes/webserver.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <map>
+//#include <map>
 
-Response::Response() {
-	_client_socket = 0;
-	_http_version = "HTTP/1.1";
-	_status_code = "200";
-	_status_message = "OK";
-	_headers = "";
-	_header_content_type = "";
-	_header_content_length = "";
-	_body = "";
-	_mime_types = NULL;
-	_mime_types_rev = NULL;
-}
 
-Response::Response(std::map<std::string, std::vector<std::string> > &mime_types, std::map<std::string, 
-	std::string>   &mime_types_rev)
+Response::Response(map_str_vec_str &mime_types, map_str_str &mime_types_rev)
 :	_client_socket(0), 
 	_http_version("HTTP/1.1"), 
 	_status_code("200"), 
@@ -28,8 +14,9 @@ Response::Response(std::map<std::string, std::vector<std::string> > &mime_types,
 	_header_content_type(""), 
 	_header_content_length(""), 
 	_body(""),
-	_mime_types(&mime_types),
-	_mime_types_rev(&mime_types_rev) {}
+	_mime_types(mime_types),
+	_mime_types_rev(mime_types_rev) 
+	{}
 
 
 Response::Response(const Response &other) 
@@ -92,8 +79,8 @@ void  Response::set_header_content_type(const std::string &file_dir) {
 	if (file_dir.find(".") != std::string::npos) {
 		std::string ext = file_dir.substr(file_dir.find_last_of('.') + 1);
 		
-		std::map<std::string, std::string>::iterator it = _mime_types_rev->find(ext);
-		if (it != _mime_types_rev->end()) {
+		std::map<std::string, std::string>::iterator it = _mime_types_rev.find(ext);
+		if (it != _mime_types_rev.end()) {
 			std::string extensions = it->second;
 			_header_content_type = "Content-Type: " + extensions;
 		} else {

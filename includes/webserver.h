@@ -1,6 +1,5 @@
 #ifndef WEBSERVER_H
 #define WEBSERVER_H
-#include "../src/classes/Config.hpp"
 #include <iostream>
 #include <string>
 #include <cstring>
@@ -13,7 +12,8 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include "../src/classes/Request.hpp"
-#include "../src/classes/Response.hpp"
+// #include "../src/classes/Response.hpp"
+#include "../src/classes/Config.hpp"
 #include "../src/classes/Connection.hpp"
 
 #include <stdlib.h> // for exit()
@@ -31,6 +31,9 @@ const int MAX_CONNECTIONS = FD_SETSIZE - 100;
 const int BUFFER_SIZE = 1024;
 typedef struct sockaddr_in SA_IN;
 typedef struct sockaddr SA;
+
+typedef std::map<std::string, std::vector<std::string > > map_str_vec_str;
+typedef std::map<std::string, std::string> map_str_str;
 
 //INITIALIZATION
 void	init_server(std::vector<ConfigServer> &servers);

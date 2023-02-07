@@ -15,19 +15,24 @@ int get_request(Connection &connection) {
     } else {
         file_dir = "../data" + connection._request.get_path();
     }
+	std::cout << "[DEBUG] method: " << connection._request.get_method() << " path: " << connection._request.get_path() << " httpversion: " << connection._request.get_http_version()<< std::endl;
 
     //[INFO] Open the file in binary mode
     file.open(file_dir.c_str(), std::ios::binary);
+	std::cout << "[DEBUG]1" << std::endl;
 
 
     if (file.is_open()) {
+		std::cout << "[DEBUG]2" << std::endl;
         //[INFO] Determine the MIME type of the file
         connection._resp.set_header_content_type(file_dir);
 
+		std::cout << "[DEBUG]3" << std::endl;
         //[INFO] Get the file size
 		connection._resp.set_header_content_length(file);
 
 
+		std::cout << "[DEBUG]3" << std::endl;
 		//[INFO] WRITE/SEND THE HEADERS
 		std::cout << "SERVER: Sending GET response: \n" << std::endl;
 		std::string response = connection._resp.serialize_headers();

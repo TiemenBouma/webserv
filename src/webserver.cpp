@@ -13,8 +13,9 @@
 
 
 
+
 int	accept_new_connection(int server_sock) {
-	std::cout << "[DEBUG]: accept_new_connection" << std::endl;
+	//std::cout << "[DEBUG]: accept_new_connection" << std::endl;
 	int addr_len = sizeof(SA_IN);
 	int client_socket;
 	SA_IN client_addr;
@@ -29,8 +30,8 @@ int main() {
 	std::vector<Connection>								connections;
 	// int 												server_socket, 
 	// 													client_socket;
-	std::map<std::string, std::vector<std::string > >	mime_types;
-	std::map<std::string, std::string> 					mime_types_rev;
+	map_str_vec_str										mime_types;
+	map_str_str											mime_types_rev;
 	init_mime_types(mime_types);
 	init_mime_types_reverse(mime_types_rev);
 
@@ -65,7 +66,7 @@ int main() {
 				continue;
 			}
 			//std::cout << "[DEBUG]server: " << servers[i].server_name << " port: " << servers[i].listen_port << std::endl;
-			Connection new_connection(servers[i]);
+			Connection new_connection(servers[i], mime_types, mime_types_rev);
 			new_connection._socket = accept_new_connection(servers[i].server_soc);
 			fcntl(new_connection._socket, F_SETFL, O_NONBLOCK);
 			connections.push_back(new_connection);

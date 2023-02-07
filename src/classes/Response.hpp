@@ -3,7 +3,8 @@
 
 #include <string>
 #include <map>
-#include "Request.hpp"
+
+#include "./../../includes/webserver.h"
 
 class Response {
 private:
@@ -16,12 +17,11 @@ private:
 	std::string _header_content_type;
 	std::string _header_content_length;
 	std::string _body;
-	std::map<std::string, std::vector<std::string> > *_mime_types;
-	std::map<std::string, std::string>  * _mime_types_rev;
+	map_str_vec_str & _mime_types;
+	map_str_str  & _mime_types_rev;
 
 public:
-	Response();
-	Response(std::map<std::string, std::vector<std::string> > &mime_types, std::map<std::string, std::string>   &mime_types_rev);
+	Response(map_str_vec_str &mime_types, map_str_str &mime_types_rev);
 	Response(const Response &other);
 	Response &operator=(const Response &other);
 	~Response();

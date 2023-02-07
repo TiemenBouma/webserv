@@ -1,5 +1,12 @@
 NAME := webserver
-FLAGS := -Wall -Werror -Wextra -std=c++98 -Wimplicit-fallthrough
+FLAGS := -Wall -Werror -Wextra -std=c++98
+
+HEADERS 		:=	../includes/webserver.h	\
+					classes/Connection.hpp \
+					classes/Request.hpp \
+					classes/Response.hpp
+
+INCLUDE_FLAGS 	:= $(addprefix -I , $(sort $(dir $(HEADERS))))
 
 SRC = 	classes/Request.cpp \
 		classes/Response.cpp \
@@ -20,11 +27,11 @@ OBJ = $(SRC:%.cpp=obj/%.o)
 all: $(NAME)
 
 $(NAME) : $(OBJ)
-	c++ $(FLAGS) $(OBJ) -o $(NAME)
+	c++ $(FLAGS) $(OBJ) -o $(NAME) $(INCLUDE_FLAGS)
 
 obj/%.o : %.cpp
 	@mkdir -p $(dir $@)
-	c++ -c $(FLAGS) $< -o $@
+	c++ -c $(FLAGS) $< -o $@ $(INCLUDE_FLAGS)
 
 clean:
 	$(RM) $(OBJ)
