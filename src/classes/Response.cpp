@@ -2,8 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-//#include <map>
-
+// //#include <map>
+#include <unistd.h>
 
 Response::Response(map_str_vec_str &mime_types, map_str_str &mime_types_rev)
 :	_client_socket(0), 

@@ -5,6 +5,9 @@
 #include <vector>
 #include <map>
 
+typedef std::map<std::string, std::vector<std::string > > map_str_vec_str;
+typedef std::map<std::string, std::string> map_str_str;
+
 enum request_state {
 	REQUEST_START,
 	REQUEST_READING_HEADERS,
@@ -25,14 +28,14 @@ public:
 	size_t		_size_headers;
 	size_t		_content_length;
 	size_t		_read_ret;
-	Request();
+	Request(map_str_vec_str &mime_types);
 	void set_method(std::stringstream &req_stream);
 	void set_method_url_version();
 	void set_headers();
 	void set_body();
 	
-	Request(std::stringstream & request_data, std::map<std::string, std::vector<std::string> > &mime_types, 
-		std::map<std::string, std::string>   &mime_types_rev);
+	// Request(std::stringstream & request_data, std::map<std::string, std::vector<std::string> > &mime_types, 
+	// 	std::map<std::string, std::string>   &mime_types_rev);
 
 	std::vector<std::string>	get_extention() const ;
 	
@@ -59,7 +62,7 @@ private:
 	std::string _header_content_type;
 	std::string _header_content_length;
 
-	std::map<std::string, std::vector<std::string> > *_mime_types;
+	map_str_vec_str &_mime_types;
 	//std::map<std::string, std::string>  * _mime_types_rev;
 
 	bool _valid_request;

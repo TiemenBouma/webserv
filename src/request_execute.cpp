@@ -1,4 +1,4 @@
-#include "../includes/webserver.h"
+#include "webserver.h"
 
 int execute_request(Connection &connection) {
 	if (connection._request.get_method() == "GET") {

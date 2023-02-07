@@ -1,5 +1,7 @@
-#include "../includes/webserver.h"
+#include "webserver.h"
+// #include "../includes/webserver.h"
 #include <poll.h>
+#include <unistd.h>
 
 int check_if_done(Connection &connection) {
 	if (connection._request._state == REQUEST_DONE) {
@@ -14,7 +16,7 @@ void	receive_request(Connection &connection) {
 	std::string							value;
 	struct pollfd 						poll_fd;
 
-	//std::cout << "[DEBUG]: receive_request" << std::endl;
+	std::cout << "[DEBUG]: receive_request" << std::endl;
 	poll_fd.events = POLLIN | POLLOUT;
 	poll_fd.revents = 0;
 	poll_fd.fd = connection._socket;

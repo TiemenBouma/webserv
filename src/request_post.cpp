@@ -1,8 +1,9 @@
-#include "../includes/webserver.h"
-#include "classes/Request.hpp"
-#include "classes/Response.hpp"
-#include <iostream>
+#include "webserver.h"
+// #include "../includes/webserver.h"
+
+// #include <iostream>
 #include <fstream>
+
 
 //Not sure how to implement POST request jet. 
 //For now it opens the file in URL and appends the body to it.

@@ -1,14 +1,11 @@
-#include "../includes/webserver.h"
-#include "classes/Config.hpp"
-#include "classes/Connection.hpp"
-#include <vector>
-#include <sstream>
-#include <map>
-#include <string>
-#include <vector>
+#include "webserver.h"
+
 #include <sys/poll.h>
-#include <sys/time.h>
-#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <fcntl.h>
+typedef struct sockaddr_in SA_IN;
+typedef struct sockaddr SA;
 
 
 
@@ -87,8 +84,10 @@ int main() {
 			//servers[i].client_socs.push_back(accept_new_connection(servers[i].server_soc));
 			//fds[i].fd = servers[i].client_socs.back();
 			//fds[i].events = POLLIN;
+			//IF RECEIVE IS DONE WECAN EXECUTE
 			execute_request(connections[i]);
 			fds[i].fd = -1;
+			//REMOVE THE OLD CONECTIONS??
 		}
 		//std::cout << "[DEBUG]polling3" << std::endl;
 

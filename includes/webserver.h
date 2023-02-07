@@ -1,27 +1,13 @@
 #ifndef WEBSERVER_H
 #define WEBSERVER_H
-#include <iostream>
 #include <string>
-#include <cstring>
-#include <cstdio>
-#include <cerrno>
-#include <csignal>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include "../src/classes/Request.hpp"
-// #include "../src/classes/Response.hpp"
-#include "../src/classes/Config.hpp"
-#include "../src/classes/Connection.hpp"
-
-#include <stdlib.h> // for exit()
-#include <climits>
+#include <iostream>
 #include <map>
-#include <fcntl.h>
-
-
+#include <vector>
+#include "Config.hpp"
+#include "Connection.hpp"
+#include "Response.hpp"
+#include "Request.hpp"
 
 #define MIME_TYPES_FILE "../data/MIME_TYPES.txt"
 #define HOMEPAGE_FILE "../data/homepage.html"
@@ -29,8 +15,8 @@
 const int PORT = 8080;
 const int MAX_CONNECTIONS = FD_SETSIZE - 100;
 const int BUFFER_SIZE = 1024;
-typedef struct sockaddr_in SA_IN;
-typedef struct sockaddr SA;
+// typedef struct sockaddr_in SA_IN;
+// typedef struct sockaddr SA;
 
 typedef std::map<std::string, std::vector<std::string > > map_str_vec_str;
 typedef std::map<std::string, std::string> map_str_str;

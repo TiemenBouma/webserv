@@ -3,8 +3,11 @@
 
 #include <string>
 #include <map>
+#include <vector>
+typedef std::map<std::string, std::vector<std::string > > map_str_vec_str;
+typedef std::map<std::string, std::string> map_str_str;
 
-#include "./../../includes/webserver.h"
+// #include "./../../includes/webserver.h"
 
 class Response {
 private:
@@ -52,7 +55,7 @@ public:
 	std::string	serialize_headers() const; //for get request
 	void write_to_socket(const char *buffer, size_t size) const;
 
-	void parse_request(Request &req);
+	//void parse_request(Request &req);
 };
 
 #endif

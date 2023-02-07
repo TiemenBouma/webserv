@@ -1,5 +1,10 @@
-#include "../includes/webserver.h"
+#include "webserver.h"
+// #include "../includes/webserver.h"
 #include <poll.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+typedef struct sockaddr_in SA_IN;
+typedef struct sockaddr SA;
 
 void	init_server(std::vector<ConfigServer> &servers) {
 	SA_IN server_addr;

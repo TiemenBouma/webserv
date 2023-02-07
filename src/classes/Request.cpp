@@ -1,11 +1,13 @@
 #include <iostream>
 #include <sstream>
-#include <string>
-#include <climits>
+// #include <string>
+// #include <climits>
 #include "Request.hpp"
-#include <map>
+// #include <map>
 
-Request::Request() {
+Request::Request(map_str_vec_str &mime_types)
+: _mime_types(mime_types)
+ {
 	_valid_request = false;
 	_error_log = "No request data.\n";
 	_whole_request_at = 0;
@@ -14,75 +16,49 @@ Request::Request() {
 }
 
 // [INFO] Constructor for the Request class does the initial parsing.
-Request::Request(std::stringstream & request_data, std::map<std::string, std::vector<std::string> > &mime_types, std::map<std::string, std::string>   &mime_types_rev) 
-: _mime_types(&mime_types)/*, _mime_types_rev(&mime_types_rev)*/ {
-	_whole_request_at = 0;
-	_content_length = 0;
-	(void)mime_types_rev;
-	// [INFO] Extract the method, URL, and version from the first line of the request
-	request_data >> _method >> _url >> _http_version;
+// Request::Request(std::stringstream & request_data, std::map<std::string, std::vector<std::string> > &mime_types, std::map<std::string, std::string>   &mime_types_rev) 
+// : _mime_types(&mime_types)/*, _mime_types_rev(&mime_types_rev)*/ {
+// 	_whole_request_at = 0;
+// 	_content_length = 0;
+// 	(void)mime_types_rev;
+// 	// [INFO] Extract the method, URL, and version from the first line of the request
+// 	request_data >> _method >> _url >> _http_version;
 
-	// [INFO] Ensure the request is using HTTP/1.1
-	if (_http_version != "HTTP/1.1") {
-		_valid_request = false;
-		_error_log += "Invalid request. Only HTTP/1.1 is supported.\n";
-	}
-
-	// [INFO] Extract the headers and body of the request
-	std::string line;
-	while (std::getline(request_data, line)) {
-		if (line.empty()) {
-			break;
-		}	
-		_headers += line + "\n";
-	}
-
-	//[CHECK] check if this IF ESLE is correct
-	if (request_data.tellg() == LLONG_MAX || request_data.tellg() < 0) {
-		_valid_request = true;
-		_error_log +=  "No body in HTTP request.\n";
-	}
-	else if (static_cast<long long>(request_data.tellg()) < 
-			static_cast<long long>(request_data.str().length()))
-		_body = request_data.str().substr(request_data.tellg());
-	else {
-		_valid_request = false;
-		_error_log +=  "Invalid request. tellg() out of range\n";
-	}
-}
-
-// void Request::set_method(std::stringstream &req_stream) {
-// 		// [INFO] Extract the method, URL, and version from the first line of the request
-// 	req_stream >> _method >> _url >> _http_version;
+// 	// [INFO] Ensure the request is using HTTP/1.1
 // 	if (_http_version != "HTTP/1.1") {
 // 		_valid_request = false;
 // 		_error_log += "Invalid request. Only HTTP/1.1 is supported.\n";
 // 	}
-// 	if (!_url) {
-// 		_valid_request = false;
-// 		_error_log += "Invalid request. No URL.\n";
-// 	}
-// 	if (!_method) {
-// 		_valid_request = false;
-// 		_error_log += "Invalid request. No method.\n";
+
+// 	// [INFO] Extract the headers and body of the request
+// 	std::string line;
+// 	while (std::getline(request_data, line)) {
+// 		if (line.empty()) {
+// 			break;
+// 		}	
+// 		_headers += line + "\n";
 // 	}
 
+// 	//[CHECK] check if this IF ESLE is correct
+// 	if (request_data.tellg() == LLONG_MAX || request_data.tellg() < 0) {
+// 		_valid_request = true;
+// 		_error_log +=  "No body in HTTP request.\n";
+// 	}
+// 	else if (static_cast<long long>(request_data.tellg()) < 
+// 			static_cast<long long>(request_data.str().length()))
+// 		_body = request_data.str().substr(request_data.tellg());
+// 	else {
+// 		_valid_request = false;
+// 		_error_log +=  "Invalid request. tellg() out of range\n";
+// 	}
 // }
 
+// [INFO] Extract the method, URL, and version from the first line of the request
 void Request::set_method_url_version() {
-		// [INFO] Extract the method, URL, and version from the first line of the request
 	_state = REQUEST_READING_HEADERS;
 	std::stringstream first_line(_whole_request.substr(0, _whole_request.find('\n')));
 	first_line >> _method >> _url >> _http_version;
 	_whole_request_at = _whole_request.find('\n') + 1;
-	// _method = _whole_request.substr(_whole_request_at, _whole_request.find(' '));
-	// _whole_request_at = _whole_request.find(' ', _whole_request_at) + 1;
-
-	// _url = _whole_request.substr(_whole_request_at, _whole_request.find(' ', _whole_request_at));
-	// _whole_request_at = _whole_request.find(' ', _whole_request_at) + 1;
-
-	// _http_version = _whole_request.substr(_whole_request_at, _whole_request.find("\n"));
-	// _whole_request_at = _whole_request.find("\n", _whole_request_at) + 1;
 
 	if (_method != "GET" || _method != "POST" || _method != "DELETE") {
 		_valid_request = false;
@@ -147,8 +123,8 @@ std::vector<std::string>	Request::get_extention() const {
 	std::string mime_type;
 	mime_type = _header_content_type.substr(_header_content_type.find(":") + 2);
 	
-	std::map<std::string, std::vector<std::string> >::iterator it = _mime_types->find(mime_type);
-	if (it != _mime_types->end()) {
+	std::map<std::string, std::vector<std::string> >::iterator it = _mime_types.find(mime_type);
+	if (it != _mime_types.end()) {
 			extention = it->second;
 	} else {
 			std::cout << "No extension found for: " << mime_type << std::endl;

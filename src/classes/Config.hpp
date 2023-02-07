@@ -5,11 +5,6 @@
 #include <vector>
 #include <map>
 
-// class Servers {
-// 	public:
-// 	std::vector<ConfigServer>		servers;
-// };
-
 class Location {
 	public:
 	std::string					location;

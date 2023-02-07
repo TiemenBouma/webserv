@@ -1,7 +1,8 @@
-#include "../includes/webserver.h"
+#include "webserver.h"
+// #include "../includes/webserver.h"
 
 void handle_connection(Connection &connection) {
-
+	(void)connection;
 
 	//std::cout << "DEBUG: Handling connection" << std::endl;
 						// [INFO] READ REQUEST
@@ -25,5 +26,5 @@ void handle_connection(Connection &connection) {
 	//now an example just with GET
 	//std::cout << "DEBUG: Executing request" << std::endl;
 	//execute_request(client_request, server_resp);
-	close(connection._socket);
+	//close(connection._socket);
 }
