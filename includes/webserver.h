@@ -1,25 +1,17 @@
 #ifndef WEBSERVER_H
 #define WEBSERVER_H
 #include <string>
+
 #include <iostream>
 #include <map>
 #include <vector>
+#include <stdlib.h> // for exit()
 #include "Config.hpp"
 #include "Connection.hpp"
 #include "Response.hpp"
 #include "Request.hpp"
+using namespace std;
 
-#define MIME_TYPES_FILE "../data/MIME_TYPES.txt"
-#define HOMEPAGE_FILE "../data/homepage.html"
-#define ROOT_DIR "../data/"
-const int PORT = 8080;
-const int MAX_CONNECTIONS = FD_SETSIZE - 100;
-const int BUFFER_SIZE = 1024;
-// typedef struct sockaddr_in SA_IN;
-// typedef struct sockaddr SA;
-
-typedef std::map<std::string, std::vector<std::string > > map_str_vec_str;
-typedef std::map<std::string, std::string> map_str_str;
 
 //INITIALIZATION
 void	init_server(std::vector<ConfigServer> &servers);

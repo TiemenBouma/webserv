@@ -15,6 +15,23 @@ Request::Request(map_str_vec_str &mime_types)
 	_state = REQUEST_START;
 }
 
+Request &Request::operator=(const Request &other) {
+	_method = other._method;
+	_url = other._url;
+	_http_version = other._http_version;
+	_headers = other._headers;
+	_body = other._body;
+	_header_content_type = other._header_content_type;
+	_header_content_length = other._header_content_length;
+	_valid_request = other._valid_request;
+	_error_log = other._error_log;
+	//_mime_types = other._mime_types;
+	_whole_request_at = other._whole_request_at;
+	_content_length = other._content_length;
+	_state = other._state;
+	return *this;
+}
+
 // [INFO] Constructor for the Request class does the initial parsing.
 // Request::Request(std::stringstream & request_data, std::map<std::string, std::vector<std::string> > &mime_types, std::map<std::string, std::string>   &mime_types_rev) 
 // : _mime_types(&mime_types)/*, _mime_types_rev(&mime_types_rev)*/ {

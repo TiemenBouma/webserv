@@ -1,8 +1,10 @@
 #include "webserver.h"
+#include "typedef.h"
 // #include "../includes/webserver.h"
 
-// #include <iostream>
+#include <iostream>
 #include <fstream>
+#include <string.h>
 
 
 //Not sure how to implement POST request jet. 

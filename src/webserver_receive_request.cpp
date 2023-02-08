@@ -1,5 +1,4 @@
 #include "webserver.h"
-// #include "../includes/webserver.h"
 #include <poll.h>
 #include <unistd.h>
 
@@ -12,25 +11,36 @@ int check_if_done(Connection &connection) {
 
 void	receive_request(Connection &connection) {
 	char								buffer[1024 * 8] = {0};
-	//long								read_ret;
 	std::string							value;
 	struct pollfd 						poll_fd;
 
 	std::cout << "[DEBUG]: receive_request" << std::endl;
-	poll_fd.events = POLLIN | POLLOUT;
+	poll_fd.events = POLLIN | POLLHUP;
 	poll_fd.revents = 0;
 	poll_fd.fd = connection._socket;
-	//read_ret = 1;
+	cout << "[DEBUG]: poll_fd.fd: " << poll_fd.fd << endl;
 
 	poll(&poll_fd, 1, 0);
+
+	//-----------------DEBUGING POLL
+	if (poll_fd.revents & POLLIN) {
+		std::cout << "[DEBUG]: POLLIN is working" << std::endl;
+	} else {
+		std::cout << "[DEBUG]: POLLIN is not working" << std::endl;
+	}
+	//----------------END DEBUGING POLL
+
 	if (poll_fd.revents & POLLHUP) {
-		std::cout << "[DEBUG]: POLLHUP" << std::endl;
+		std::cout << "[DEBUG]: POLLHUP active" << std::endl;
+		connection._request._state = REQUEST_CANCELLED; //just for now cancel request, later need to check if correct.
 		//connection ended can close up
 		//code
 		return ;
 	}
 	if (poll_fd.revents & POLLIN) {
+		//cout << "[DEBUG]: start read" << endl;
 		connection._request._read_ret = read(connection._socket, buffer, 1024 * 8);
+		//cout << "[DEBUG] end read" << endl;
 		if (connection._request._read_ret <= 0) {
 			connection._request._state = REQUEST_CANCELLED;
 			return;
@@ -55,7 +65,6 @@ void	receive_request(Connection &connection) {
 		}
 	}
 	if (connection._request._state == REQUEST_READING_DONE) {
-		//close(connection._socket);
 		connection._request._state = REQUEST_DONE;
 	}
 }

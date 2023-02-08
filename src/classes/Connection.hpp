@@ -1,21 +1,25 @@
 #ifndef CONNECTION_HPP
 #define CONNECTION_HPP
 
-#include <string>
-#include <map>
-#include <vector>
 #include "Request.hpp"
 #include "Response.hpp"
 #include "Config.hpp"
+#include "typedef.h"
+#include <string>
+#include <map>
+#include <vector>
 
-typedef std::map<std::string, std::vector<std::string > > map_str_vec_str;
-typedef std::map<std::string, std::string> map_str_str;
+
 
 //class Response;
 
 
 class Connection {
 public:
+	Connection();
+	Connection(const Connection &other);
+	Connection &operator=(const Connection &other);
+	~Connection();
 	Connection(ConfigServer &server, map_str_vec_str &mime_types, map_str_str &mime_types_rev);
 	int					_port;
 	int					_socket;

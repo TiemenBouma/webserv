@@ -1,11 +1,12 @@
 #ifndef RESPONSE_HPP
 #define RESPONSE_HPP
 
+
+#include "typedef.h"
 #include <string>
 #include <map>
 #include <vector>
-typedef std::map<std::string, std::vector<std::string > > map_str_vec_str;
-typedef std::map<std::string, std::string> map_str_str;
+
 
 // #include "./../../includes/webserver.h"
 

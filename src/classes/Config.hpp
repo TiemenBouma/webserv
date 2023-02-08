@@ -1,6 +1,7 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 
+#include "typedef.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -15,6 +16,10 @@ class Location {
 
 class ConfigServer {
 public:
+	ConfigServer();
+	ConfigServer(ConfigServer const &other);
+	ConfigServer &operator=(ConfigServer const &other);
+	~ConfigServer();
 	//TO BE PARSED
 	int 						listen_port;
 	std::string					server_name;

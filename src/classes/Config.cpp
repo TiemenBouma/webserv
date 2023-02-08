@@ -1,3 +1,26 @@
+#include "Config.hpp"
+
+ConfigServer::ConfigServer(){}
+ConfigServer::ConfigServer(ConfigServer const &other) {
+	*this = other;
+}
+ConfigServer &ConfigServer::operator=(ConfigServer const &other) {
+	if (this != &other) {
+		this->listen_port = other.listen_port;
+		this->server_name = other.server_name;
+		this->error_pages = other.error_pages;
+		this->max_size_content = other.max_size_content;
+		this->root = other.root;
+		this->cgi_path = other.cgi_path;
+		this->redir_src = other.redir_src;
+		this->redir_dst = other.redir_dst;
+		this->locations = other.locations;
+		this->server_soc = other.server_soc;
+	}
+	return *this;
+}
+ConfigServer::~ConfigServer(){}
+
 // std::vector<std::string> tokenize(std::string conf) {
 // 	std::string::size_type 		end;
 // 	std::vector<std::string>	tokens;

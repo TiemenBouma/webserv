@@ -1,8 +1,12 @@
 #include "webserver.h"
+
 // #include "../includes/webserver.h"
 #include <poll.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <cerrno>
+#include <string.h>
+#include <fcntl.h>
 typedef struct sockaddr_in SA_IN;
 typedef struct sockaddr SA;
 
@@ -27,19 +31,17 @@ void	init_server(std::vector<ConfigServer> &servers) {
 			std::cerr << "Error bind: " << strerror(errno) << std::endl;
 			exit(2);
 		}
-
+		fcntl(servers[i].server_soc, F_SETFL, O_NONBLOCK);
 		//[INFO] listen for connections
 		if (listen(servers[i].server_soc, MAX_CONNECTIONS) < 0) {
 			std::cerr << "Error listen: " << strerror(errno) << std::endl;
 			exit(3);
 		}
-		//std::cout << "[DEBUG] server socket: " << servers[i].server_soc << " is listening." << std::endl;
 	}
 }
 
 void	add_server_ports(std::vector<struct pollfd> &fds, std::vector<ConfigServer> &servers) {
 	for (size_t i = 0; i < servers.size(); i++) {
-		//std::cout << "[DEBUG] add server port: " << servers[i].listen_port << std::endl;
 		fds.at(i).fd = servers[i].server_soc;
 	}
 }

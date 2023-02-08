@@ -1,12 +1,12 @@
 #ifndef REQUEST_HPP
 #define REQUEST_HPP
 
+#include "typedef.h"
 #include <string>
 #include <vector>
 #include <map>
 
-typedef std::map<std::string, std::vector<std::string > > map_str_vec_str;
-typedef std::map<std::string, std::string> map_str_str;
+
 
 enum request_state {
 	REQUEST_START,
@@ -29,6 +29,7 @@ public:
 	size_t		_content_length;
 	size_t		_read_ret;
 	Request(map_str_vec_str &mime_types);
+	Request &operator=(const Request &other);
 	void set_method(std::stringstream &req_stream);
 	void set_method_url_version();
 	void set_headers();

@@ -2,6 +2,7 @@ NAME := webserver
 FLAGS := -Wall -Werror -Wextra -std=c++98
 
 HEADERS 		:=	../includes/webserver.h	\
+					../includes/typedef.h \
 					classes/Connection.hpp \
 					classes/Request.hpp \
 					classes/Response.hpp
@@ -11,6 +12,7 @@ INCLUDE_FLAGS 	:= $(addprefix -I , $(sort $(dir $(HEADERS))))
 SRC = 	classes/Request.cpp \
 		classes/Response.cpp \
 		classes/Connection.cpp \
+		classes/Config.cpp \
 		webserver.cpp \
 		request_get.cpp \
 		request_execute.cpp \

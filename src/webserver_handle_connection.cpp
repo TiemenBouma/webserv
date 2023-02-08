@@ -1,4 +1,5 @@
 #include "webserver.h"
+#include "typedef.h"
 // #include "../includes/webserver.h"
 
 void handle_connection(Connection &connection) {
