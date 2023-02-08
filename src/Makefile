@@ -22,7 +22,7 @@ OBJ = $(SRC:%.cpp=obj/%.o)
 all: $(NAME)
 
 $(NAME) : $(OBJ)
-	$(CC) $(FLAGS) $(INC) $(OBJ) -o $(NAME)
+	$(CC) $(FLAGS) $(INC) $(OBJ) -o $(NAME) -fsanitize=address -g
 
 obj/%.o : %.cpp
 	@mkdir -p $(dir $@)

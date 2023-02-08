@@ -6,7 +6,7 @@
 /*   By: swofferh <swofferh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/01/25 14:53:58 by swofferh      #+#    #+#                 */
-/*   Updated: 2023/02/01 14:27:02 by svos          ########   odam.nl         */
+/*   Updated: 2023/02/08 12:07:17 by svos          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	main(int argc, char *argv[])
 	std::ifstream configFile(argv[1]);
 	std::string line;
 	std::string	fullInput;
-	ConfigServer configData;
+	std::vector<ConfigServer> servers;
 
 	// this checks the state of the configFile ifstream.
 	// std::cout << configFile.good() << std::endl;
@@ -36,24 +36,20 @@ int	main(int argc, char *argv[])
 	// read in the config file
     while (std::getline(configFile, line)) {
 		std::cout << line << std::endl;
-        if (line.find("	listen") == 0) {
-            configData.listen_port = stoi(line.substr(line.find(" ") + 1));
-        }
 		fullInput += line;
+		fullInput += '\n';
     }
-	std::cout << "listen port: " << configData.listen_port << std::endl;
-	if (configData.check_brackets(fullInput) == 0)
-		error_msg("incorrect brackets", EXIT_FAILURE);
 	try
 	{
-		configData.parse_config(fullInput, configData);
+		parse_config(fullInput, servers);
+		print_servers(servers);
 	}
 	catch (std::exception& e)
 	{
 		std::cout << "exception caught: " << std::endl;
 		std::cout << e.what() << std::endl;
 	}
-	start_webserver(configData.listen_port);
+	// start_webserver(servers.listen_port);
 	return (0);
 }
 
