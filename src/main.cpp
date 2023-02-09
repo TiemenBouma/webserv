@@ -36,7 +36,7 @@ int	main(int argc, char *argv[])
 		std::cout << "exception caught: " << std::endl;
 		std::cout << e.what() << std::endl;
 	}
-	// start_webserver(servers.listen_port);
+	start_webserver(servers);
 	return (0);
 }
 

@@ -17,8 +17,7 @@ int	accept_new_connection(int server_sock) {
 	return client_socket;
 }
 
-int main() {
-	std::vector<ConfigServer>							servers;
+int start_webserver(std::vector<ConfigServer> servers) {
 	std::vector<Connection>								connections;
 	map_str_vec_str										mime_types;
 	map_str_str											mime_types_rev;

@@ -14,6 +14,7 @@ using namespace std;
 
 
 //INITIALIZATION
+int start_webserver(std::vector<ConfigServer> servers);
 void	init_server(std::vector<ConfigServer> &servers);
 void	add_server_ports(std::vector<struct pollfd> &fds, std::vector<ConfigServer> &servers);
 
