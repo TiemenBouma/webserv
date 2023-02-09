@@ -42,11 +42,12 @@ void	receive_request(Connection &connection) {
 		connection._request._read_ret = read(connection._socket, buffer, 1024 * 8);
 		//cout << "[DEBUG] end read" << endl;
 		if (connection._request._read_ret <= 0) {
+			cout << "[DEBUG] Read error, REUEST CANCELLED" << endl;
 			connection._request._state = REQUEST_CANCELLED;
 			return;
 		}
 		connection._request._whole_request += std::string(buffer, buffer + connection._request._read_ret);
-		std::cout << "[DEBUG]: whole request: " << connection._request._whole_request << std::endl;
+		std::cout << "[DEBUG]: whole request:\n" << connection._request._whole_request << std::endl;
 	}
 
 	if (connection._request._state == REQUEST_START)

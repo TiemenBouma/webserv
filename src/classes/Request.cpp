@@ -1,9 +1,7 @@
 #include <iostream>
 #include <sstream>
-// #include <string>
-// #include <climits>
 #include "Request.hpp"
-// #include <map>
+
 
 Request::Request(map_str_vec_str &mime_types)
 : _mime_types(mime_types)

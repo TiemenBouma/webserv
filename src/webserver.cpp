@@ -56,14 +56,14 @@ int start_webserver(std::vector<ConfigServer> servers) {
 			struct pollfd new_pollfd = {new_connection._socket, POLLIN, 0};
 			poll(&new_pollfd, 1, 0);
 			if (new_pollfd.revents & POLLIN) {
-				cout << "POLLIN Active\n";
+				cout << "[DEBUG]POLLIN new connection Active\n";
 			}
 			if (new_connection._socket < 0)
 				continue;
 			fcntl(new_connection._socket, F_SETFL, O_NONBLOCK);
 			poll(&new_pollfd, 1, 0);
 			if (new_pollfd.revents & POLLIN) {
-				cout << "POLLIN Active after fcntl\n";
+				cout << "[DEBUG]POLLIN new connection Active after fcntl\n";
 			}
 			connections.push_back(new_connection);
 		}
@@ -74,6 +74,7 @@ int start_webserver(std::vector<ConfigServer> servers) {
 				continue;
 			}
 			receive_request(connections[i]);
+			cout << "[DEBUG] state request: " << connections[i]._request._state << endl;
 			if (connections[i]._request._state == REQUEST_DONE)
 				execute_request(connections[i]);
 			if (connections[i]._request._state == REQUEST_DONE ||
