@@ -20,6 +20,7 @@ void	init_server(std::vector<ConfigServer> &servers) {
 			std::cerr << "Error socket: " << strerror(errno) << std::endl;
 			exit(1);
 		}
+		fcntl(servers[i].server_soc, F_SETFL, O_NONBLOCK);
 
 			//[INFO] set server address
 		server_addr.sin_family = AF_INET;
@@ -31,7 +32,6 @@ void	init_server(std::vector<ConfigServer> &servers) {
 			std::cerr << "Error bind: " << strerror(errno) << std::endl;
 			exit(2);
 		}
-		fcntl(servers[i].server_soc, F_SETFL, O_NONBLOCK);
 		//[INFO] listen for connections
 		if (listen(servers[i].server_soc, MAX_CONNECTIONS) < 0) {
 			std::cerr << "Error listen: " << strerror(errno) << std::endl;
