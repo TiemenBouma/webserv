@@ -1,6 +1,11 @@
 #include "Config.hpp"
 #include <iostream>
+#include <stack>
 //#include "webserver.h"
+
+ConfigServer::ConfigServer()
+: keywords(_init_keywords())
+{}
 
 ConfigServer::ConfigServer(ConfigServer const &other) {
 	*this = other;
@@ -16,7 +21,6 @@ ConfigServer &ConfigServer::operator=(ConfigServer const &other) {
 		this->redir_src = other.redir_src;
 		this->redir_dst = other.redir_dst;
 		this->locations = other.locations;
-		this->keywords = other.keywords;
 	}
 	return *this;
 }
@@ -41,7 +45,7 @@ const std::vector<std::string>	ConfigServer::_init_keywords()
 	ret.push_back("location");
 	ret.push_back("index");
 	ret.push_back("autoindex");
-	ret.push_back("allowed_methods");
+	ret.push_back("accepted_methods");
 	ret.push_back("default_file");
 	ret.push_back("cgi_path");
 	ret.push_back("path_uploads");
@@ -195,45 +199,46 @@ void	ConfigServer::_parse_redirect(std::vector<t_location> &dst, std::string::it
 
 	new_loc.autoindex = 0;
 	_parse_location(new_loc.location, it);
-	std::cout << "\tin data class: " << new_loc.location << std::endl;
-	std::cout << "\tparsed location" << std::endl;
+	//std::cout << "\tin data class: " << new_loc.location << std::endl;
+	//std::cout << "\tparsed location" << std::endl;
 	while (*it != '}' && *it != '\0')
 	{
 		i = 0;
 		while (cmp_directive(it, keywords[i]) == 0)
 			i++;
-		std::cout << "\tin location block: i: " << i << ", directive found: " << keywords[i] << std::endl;
+	//	std::cout << "\tin location block: i: " << i << ", directive found: " << keywords[i] << std::endl;
 		switch (i)
 		{
 			case INDEX:
 				_parse_string(new_loc.index, it);
-				std::cout << "\tin data class: " << new_loc.index << std::endl;
-				std::cout << "\tparsed index" << std::endl;
+		//		std::cout << "\tin data class: " << new_loc.index << std::endl;
+		//		std::cout << "\tparsed index" << std::endl;
 				break;
 			case AUTOINDEX:
 				_parse_bool(new_loc.autoindex, it);
-				std::cout << "\tin data class: " << new_loc.autoindex << std::endl;
-				std::cout << "\tparsed autoindex" << std::endl;
+		//		std::cout << "\tin data class: " << new_loc.autoindex << std::endl;
+		//		std::cout << "\tparsed autoindex" << std::endl;
 				break;
 			case METHODS:
 				_parse_methods(new_loc.accepted_methods, it);
-				std::cout << "\tin data class: " << new_loc.accepted_methods[1] << std::endl;
-				std::cout << "\tparsed methods" << std::endl;
+		//		std::cout << "\tin data class: " << new_loc.accepted_methods[1] << std::endl;
+		//		std::cout << "\tparsed methods" << std::endl;
 				break;
 			case DEFAULT_FILE:
 				_parse_string(new_loc.default_file, it);
-				std::cout << "\tin data class: " << new_loc.default_file << std::endl;
-				std::cout << "\tparsed default file" << std::endl;
+		//		std::cout << "\tin data class: " << new_loc.default_file << std::endl;
+		//		std::cout << "\tparsed default file" << std::endl;
 				break;
 			case CGI:
 				_parse_string(new_loc.cgi_path, it);
-				std::cout << "\tin data class: " << new_loc.cgi_path << std::endl;
-				std::cout << "\tparsed cgi path" << std::endl;
+		//		std::cout << "\tin data class: " << new_loc.cgi_path << std::endl;
+		//		std::cout << "\tparsed cgi path" << std::endl;
 				break;
 			case PATH_UPLOADS:
 				_parse_string(new_loc.path_uploads, it);
-				std::cout << "\tin data class: " << new_loc.path_uploads << std::endl;
-				std::cout << "\tparsed path uploads" << std::endl;
+		//		std::cout << "\tin data class: " << new_loc.path_uploads << std::endl;
+
+		//		std::cout << "\tparsed path uploads" << std::endl;
 				break;
 			default:
 				throw(UnknownKeyword());
@@ -263,9 +268,6 @@ void	ConfigServer::_next_directive(std::string::iterator &it)
 	PUBLIC
 */
 
-ConfigServer::ConfigServer(): keywords(_init_keywords())
-{
-}
 
 int	ConfigServer::parse_keyword(std::string::iterator &it)
 {
@@ -277,46 +279,46 @@ int	ConfigServer::parse_keyword(std::string::iterator &it)
 		i = 0;
 		while (cmp_directive(it, keywords[i]) == 0)
 			i++;
-		std::cout << "in server block: i: " << i << ", directive found: " << keywords[i] << std::endl;
+		//std::cout << "in server block: i: " << i << ", directive found: " << keywords[i] << std::endl;
 		switch (i)
 		{
 			case LISTEN:
 				_parse_number(listen_port, it);
-				std::cout << "in data class: " << listen_port << std::endl;
-				std::cout << "parsed listen" << std::endl;
+		//		std::cout << "in data class: " << listen_port << std::endl;
+		//		std::cout << "parsed listen" << std::endl;
 				break;
 			case ROOT:
 				_parse_string(root, it);
-				std::cout << "in data class: " << root << std::endl;
-				std::cout << "parsed root" << std::endl;
+		//		std::cout << "in data class: " << root << std::endl;
+		//		std::cout << "parsed root" << std::endl;
 				break;
 			case SERVER_NAME:
 				_parse_string(server_name, it);
-				std::cout << "in data class: " << server_name << std::endl;
-				std::cout << "parsed server name" << std::endl;
+		//		std::cout << "in data class: " << server_name << std::endl;
+		//		std::cout << "parsed server name" << std::endl;
 				break;
 			case ERROR_PAGE:
 				_parse_error_pages(error_pages, it);
-				for(mapit = error_pages.begin(); mapit != error_pages.end(); mapit++)
-					std::cout << "in error pages: " << mapit->first << ", " << mapit->second << std::endl;
-				std::cout << "parsed error pages" << std::endl;
+		//		for(mapit = error_pages.begin(); mapit != error_pages.end(); mapit++)
+		//			std::cout << "in error pages: " << mapit->first << ", " << mapit->second << std::endl;
+		//		std::cout << "parsed error pages" << std::endl;
 				break;
 			case CLIENT_BODY_SIZE:
 				_parse_number(size_content, it);
-				std::cout << "in data class: " << size_content << std::endl;
-				std::cout << "parsed client body size" << std::endl;
+		//		std::cout << "in data class: " << size_content << std::endl;
+		//		std::cout << "parsed client body size" << std::endl;
 				break;
 			case REDIRECTION:
 				_parse_redirect(locations, it, keywords);
-				print_locations(locations);
-				std::cout << "parsed redirect" << std::endl;
+		//		print_locations(locations);
+		//		std::cout << "parsed redirect" << std::endl;
 				break;
 			default:
 				throw(UnknownKeyword());
 		}
-		std::cout << "*it before skipping: '" << *it << "'" << std::endl;
+	//	std::cout << "*it before skipping: '" << *it << "'" << std::endl;
 		_next_directive(it);
-		std::cout << "*it after skipping: '" << *it << "'" << std::endl;
+	//	std::cout << "*it after skipping: '" << *it << "'" << std::endl;
 	}
 	return (0);
 }
@@ -388,7 +390,6 @@ int	parse_config(std::string config, std::vector<ConfigServer> &servers)
 		it += skipspace(it);
 		if (*it == '\0')
 			return (1);
-		std::cout << "it pointing to: '" << *it << "'" << std::endl;
 		if (serv.cmp_directive(it, "server") == 0)
 			throw(ConfigServer::UnknownKeyword());
 		it += strlen("server");
@@ -415,7 +416,7 @@ int	check_brackets(std::string config)
 		if (*it == '{' || *it == '}')
 			stack.push(*it);
 	}
-	std::cout << "stack size: " << stack.size() << std::endl;
+	//std::cout << "stack size: " << stack.size() << std::endl;
 	//	[INFO]check if the amount of left brackets are equal to the amount of right ones
 	while (stack.size() > 0)
 	{

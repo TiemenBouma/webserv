@@ -1,10 +1,11 @@
-#include <iostream> // std::
 #include <fstream> 
-#include <string>
-#include <fcntl.h>
-#include "config.hpp"
+#include "webserver.h"
 
-#include "../includes/webserver.h"
+void error_msg(const char *msg, int code)
+{
+	perror(msg);
+    exit(code);
+}
 
 int	main(int argc, char *argv[])
 {
@@ -22,14 +23,14 @@ int	main(int argc, char *argv[])
 	if (argc != 2)
 		error_msg("Expected: ./webserv config_file", EXIT_FAILURE);
     while (std::getline(configFile, line)) {
-		std::cout << line << std::endl;
+	//	std::cout << line << std::endl;
 		fullInput += line;
 		fullInput += '\n';
     }
 	try
 	{
 		parse_config(fullInput, servers);
-		print_servers(servers);
+		//print_servers(servers);
 	}
 	catch (std::exception& e)
 	{
@@ -40,9 +41,5 @@ int	main(int argc, char *argv[])
 	return (0);
 }
 
-void error_msg(const char *msg, int code)
-{
-	perror(msg);
-    exit(code);
-}
+
 

@@ -6,10 +6,10 @@
 int get_request(Connection &connection) {
     std::ifstream file;
     std::string file_dir;
-
 	//[INFO] DETERMINE THE FILE TO OPEN
     if (connection._request.get_path() == "/") {
-        file_dir = HOMEPAGE_FILE;
+        file_dir = connection._server.root + connection._server.locations[2].index;
+		std::cout << "[DEBUG] filedir = " << file_dir << std::endl;
     } else {
         file_dir = "../data" + connection._request.get_path();
     }

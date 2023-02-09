@@ -25,11 +25,11 @@ int start_webserver(std::vector<ConfigServer> servers) {
 	init_mime_types_reverse(mime_types_rev);
 
 	//TEST SERVER
-	ConfigServer test_server;
-	test_server.server_name = "localhost";
-	test_server.listen_port = 8080;
-	test_server.root = ROOT_DIR;
-	servers.push_back(test_server);
+	// ConfigServer test_server;
+	// test_server.server_name = "localhost";
+	// test_server.listen_port = 8080;
+	// test_server.root = ROOT_DIR;
+	// servers.push_back(test_server);
 	size_t 												total_ports = servers.size();
 
 	init_server(servers);

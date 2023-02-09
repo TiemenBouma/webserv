@@ -42,6 +42,9 @@ public:
 	std::vector<t_location>			locations;
 	const std::vector<std::string>	keywords;
 
+	int								server_soc; //special case, meybe need to be 
+	//somewhere else outside this class
+
 	ConfigServer();
 	ConfigServer(ConfigServer const &other);
 	ConfigServer &operator=(ConfigServer const &other);
