@@ -21,7 +21,8 @@ SRC = 	classes/Request.cpp \
 		init_mime_types.cpp \
 		webserver_init.cpp  \
 		webserver_handle_connection.cpp \
-		webserver_receive_request.cpp 
+		webserver_receive_request.cpp \
+		main.cpp
 
 
 OBJ = $(SRC:%.cpp=obj/%.o)
