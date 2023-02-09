@@ -61,10 +61,6 @@ int start_webserver(std::vector<ConfigServer> servers) {
 			if (new_connection._socket < 0)
 				continue;
 			fcntl(new_connection._socket, F_SETFL, O_NONBLOCK);
-			poll(&new_pollfd, 1, 0);
-			if (new_pollfd.revents & POLLIN) {
-				cout << "[DEBUG]POLLIN new connection Active after fcntl\n";
-			}
 			connections.push_back(new_connection);
 		}
 
@@ -74,7 +70,10 @@ int start_webserver(std::vector<ConfigServer> servers) {
 				continue;
 			}
 			receive_request(connections[i]);
-			cout << "[DEBUG] state request: " << connections[i]._request._state << endl;
+			//DEBUG
+			if (connections[i]._request._state == REQUEST_CANCELLED)
+				cout << connections[i]._request.get_error_log() << endl;
+			//DEBUG END
 			if (connections[i]._request._state == REQUEST_DONE)
 				execute_request(connections[i]);
 			if (connections[i]._request._state == REQUEST_DONE ||

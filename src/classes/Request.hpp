@@ -53,6 +53,7 @@ public:
 	bool	get_valid_request() const;
 	std::string	get_error_log() const;
 
+	std::string _error_log;
 private:
 	std::string _method;
 	std::string _url;
@@ -67,7 +68,6 @@ private:
 	//std::map<std::string, std::string>  * _mime_types_rev;
 
 	bool _valid_request;
-	std::string _error_log;
 
 };
 std::ostream & operator<<(std::ostream &os, const Request &other);

@@ -3,6 +3,9 @@
 #include <fstream>
 
 
+#include <unistd.h>
+
+
 int get_request(Connection &connection) {
     std::ifstream file;
     std::string file_dir;
@@ -43,6 +46,7 @@ int get_request(Connection &connection) {
         while ((n = file.read(buffer, BUFSIZE).gcount()) > 0) {
 			//std::cout << "DEBUG: writing body: " << std::string(buffer).substr(0, n) <<  std::endl;
             connection._resp.write_to_socket(buffer, n);
+
         }
 
 		//[INFO] END OF GET REQUEST

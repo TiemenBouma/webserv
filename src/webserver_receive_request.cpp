@@ -18,20 +18,20 @@ void	receive_request(Connection &connection) {
 	poll_fd.events = POLLIN | POLLHUP;
 	poll_fd.revents = 0;
 	poll_fd.fd = connection._socket;
-	cout << "[DEBUG]: poll_fd.fd: " << poll_fd.fd << endl;
 
 	poll(&poll_fd, 1, 0);
 
 	//-----------------DEBUGING POLL
 	if (poll_fd.revents & POLLIN) {
-		std::cout << "[DEBUG]: POLLIN is working" << std::endl;
+		std::cout << "[DEBUG]: POLLIN in receive is working" << std::endl;
 	} else {
-		std::cout << "[DEBUG]: POLLIN is not working" << std::endl;
+		std::cout << "[DEBUG]: POLLIN in receive is not working" << std::endl;
 	}
 	//----------------END DEBUGING POLL
 
 	if (poll_fd.revents & POLLHUP) {
-		std::cout << "[DEBUG]: POLLHUP active" << std::endl;
+		std::cout << "[DEBUG]: POLLHUP active REQUEST CANCELLED" << std::endl;
+		connection._request._error_log += "POLLHUB Error\n";
 		connection._request._state = REQUEST_CANCELLED; //just for now cancel request, later need to check if correct.
 		//connection ended can close up
 		//code
@@ -42,8 +42,8 @@ void	receive_request(Connection &connection) {
 		connection._request._read_ret = read(connection._socket, buffer, 1024 * 8);
 		//cout << "[DEBUG] end read" << endl;
 		if (connection._request._read_ret <= 0) {
-			cout << "[DEBUG] Read error, REUEST CANCELLED" << endl;
 			connection._request._state = REQUEST_CANCELLED;
+			connection._request._error_log += "Read Error\n";
 			return;
 		}
 		connection._request._whole_request += std::string(buffer, buffer + connection._request._read_ret);

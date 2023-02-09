@@ -6,7 +6,7 @@
 #include <unistd.h>
 
 Response::Response(map_str_vec_str &mime_types, map_str_str &mime_types_rev)
-:	_client_socket(0), 
+:	_client_socket(-1), 
 	_http_version("HTTP/1.1"), 
 	_status_code("200"), 
 	_status_message("OK"), 
@@ -58,7 +58,7 @@ void	Response::set_client_socket(int client_socket) {_client_socket = client_soc
 void	Response::set_http_version(const std::string &http_version) {_http_version = http_version;}
 void	Response::set_status_code(const std::string &status_code) {_status_code = status_code;}
 void	Response::set_status_message(const std::string &status_message) {_status_message = status_message;}
-void	Response::add_header(const std::string &header) {_headers += header + "\r\n"; }
+void	Response::add_header(const std::string &header) {_headers += header + "\n"; }
 void	Response::set_body(const std::string &body) {_body = body;}
 
 std::string	Response::serialize() const {

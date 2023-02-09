@@ -7,7 +7,7 @@ Request::Request(map_str_vec_str &mime_types)
 : _mime_types(mime_types)
  {
 	_valid_request = false;
-	_error_log = "No request data.\n";
+	_error_log = "";
 	_whole_request_at = 0;
 	_content_length = 0;
 	_state = REQUEST_START;
@@ -75,7 +75,8 @@ void Request::set_method_url_version() {
 	first_line >> _method >> _url >> _http_version;
 	_whole_request_at = _whole_request.find('\n') + 1;
 
-	if (_method != "GET" || _method != "POST" || _method != "DELETE") {
+	//cout << "[DEBUG] method: " << _method << endl;
+	if (_method != "GET" && _method != "POST" && _method != "DELETE") {
 		_valid_request = false;
 		_error_log += "Invalid request. No method.\n";
 		_state = REQUEST_CANCELLED;

@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <map>
+using namespace std;
 
 
 typedef std::map<std::string, std::vector<std::string > > map_str_vec_str;
