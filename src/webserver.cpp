@@ -30,7 +30,7 @@ int start_webserver(std::vector<ConfigServer> servers) {
 	// test_server.listen_port = 8080;
 	// test_server.root = ROOT_DIR;
 	// servers.push_back(test_server);
-	size_t 												total_ports = servers.size();
+	size_t												total_ports = servers.size();
 
 	init_server(servers);
 

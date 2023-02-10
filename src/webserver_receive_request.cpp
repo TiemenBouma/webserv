@@ -19,7 +19,7 @@ void	receive_request(Connection &connection) {
 	poll_fd.revents = 0;
 	poll_fd.fd = connection._socket;
 
-	poll(&poll_fd, 1, 0);
+	poll(&poll_fd, 1, 1);
 
 	//-----------------DEBUGING POLL
 	if (poll_fd.revents & POLLIN) {

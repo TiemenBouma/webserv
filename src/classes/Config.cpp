@@ -1,6 +1,9 @@
 #include "Config.hpp"
 #include <iostream>
 #include <stack>
+#include <sstream>
+
+#include <cstring>
 //#include "webserver.h"
 
 ConfigServer::ConfigServer()
@@ -68,7 +71,8 @@ void	ConfigServer::_parse_number(T &dst, std::string::iterator it)
 		value += *it;
 	if (*it != ';')
 		throw(ExpectedSemicolon());
-	dst = std::stoi(value);
+	std::stringstream ss(value);
+	ss >> dst;
 }
 
 void	ConfigServer::_parse_string(std::string &dst, std::string::iterator it)
@@ -113,7 +117,7 @@ void	ConfigServer::_parse_error_pages(std::map<int, std::string> &dst, std::stri
 		it++;
 	if ((*it == '\n' || *it == ';') && *it == '}')
 		throw(NoValueFound());
-	if (std::isdigit(*it == 0))
+	if (std::isdigit(*it) == 0)
 		throw(IncorrectErrorPage());
 	for (; std::isdigit(*it) != 0; it++)
 		value1 += *it;
@@ -129,7 +133,10 @@ void	ConfigServer::_parse_error_pages(std::map<int, std::string> &dst, std::stri
 		throw(IncorrectErrorPage());
 	if (*it != ';')
 		throw(ExpectedSemicolon());
-	dst.insert(std::pair<int, std::string>(stoi(value1), value2));
+	std::stringstream ss(value1);
+	int i;
+	ss >> i;
+	dst.insert(std::pair<int, std::string>(i, value2));
 }
 
 void	ConfigServer::_parse_bool(bool &dst, std::string::iterator it)
