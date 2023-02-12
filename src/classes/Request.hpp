@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include "Config.hpp"
 
 
 
@@ -28,6 +29,7 @@ public:
 	size_t		_size_headers;
 	size_t		_content_length;
 	size_t		_read_ret;
+	Location	*_location_serv;
 	Request(map_str_vec_str &mime_types);
 	Request &operator=(const Request &other);
 	void set_method(std::stringstream &req_stream);

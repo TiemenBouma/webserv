@@ -6,7 +6,8 @@
 #include <vector>
 #include <map>
 
-typedef struct s_location {
+class Location {
+public:
 	std::string 				location;
 	bool 						autoindex;
 	std::vector<std::string>	accepted_methods;
@@ -14,7 +15,7 @@ typedef struct s_location {
 	std::string					default_file;
 	std::string 				cgi_path;
 	std::string					path_uploads;
-} t_location;
+};
 
 class ConfigServer {
 private:
@@ -28,7 +29,7 @@ private:
 	void							_parse_bool(bool &dst, std::string::iterator it);
 	void							_parse_methods(std::vector<std::string> &dst, std::string::iterator it);
 	void							_parse_location(std::string &dst, std::string::iterator &it);
-	void							_parse_redirect(std::vector<t_location>	&dst, std::string::iterator &it, std::vector<std::string> keywords);
+	void							_parse_redirect(std::vector<Location>	&dst, std::string::iterator &it, std::vector<std::string> keywords);
 	void							_next_directive(std::string::iterator &it);
 
 public:
@@ -39,7 +40,7 @@ public:
 	long							size_content;
 	std::string						redir_src;
 	std::string						redir_dst;
-	std::vector<t_location>			locations;
+	std::vector<Location>			locations;
 	const std::vector<std::string>	keywords;
 
 	int								server_soc; //special case, meybe need to be 
@@ -53,7 +54,7 @@ public:
 	int		parse_keyword(std::string::iterator &it);
 	int		cmp_directive(std::string::iterator it, std::string directive);
 	bool	case_ins_strcmp(const std::string s1, const std::string s2);
-	void	print_locations(std::vector<t_location> locs);
+	void	print_locations(std::vector<Location> locs);
 
 
 
