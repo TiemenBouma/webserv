@@ -5,7 +5,7 @@
 
 Request::Request(map_str_vec_str &mime_types)
 : _mime_types(mime_types)
- {
+{
 	_valid_request = false;
 	_error_log = "";
 	_whole_request_at = 0;
@@ -151,6 +151,7 @@ std::vector<std::string>	Request::get_extention() const {
 
 std::string	Request::get_method() const {return _method;}
 std::string	Request::get_path() const {return _url;} 
+void		Request::set_path(const std::string &path) {_url = path;}
 std::string	Request::get_http_version() const {return _http_version;} 
 std::string	Request::get_headers() const {return _headers;} 
 std::string	Request::get_body() const {return _body;} 

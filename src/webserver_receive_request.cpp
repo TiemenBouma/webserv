@@ -19,6 +19,7 @@ void	receive_request(Connection &connection) {
 	poll_fd.revents = 0;
 	poll_fd.fd = connection._socket;
 
+	//TIMEOUT 1ms for poll might not be good. No timeout might need to be used.
 	poll(&poll_fd, 1, 1);
 
 	//-----------------DEBUGING POLL

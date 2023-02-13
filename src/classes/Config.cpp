@@ -21,8 +21,8 @@ ConfigServer &ConfigServer::operator=(ConfigServer const &other) {
 		this->server_name = other.server_name;
 		this->error_pages = other.error_pages;
 		this->size_content = other.size_content;
-		this->redir_src = other.redir_src;
-		this->redir_dst = other.redir_dst;
+		//this->redir_src = other.redir_src;
+		//this->redir_dst = other.redir_dst;
 		this->locations = other.locations;
 	}
 	return *this;
@@ -199,10 +199,10 @@ void	ConfigServer::_parse_location(std::string &dst, std::string::iterator &it)
 	dst = value;
 }
 
-void	ConfigServer::_parse_redirect(std::vector<t_location> &dst, std::string::iterator &it, std::vector<std::string> keywords)
+void	ConfigServer::_parse_redirect(std::vector<Location> &dst, std::string::iterator &it, std::vector<std::string> keywords)
 {
 	int	i;
-	t_location	new_loc;
+	Location	new_loc;
 
 	new_loc.autoindex = 0;
 	_parse_location(new_loc.location, it);
@@ -317,7 +317,7 @@ int	ConfigServer::parse_keyword(std::string::iterator &it)
 				break;
 			case REDIRECTION:
 				_parse_redirect(locations, it, keywords);
-		//		print_locations(locations);
+		//		prinLocations(locations);
 		//		std::cout << "parsed redirect" << std::endl;
 				break;
 			default:
@@ -360,9 +360,9 @@ bool	ConfigServer::case_ins_strcmp(const std::string s1, const std::string s2)
 	return (true);
 }
 
-void	ConfigServer::print_locations(std::vector<t_location> locs)
+void	ConfigServer::print_locations(std::vector<Location> locs)
 {
-	for (std::vector<t_location>::iterator it = locs.begin(); it != locs.end(); it++)
+	for (std::vector<Location>::iterator it = locs.begin(); it != locs.end(); it++)
 	{
 		std::cout << "in location block:" << std::endl;
 		std::cout << "\tLocation: '" << (*it).location << "'" << std::endl;

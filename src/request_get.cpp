@@ -10,15 +10,17 @@ int get_request(Connection &connection) {
     std::ifstream file;
     std::string file_dir;
 	//[INFO] DETERMINE THE FILE TO OPEN
-    if (connection._request.get_path() == "/") {
-        file_dir = connection._server.root + connection._server.locations[2].index;
-		std::cout << "[DEBUG] filedir = " << file_dir << std::endl;
-    } else {
-        file_dir = "../data" + connection._request.get_path();
-    }
+    // if (connection._request.get_path() == "/") {
+    //     file_dir = connection._server.root + connection._server.locations[2].index;
+	// 	std::cout << "[DEBUG] filedir = " << file_dir << std::endl;
+    // } else {
+    //     file_dir = "../data" + connection._request.get_path();
+    // }
 
     //[INFO] Open the file in binary mode
-    file.open(file_dir.c_str(), std::ios::binary);
+	cout << "DEBUG: file_dir = " << connection._resp._file_path << endl;
+    file.open(connection._resp._file_path.c_str(), std::ios::binary);
+	cout << "DEBUG: file_dir = " << connection._resp._file_path << endl;
 
 
 

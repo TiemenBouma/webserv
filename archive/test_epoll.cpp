@@ -10,16 +10,16 @@ int main(int fd) {
 	// Create an epoll instance
 	epfd = epoll_create(1); 
 	if (epfd == -1) {
-	perror("epoll_create");
-	return 1;
+		perror("epoll_create");
+		return 1;
 	}
 
 	// Wait for incoming data
 	ev.events = EPOLLIN; 
 	ev.data.fd = fd;
 	if (epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &ev) == -1) {
-	perror("epoll_ctl");
-	return 1;
+		perror("epoll_ctl");
+		return 1;
 	}
 
 	// Check for events with a 0 timeout

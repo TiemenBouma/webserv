@@ -22,7 +22,7 @@ class Request
 {
 public:
 	int			_state;
-	std::string	_buff_request;
+	//std::string	_buff_request;
 	std::string	_whole_request;
 	size_t		_whole_request_at;
 	size_t		_left_in_buff;
@@ -45,6 +45,7 @@ public:
 
 	std::string	get_method() const;
 	std::string	get_path() const;
+	void		set_path(const std::string &path);
 	std::string	get_http_version() const;
 	std::string	get_headers() const;
 	std::string	get_body() const;

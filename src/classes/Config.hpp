@@ -38,8 +38,8 @@ public:
 	std::string 					server_name;
 	std::map<int, std::string>		error_pages;
 	long							size_content;
-	std::string						redir_src;
-	std::string						redir_dst;
+	//std::string						redir_src;
+	//std::string						redir_dst;
 	std::vector<Location>			locations;
 	const std::vector<std::string>	keywords;
 
