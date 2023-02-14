@@ -31,6 +31,8 @@ int execute_request(Connection &connection);
 int get_request(Connection &connection);
 int post_request(Connection &connection);
 
+//ERROR HANDLING
+void error_request(Connection &connection);
 
 
 

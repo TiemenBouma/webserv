@@ -21,16 +21,11 @@ int start_webserver(std::vector<ConfigServer> servers) {
 	std::vector<Connection>								connections;
 	map_str_vec_str										mime_types;
 	map_str_str											mime_types_rev;
+	size_t												total_ports = servers.size();
+	
+	// [INFO]init mime types
 	init_mime_types(mime_types);
 	init_mime_types_reverse(mime_types_rev);
-
-	//TEST SERVER
-	// ConfigServer test_server;
-	// test_server.server_name = "localhost";
-	// test_server.listen_port = 8080;
-	// test_server.root = ROOT_DIR;
-	// servers.push_back(test_server);
-	size_t												total_ports = servers.size();
 
 	init_server(servers);
 

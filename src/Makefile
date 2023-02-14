@@ -18,6 +18,7 @@ SRC = 	classes/Request.cpp \
 		request_execute.cpp \
 		request_post.cpp \
 		request_delete.cpp \
+		request_error.cpp \
 		init_mime_types.cpp \
 		webserver_init.cpp  \
 		webserver_handle_connection.cpp \

@@ -37,6 +37,7 @@ int	main(int argc, char *argv[])
 		std::cout << "exception caught: " << std::endl;
 		std::cout << e.what() << std::endl;
 	}
+	//servers[0].print_locations(servers[0].locations);
 	start_webserver(servers);
 	return (0);
 }
