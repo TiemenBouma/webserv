@@ -53,17 +53,15 @@ int execute_request(Connection &connection) {
 	if (connection._resp._status_code == "405")
 		return 1;//return error page
 
-
 	if (response._location_serv == NULL) {
 		//return error page
 	}
 	response.set_client_socket(connection._socket);
 	//check if I need to check the homepage here
 	if (request.get_path() == "/") {
-		request.set_path(response._location_serv->index);
+		response._file_path = response._location_serv->index;
 	}
-	response._file_path = server.root + request.get_path();
-
+	response._file_path = server.root + response._location_serv->index;
 
 	if (connection._request.get_method() == "GET") {
 		std::cout << "DEBUG: GET request" << std::endl;

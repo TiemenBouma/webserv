@@ -41,6 +41,3 @@ int	main(int argc, char *argv[])
 	start_webserver(servers);
 	return (0);
 }
-
-
-
