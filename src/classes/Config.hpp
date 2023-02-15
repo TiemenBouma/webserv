@@ -33,6 +33,9 @@ private:
 	void							_next_directive(std::string::iterator &it);
 
 public:
+	const std::vector<std::string>	keywords;
+
+
 	int 							listen_port;
 	std::string 					root;
 	std::string 					server_name;
@@ -41,8 +44,6 @@ public:
 	//std::string						redir_src;
 	//std::string						redir_dst;
 	std::vector<Location>			locations;
-	const std::vector<std::string>	keywords;
-
 	int								server_soc; //special case, meybe need to be 
 	//somewhere else outside this class
 

@@ -58,6 +58,7 @@ int execute_request(Connection &connection) {
 		//return error page
 	}
 	response.set_client_socket(connection._socket);
+	//check if I need to check the homepage here
 	if (request.get_path() == "/") {
 		request.set_path(response._location_serv->index);
 	}

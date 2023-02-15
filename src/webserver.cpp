@@ -23,7 +23,7 @@ int start_webserver(std::vector<ConfigServer> servers) {
 	map_str_str											mime_types_rev;
 	size_t												total_ports = servers.size();
 	
-	// [INFO]init mime types
+	// [INFO]init mime types, for the surfix
 	init_mime_types(mime_types);
 	init_mime_types_reverse(mime_types_rev);
 
@@ -40,25 +40,29 @@ int start_webserver(std::vector<ConfigServer> servers) {
 			std::cerr <<"Error: Poll: Exit webserver.\n";
 			exit(1);
 		}
-
+		//listening  and accepting to new connection comming in
 		for (size_t i = 0; i < total_ports; i++) {
 			if (!(fds[i].revents & POLLIN)) {
 				continue;
 			}
 			Connection new_connection(servers[i], mime_types, mime_types_rev);
 			new_connection._socket = accept_new_connection(servers[i].server_soc);
-			//[INFO] new connection socket is not active with POLLIN :(
+
+			
+			//[DEBUG]TIEMEN LOOK AT THIS
 			struct pollfd new_pollfd = {new_connection._socket, POLLIN, 0};
 			poll(&new_pollfd, 1, 0);
 			if (new_pollfd.revents & POLLIN) {
 				cout << "[DEBUG]POLLIN new connection Active\n";
 			}
-			if (new_connection._socket < 0)
+
+			if (new_connection._socket < 0) //check if this needs to be contionue or someting else
 				continue;
 			fcntl(new_connection._socket, F_SETFL, O_NONBLOCK);
 			connections.push_back(new_connection);
 		}
 
+		//[INFO] Handeling current connections
 		int total_connections = connections.size();
 		for (int i = 0; i < total_connections; i++) {
 			if (!(fds[i].revents & POLLIN)) {
@@ -70,7 +74,7 @@ int start_webserver(std::vector<ConfigServer> servers) {
 				cout << connections[i]._request.get_error_log() << endl;
 			//DEBUG END
 			if (connections[i]._request._state == REQUEST_DONE)
-				execute_request(connections[i]);
+				execute_request(connections[i]);// Maybe rename to handeling or someting like that.
 			if (connections[i]._request._state == REQUEST_DONE ||
 				connections[i]._request._state == REQUEST_CANCELLED) {
 				close(connections[i]._socket);
