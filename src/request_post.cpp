@@ -1,16 +1,19 @@
-#include "../includes/webserver.h"
-#include "Request.hpp"
-#include "Response.hpp"
+#include "webserver.h"
+#include "typedef.h"
+// #include "../includes/webserver.h"
+
 #include <iostream>
 #include <fstream>
+#include <string.h>
+
 
 //Not sure how to implement POST request jet. 
 //For now it opens the file in URL and appends the body to it.
-int post_request(Request &client_request, Response &resp) {
-	std::string body = client_request.get_body();
-	std::string path = client_request.get_path();
+int post_request(Connection &connection) {
+	std::string body = connection._request.get_body();
+	std::string path = connection._request.get_path();
 	//in extentions we have all extentions poible fo that mime type, not using extention atm.
-	std::vector<std::string> extention = client_request.get_extention();
+	std::vector<std::string> extention = connection._request.get_extention();
 
 	std::string file_path = ROOT_DIR + path;
 	std::cout << "DEBUG: file_path: " << file_path << std::endl;
@@ -24,7 +27,7 @@ int post_request(Request &client_request, Response &resp) {
 	file << body;
 	file.close();
 
-	resp.set_status_code("200");
+	connection._resp.set_status_code("200");
 
 	return (0);
 }

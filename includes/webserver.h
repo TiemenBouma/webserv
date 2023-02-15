@@ -1,22 +1,8 @@
 #ifndef WEBSERVER_H
 #define WEBSERVER_H
-#include <iostream>
 #include <string>
-#include <cstring>
-#include <cstdio>
-#include <cerrno>
-#include <csignal>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include "../src/Request.hpp"
-#include "../src/Response.hpp"
-#include <stdlib.h> // for exit()
-#include <climits>
-#include <map>
 
+<<<<<<< HEAD
 #define MIME_TYPES_FILE "../data/MIME_TYPES.txt"
 #define HOMEPAGE_FILE "../data/homepage.html"
 #define ROOT_DIR "../data/"
@@ -25,25 +11,48 @@
 const int MAX_CONNECTIONS = FD_SETSIZE - 100;
 typedef struct sockaddr_in SA_IN;
 typedef struct sockaddr SA;
+=======
+#include <iostream>
+#include <map>
+#include <vector>
+#include <stdlib.h> // for exit()
+#include "Config.hpp"
+#include "Connection.hpp"
+#include "Response.hpp"
+#include "Request.hpp"
+using namespace std;
+
+>>>>>>> tiemen
 
 const int BUFFER_SIZE = 1024;
 
 //INITIALIZATION
-int	init_server(int port, int max_connections);
+int start_webserver(std::vector<ConfigServer> servers);
+void	init_server(std::vector<ConfigServer> &servers);
+void	add_server_ports(std::vector<struct pollfd> &fds, std::vector<ConfigServer> &servers);
+
 void init_mime_types(std::map<std::string, std::vector<std::string> > & mime_types) ;
 void init_mime_types_reverse(std::map<std::string, std::string> & mime_types_rev);
 
 //SERVER RUNTIME
 int	accept_new_connection(int server_sock);
-void handle_connection(int client_socket, std::map<std::string, std::vector<std::string> > & mime_types, std::map<std::string, std::string>  mime_types_rev);
-int execute_request(Request &req, Response &resp);
+void	receive_request(Connection &connection);
+void handle_connection(Connection &connection);
+int execute_request(Connection &connection);
 
 //GET POST DELETE
-int get_request(Request &req, Response &resp);
-int post_request(Request &client_request, Response &resp);
+int get_request(Connection &connection);
+int post_request(Connection &connection);
 
+<<<<<<< HEAD
 //PASRING
 int start_webserver(int portno);
 void error_msg(const char *msg, int code);
+=======
+//ERROR HANDLING
+void error_request(Connection &connection);
+
+
+>>>>>>> tiemen
 
 #endif

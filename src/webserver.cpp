@@ -1,10 +1,12 @@
-#include "../includes/webserver.h"
-#include <vector>
-#include <sstream>
-#include <map>
-#include <string>
-#include <vector>
+#include "webserver.h"
+#include "typedef.h"
+#include <sys/poll.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <fcntl.h>
+#include <unistd.h> //for close ()
 
+<<<<<<< HEAD
 int	init_server(int port, int max_connections) {
 	int server_socket;
 	SA_IN server_addr; 
@@ -33,6 +35,8 @@ int	init_server(int port, int max_connections) {
 	}
 	return server_socket;
 }
+=======
+>>>>>>> tiemen
 
 int	accept_new_connection(int server_sock) {
 	int addr_len = sizeof(SA_IN);
@@ -44,6 +48,7 @@ int	accept_new_connection(int server_sock) {
 	return client_socket;
 }
 
+<<<<<<< HEAD
 //[CHECK] read request from client might needs improvement to first read the header and then see how many bytes to read the body.
 int read_request(int client_socket, std::stringstream & request_data) {
 	uint8_t buffer[BUFFER_SIZE];
@@ -62,16 +67,21 @@ int read_request(int client_socket, std::stringstream & request_data) {
 		request_data << buffer;
 	}
 }
+=======
+int start_webserver(std::vector<ConfigServer> servers) {
+	std::vector<Connection>								connections;
+	map_str_vec_str										mime_types;
+	map_str_str											mime_types_rev;
+	size_t												total_ports = servers.size();
+	
+	// [INFO]init mime types, for the surfix
+	init_mime_types(mime_types);
+	init_mime_types_reverse(mime_types_rev);
+>>>>>>> tiemen
 
-void handle_connection(int client_socket, std::map<std::string, std::vector<std::string> > & mime_types
-		, std::map<std::string, std::string>  mime_types_rev) {
-	std::cout << "DEBUG: Handling connection" << std::endl;
-	// [INFO] READ REQUEST
-	std::stringstream request_data;
-	std::cout << "DEBUG: Reading request" << std::endl;
-	read_request(client_socket, request_data);
-	std::cout << "DEBUG: Reading request finished" << std::endl;
+	init_server(servers);
 
+<<<<<<< HEAD
 	//[INFO] PARSE REQUEST in Request class constructor
 	std::cout << "DEBUG: Parsing request" << std::endl;
 	Request client_request(request_data, mime_types, mime_types_rev);
@@ -80,12 +90,62 @@ void handle_connection(int client_socket, std::map<std::string, std::vector<std:
 	//[INFO] Construct Response
 	Response server_resp(mime_types, mime_types_rev);
 	server_resp.set_client_socket(client_socket);
+=======
+	// [INFO]init pollfd
+	struct pollfd init_fds = {-1, POLLIN, 0};
+	std::vector<struct pollfd> fds(servers.size(), init_fds);
+	add_server_ports(fds, servers);
 
-	// [INFO] Here we need a function to decide what response we do
-	//now an example just with GET
-	std::cout << "DEBUG: Executing request" << std::endl;
-	execute_request(client_request, server_resp);
-	close(client_socket);
+	// [INFO]handle connections
+	while (true) {
+		if (poll(&*fds.begin(), fds.size(), 0) < 0) {
+			std::cerr <<"Error: Poll: Exit webserver.\n";
+			exit(1);
+		}
+		//listening  and accepting to new connection comming in
+		for (size_t i = 0; i < total_ports; i++) {
+			if (!(fds[i].revents & POLLIN)) {
+				continue;
+			}
+			Connection new_connection(servers[i], mime_types, mime_types_rev);
+			new_connection._socket = accept_new_connection(servers[i].server_soc);
+
+			
+			//[DEBUG]TIEMEN LOOK AT THIS
+			struct pollfd new_pollfd = {new_connection._socket, POLLIN, 0};
+			poll(&new_pollfd, 1, 0);
+			if (new_pollfd.revents & POLLIN) {
+				cout << "[DEBUG]POLLIN new connection Active\n";
+			}
+
+			if (new_connection._socket < 0) //check if this needs to be contionue or someting else
+				continue;
+			fcntl(new_connection._socket, F_SETFL, O_NONBLOCK);
+			connections.push_back(new_connection);
+		}
+>>>>>>> tiemen
+
+		//[INFO] Handeling current connections
+		int total_connections = connections.size();
+		for (int i = 0; i < total_connections; i++) {
+			if (!(fds[i].revents & POLLIN)) {
+				continue;
+			}
+			receive_request(connections[i]);
+			//DEBUG
+			if (connections[i]._request._state == REQUEST_CANCELLED)
+				cout << connections[i]._request.get_error_log() << endl;
+			//DEBUG END
+			if (connections[i]._request._state == REQUEST_DONE)
+				execute_request(connections[i]);// Maybe rename to handeling or someting like that.
+			if (connections[i]._request._state == REQUEST_DONE ||
+				connections[i]._request._state == REQUEST_CANCELLED) {
+				close(connections[i]._socket);
+				connections.erase(connections.begin() + i);
+			}
+		}
+	}
+	return 0;
 }
 
 int start_webserver(int portno) {
