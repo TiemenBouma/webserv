@@ -1,5 +1,9 @@
-NAME := webserver
+
+include ../includes/Makepretty.mk
+
+NAME := webserv
 FLAGS := -Wall -Werror -Wextra -std=c++98
+TEST = ../testers/web_swirls/
 
 HEADERS 		:=	../includes/webserver.h	\
 					../includes/typedef.h \
@@ -44,5 +48,16 @@ fclean: clean
 	$(RM) $(NAME)
 
 re: fclean all
+
+run: re 
+	./$(NAME) ../data/default.conf
+
+test:
+	@echo "$(RED)$(NNN)	___ TESTING ___ $(NNN)$(RESET)"
+	curl -svo /dev/null http://localhost:8080
+#	for connection:
+# curl http://localhost:8080
+# For response (header and body)
+# curl -sv /dev/null http://localhost:8080
 
 .PHONY: clean fclean re
