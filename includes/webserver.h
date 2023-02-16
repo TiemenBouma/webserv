@@ -2,16 +2,6 @@
 #define WEBSERVER_H
 #include <string>
 
-<<<<<<< HEAD
-#define MIME_TYPES_FILE "../data/MIME_TYPES.txt"
-#define HOMEPAGE_FILE "../data/homepage.html"
-#define ROOT_DIR "../data/"
-// const int PORT = 8080;
-
-const int MAX_CONNECTIONS = FD_SETSIZE - 100;
-typedef struct sockaddr_in SA_IN;
-typedef struct sockaddr SA;
-=======
 #include <iostream>
 #include <map>
 #include <vector>
@@ -22,9 +12,7 @@ typedef struct sockaddr SA;
 #include "Request.hpp"
 using namespace std;
 
->>>>>>> tiemen
 
-const int BUFFER_SIZE = 1024;
 
 //INITIALIZATION
 int start_webserver(std::vector<ConfigServer> servers);
@@ -44,15 +32,9 @@ int execute_request(Connection &connection);
 int get_request(Connection &connection);
 int post_request(Connection &connection);
 
-<<<<<<< HEAD
-//PASRING
-int start_webserver(int portno);
-void error_msg(const char *msg, int code);
-=======
 //ERROR HANDLING
 void error_request(Connection &connection);
 
 
->>>>>>> tiemen
 
 #endif

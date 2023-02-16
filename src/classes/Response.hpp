@@ -59,11 +59,7 @@ public:
 	std::string	serialize_headers() const; //for get request
 	void write_to_socket(const char *buffer, size_t size) const;
 
-<<<<<<< HEAD:src/Response.hpp
-	void _parse_request(Request &req);
-=======
 	//void parse_request(Request &req);
->>>>>>> tiemen:src/classes/Response.hpp
 };
 
 #endif

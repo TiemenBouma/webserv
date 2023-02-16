@@ -23,12 +23,6 @@ SRC = 	classes/Request.cpp \
 		request_execute.cpp \
 		request_post.cpp \
 		request_delete.cpp \
-<<<<<<< HEAD
-		Response.cpp \
-		init_mime_types.cpp \
-		Config.cpp \
-		main.cpp 
-=======
 		request_error.cpp \
 		init_mime_types.cpp \
 		webserver_init.cpp  \
@@ -36,26 +30,17 @@ SRC = 	classes/Request.cpp \
 		webserver_receive_request.cpp \
 		main.cpp
 
->>>>>>> tiemen
 
 OBJ = $(SRC:%.cpp=obj/%.o)
 
 all: $(NAME)
 
 $(NAME) : $(OBJ)
-<<<<<<< HEAD
-	$(CC) $(FLAGS) $(INC) $(OBJ) -o $(NAME) -fsanitize=address -g
-
-obj/%.o : %.cpp
-	@mkdir -p $(dir $@)
-	$(CC) -c $(FLAGS) $< -o $@
-=======
 	c++ $(FLAGS) $(OBJ) -o $(NAME) $(INCLUDE_FLAGS)
 
 obj/%.o : %.cpp
 	@mkdir -p $(dir $@)
 	c++ -c $(FLAGS) $< -o $@ $(INCLUDE_FLAGS)
->>>>>>> tiemen
 
 clean:
 	$(RM) $(OBJ)
