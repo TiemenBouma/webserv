@@ -24,9 +24,6 @@ void error_request(Connection &connection) {
 
     file.open(error_page.c_str(), std::ios::binary);
 
-
-
-
     if (file.is_open()) {
 
         //[INFO] Determine the MIME type of the file

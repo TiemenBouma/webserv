@@ -25,7 +25,7 @@ int get_request(Connection &connection) {
 		//[INFO] WRITE/SEND THE HEADERS
 		std::cout << "SERVER: Sending GET response: \n" << std::endl;
 		std::string response_string = connection._resp.serialize_headers();
-		//std::cout << "DEBUG send response:" << response << std::endl;
+		//std::cout << "DEBUG send response:\n" << response_string << std::endl;
 		connection._resp.write_to_socket(response_string.c_str(), response_string.size());
 
 		//[INFO] write/send the body of the response in chunks for speed
@@ -41,8 +41,9 @@ int get_request(Connection &connection) {
         file.close();
     } 
 	else {//Server side error
-        std::cout << "Error opening file 500 error" << std::endl; 
+        std::cout << "DEBUG: Error opening file 500 error" << std::endl; 
         connection._resp.set_status_code("500");
+		error_request(connection);
     }
     return 0;
 }

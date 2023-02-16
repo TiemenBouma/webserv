@@ -24,6 +24,7 @@ void set_location(Connection &connection) {
 	for (size_t i = 0; i < server.locations.size(); i++) {
 		if (server.locations[i].location == uri) {
 			response._location_serv = &server.locations[i];
+			response._file_path = server.root + response._location_serv->index;
 			return;
 		}
 	}
