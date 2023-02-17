@@ -42,6 +42,8 @@ int execute_request(Connection &connection) {
 	ConfigServer &server = connection._server;
 	//all checks set error code in response. If all checks are done errorcode needs to be checked before next fase.
 
+	response.set_client_socket(connection._socket);
+	//cout << "DEBUG: execute_request" << endl;
 	//preparing response
 	set_location(connection);
 	if (connection._resp._status_code == "404") {
@@ -51,13 +53,13 @@ int execute_request(Connection &connection) {
 	
 	//check if method is allowed
 	check_method(connection);
-	if (connection._resp._status_code == "405")
+	if (connection._resp._status_code == "405") {
+		error_request(connection);
 		return 1;//return error page
-
+	}
 	if (response._location_serv == NULL) {
 		//return error page
 	}
-	response.set_client_socket(connection._socket);
 	//check if I need to check the homepage here
 	if (request.get_path() == "/") {
 		response._file_path = response._location_serv->index;

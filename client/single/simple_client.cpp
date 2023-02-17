@@ -15,7 +15,7 @@ int main()
 {
     int sock = 0; long valread;
     struct sockaddr_in serv_addr;
-    std::string hello = "Hello from client";
+    std::string hello = "POST /dog HTTP/1.1";
     char buffer[1024] = {0};
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
@@ -41,8 +41,12 @@ int main()
         return -1;
     }
     send(sock , hello.c_str() , hello.length() , 0 );
-    printf("Hello message sent\n");
-    valread = read( sock , buffer, 1024);
-    printf("%s\n",buffer );
+    printf("doga send\n");
+    printf("receiving:\n");
+
+	while (valread = read( sock , buffer, 1024) > 0) {
+    	//valread = read( sock , buffer, 1024);
+    	printf("%s\n",buffer );
+	}
     return 0;
 }

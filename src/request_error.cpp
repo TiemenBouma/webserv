@@ -34,10 +34,9 @@ void error_request(Connection &connection) {
 
 		//[INFO] WRITE/SEND THE HEADERS
 		std::cout << "SERVER: Sending ERROR response: \n" << std::endl;
-		std::string response = connection._resp.serialize_headers();
+		std::string response_str = connection._resp.serialize_headers();
 		//std::cout << "DEBUG send response:" << response << std::endl;
-		connection._resp.write_to_socket(response.c_str(), response.size());
-		cout << "DEBUG: error response: " << response << endl;
+		connection._resp.write_to_socket(response_str.c_str(), response_str.size());
 
 		//[INFO] write/send the body of the response in chunks for speed
         const std::streamsize BUFSIZE = 8192;
@@ -48,10 +47,10 @@ void error_request(Connection &connection) {
             connection._resp.write_to_socket(buffer, n);
 
         }
-		cout << "end error response" << endl;
-		//[INFO] END OF GET REQUEST
+		cout << "SERVER: End error response" << endl;
+		//[INFO] END OF ERROR RESPONSE
         file.close();
     } 
 	else
-        std::cout << "Error open error_page" << std::endl;
+        std::cout << "SERVER: Error open error_page" << std::endl;
 }
