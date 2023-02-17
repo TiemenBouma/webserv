@@ -3,3 +3,4 @@ clients
 one_client
 obj/
 .vscode
+data/uploads/.
