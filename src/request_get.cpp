@@ -17,7 +17,7 @@ int get_request(Connection &connection) {
     if (file.is_open()) {
 
         //[INFO] Determine the MIME type of the file
-        connection._resp.set_header_content_type(file_dir);
+        connection._resp.set_header_content_type(connection._resp._file_path);
 
         //[INFO] Get the file size
 		connection._resp.set_header_content_length(file);
