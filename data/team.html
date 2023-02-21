@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hello (Web)World</title>
+	<style>
+		body {
+			background-color: #2c3e50;
+			color: #fff;
+			font-family: monospace, sans-serif;
+			margin: 0;
+			padding: 0;
+		}
+		h1 {
+			font-size: 48px;
+			font-weight: bold;
+			text-align: center;
+			padding-top: 50px;
+		}
+		.container {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 70vh;
+		}
+		.col {
+			display: flex;
+			flex-direction: column;
+			margin: 0 20px;
+			align-items: center;
+			justify-content: center;
+			flex-basis: 50%;
+			text-align: center;
+		}
+		.btn {
+			margin: 20px 0;
+			padding: 20px 50px;
+			border-radius: 30px;
+			font-size: 24px;
+			font-weight: normal;
+			text-align: center;
+			background-color: #0a2c42;
+			color: #fff;
+			cursor: pointer;
+			text-shadow: 2px 2px 2px #000000;
+			box-shadow: 2px 2px 4px #000000;
+			transition: background-color 0.2s;
+		}
+        .btn:hover {
+			background-color: #59708d;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Hello (Web)World</h1>
+	<div class="container">
+            <button class="btn" onclick="window.location.href='http://localhost:8080/dog.png';">Dog</button>
+			<button class="btn" onclick="window.location.href='http://localhost:8080/dog.png/cat.png';">Error</button>
+			<button class="btn" onclick="window.location.href='http://localhost:8080/homepage.html';">Form</button>
+            <button class="btn" onclick="window.location.href='http://localhost:8080/homepage.html';">New</button>
+		</div>
+	</div>
+</body>
+</html>
