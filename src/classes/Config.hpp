@@ -57,7 +57,7 @@ public:
 	bool	case_ins_strcmp(const std::string s1, const std::string s2);
 	void	print_locations(std::vector<Location> locs);
 
-
+	void	check_req_direcs();
 
 	class NoBracketAferServer: public std::exception
 	{
@@ -78,9 +78,9 @@ public:
 	class UnknownKeyword: public std::exception
 	{
 		public:
-			const char *	what() const throw()
+			virtual const char *	what() const throw()
 			{
-				return ("This keyword is unknown.");
+				return ("This keyword is unknown");
 			}
 	};
 	class NoValueFound: public std::exception
@@ -123,12 +123,29 @@ public:
 				return ("Expected semicolon after value.");
 			}
 	};
+	class WrongListenPort: public std::exception
+	{
+		public:
+			const char *	what() const throw()
+			{
+				return ("The directive listen_port must be set and can't be negative.");
+			}
+	};
+	class WrongRoot: public std::exception
+	{
+		public:
+			const char *	what() const throw()
+			{
+				return ("The directive root must be set.");
+			}
+	};
 };
 
-int		parse_config(std::string config, std::vector<ConfigServer> &servers);
-int		check_brackets(std::string config);
-int		skipspace(std::string::iterator it);
-void	print_servers(std::vector<ConfigServer> servers);
+int			parse_config(std::string config, std::vector<ConfigServer> &servers);
+int			check_brackets(std::string config);
+int			skipspace(std::string::iterator it);
+void		print_servers(std::vector<ConfigServer> servers);
+std::string	it_to_str(std::string::iterator it);
 
 enum	token_types
 {

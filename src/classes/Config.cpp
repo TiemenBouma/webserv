@@ -7,7 +7,7 @@
 //#include "webserver.h"
 
 ConfigServer::ConfigServer()
-: keywords(_init_keywords())
+: keywords(_init_keywords()), listen_port(-1)
 {}
 
 ConfigServer::ConfigServer(ConfigServer const &other) {
@@ -249,6 +249,7 @@ void	ConfigServer::_parse_redirect(std::vector<Location> &dst, std::string::iter
 		//		std::cout << "\tparsed path uploads" << std::endl;
 				break;
 			default:
+				std::cout << "'" << it_to_str(it) << "'" << std::endl;
 				throw(UnknownKeyword());
 		}
 		_next_directive(it);
@@ -276,17 +277,6 @@ void	ConfigServer::_next_directive(std::string::iterator &it)
 	PUBLIC
 */
 
-std::string	it_to_str(std::string::iterator it)
-{
-	std::string	ret = "";
-
-	for (; *it != ' ' && *it != '\0'; it++)
-	{
-		ret += *it;
-	}
-	return (ret);
-}
-
 int	ConfigServer::parse_keyword(std::string::iterator &it)
 {
 	int	i;
@@ -302,8 +292,8 @@ int	ConfigServer::parse_keyword(std::string::iterator &it)
 		{
 			case LISTEN:
 				_parse_number(listen_port, it);
-				std::cout << "in data class: " << listen_port << std::endl;
-				std::cout << "parsed listen" << std::endl;
+		//		std::cout << "in data class: " << listen_port << std::endl;
+		//		std::cout << "parsed listen" << std::endl;
 				break;
 			case ROOT:
 				_parse_string(root, it);
@@ -390,6 +380,14 @@ void	ConfigServer::print_locations(std::vector<Location> locs)
 	}
 }
 
+void	ConfigServer::check_req_direcs()
+{
+	if (listen_port < 0)
+		throw(WrongListenPort());
+	if (root == "")
+		throw(WrongRoot());
+}
+
 /* 
 	[INFO]FUNCTION OUTSIDE CLASS
 */
@@ -418,6 +416,7 @@ int	parse_config(std::string config, std::vector<ConfigServer> &servers)
 		it += 1;
 		it += skipspace(it);
 		serv.parse_keyword(it);
+		serv.check_req_direcs();
 		std::cout << std::endl << "parsed server" << std::endl << std::endl;
 		servers.push_back(serv);
 	}
@@ -479,3 +478,13 @@ void	print_servers(std::vector<ConfigServer> servers)
 	}
 }
 
+std::string	it_to_str(std::string::iterator it)
+{
+	std::string	ret = "";
+
+	for (; *it != ' ' && *it != '\0'; it++)
+	{
+		ret += *it;
+	}
+	return (ret);
+}
