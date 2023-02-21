@@ -109,6 +109,8 @@ void Request::set_headers() {
 	while (std::getline(headers_stream, line)) {
 		if (line.find("Content-Type") != std::string::npos) {
 			_header_content_type = line.substr(line.find(":") + 2);
+			_header_content_type = _header_content_type.substr(0, _header_content_type.size() - 1); // INFO: minus 1 because last char is \r I think
+
 		}
 		else if (line.find("Content-Length") != std::string::npos) {
 			_header_content_length = line.substr(line.find(":") + 2);
@@ -136,16 +138,15 @@ void Request::set_body() {
 
 std::vector<std::string>	Request::get_extention() const {
 	std::vector<std::string> extention;
-	std::string mime_type;
-	mime_type = _header_content_type.substr(_header_content_type.find(":") + 2);
-	
-	std::map<std::string, std::vector<std::string> >::iterator it = _mime_types.find(mime_type);
+
+	std::map<std::string, std::vector<std::string> >::iterator it = _mime_types.find(_header_content_type);
 	if (it != _mime_types.end()) {
 			extention = it->second;
 	} else {
-			std::cout << "No extension found for: " << mime_type << std::endl;
+			std::cout << "DEBUG: No extension found for: " << _header_content_type << std::endl;
 			extention.push_back("html");
 	}
+	//string extention2 = "." + extention[0];
 	return extention;
 }
 
