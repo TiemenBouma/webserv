@@ -56,6 +56,7 @@ const std::vector<std::string>	ConfigServer::_init_keywords()
 	return (ret);
 }
 
+// DEBUG Make sure this is a number
 template <typename T>
 void	ConfigServer::_parse_number(T &dst, std::string::iterator it)
 {
@@ -275,6 +276,16 @@ void	ConfigServer::_next_directive(std::string::iterator &it)
 	PUBLIC
 */
 
+std::string	it_to_str(std::string::iterator it)
+{
+	std::string	ret = "";
+
+	for (; *it != ' ' && *it != '\0'; it++)
+	{
+		ret += *it;
+	}
+	return (ret);
+}
 
 int	ConfigServer::parse_keyword(std::string::iterator &it)
 {
@@ -291,8 +302,8 @@ int	ConfigServer::parse_keyword(std::string::iterator &it)
 		{
 			case LISTEN:
 				_parse_number(listen_port, it);
-		//		std::cout << "in data class: " << listen_port << std::endl;
-		//		std::cout << "parsed listen" << std::endl;
+				std::cout << "in data class: " << listen_port << std::endl;
+				std::cout << "parsed listen" << std::endl;
 				break;
 			case ROOT:
 				_parse_string(root, it);
@@ -321,6 +332,7 @@ int	ConfigServer::parse_keyword(std::string::iterator &it)
 		//		std::cout << "parsed redirect" << std::endl;
 				break;
 			default:
+				std::cout << "'" << it_to_str(it) << "'" << std::endl;
 				throw(UnknownKeyword());
 		}
 	//	std::cout << "*it before skipping: '" << *it << "'" << std::endl;
