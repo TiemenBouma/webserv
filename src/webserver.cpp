@@ -48,7 +48,7 @@ int start_webserver(std::vector<ConfigServer> servers) {
 			Connection new_connection(servers[i], mime_types, mime_types_rev);
 			new_connection._socket = accept_new_connection(servers[i].server_soc);
 
-			
+
 			//[DEBUG]TIEMEN LOOK AT THIS
 			struct pollfd new_pollfd = {new_connection._socket, POLLIN, 0};
 			poll(&new_pollfd, 1, 0);
@@ -85,39 +85,39 @@ int start_webserver(std::vector<ConfigServer> servers) {
 	return 0;
 }
 
-int start_webserver(int portno) {
-	int server_socket, client_socket;
-	std::map<std::string, std::vector<std::string> > mime_types;
-	std::map<std::string, std::string>  mime_types_rev;
-	init_mime_types(mime_types);
-	init_mime_types_reverse(mime_types_rev);
-	server_socket = init_server(portno, MAX_CONNECTIONS);
+// int start_webserver(int portno) {
+// 	int server_socket, client_socket;
+// 	std::map<std::string, std::vector<std::string> > mime_types;
+// 	std::map<std::string, std::string>  mime_types_rev;
+// 	init_mime_types(mime_types);
+// 	init_mime_types_reverse(mime_types_rev);
+// 	server_socket = init_server(portno, MAX_CONNECTIONS);
 
-	fd_set current_sockets, ready_sockets;
-	FD_ZERO(&current_sockets);
-	FD_SET(server_socket, &current_sockets);
+// 	fd_set current_sockets, ready_sockets;
+// 	FD_ZERO(&current_sockets);
+// 	FD_SET(server_socket, &current_sockets);
 
-	// [INFO]handle connections
-	//std::cout << portno << std::endl;
-	while (true) {
-		ready_sockets = current_sockets;
-		if (select(FD_SETSIZE, &ready_sockets, NULL, NULL, NULL) < 0) {
-			//[CHECK]PERROR NOT ALLOWED IN THIS PART OF SERVER?
-			perror("ERROR\n");
-			exit(1);
-		}
-		for (int i = 0; i < FD_SETSIZE; i++) {
-			if (FD_ISSET(i, &ready_sockets)) {
-				if (i == server_socket) {
-					//[INFO]this is a new connection that we can accept
-					client_socket = accept_new_connection(server_socket);
-					FD_SET(client_socket, &current_sockets);
-				} else {
-					handle_connection(i, mime_types, mime_types_rev);
-					FD_CLR(i, &current_sockets);
-				}
-			}
-		}
-	}
-	return 0;
-}
+// 	// [INFO]handle connections
+// 	//std::cout << portno << std::endl;
+// 	while (true) {
+// 		ready_sockets = current_sockets;
+// 		if (select(FD_SETSIZE, &ready_sockets, NULL, NULL, NULL) < 0) {
+// 			//[CHECK]PERROR NOT ALLOWED IN THIS PART OF SERVER?
+// 			perror("ERROR\n");
+// 			exit(1);
+// 		}
+// 		for (int i = 0; i < FD_SETSIZE; i++) {
+// 			if (FD_ISSET(i, &ready_sockets)) {
+// 				if (i == server_socket) {
+// 					//[INFO]this is a new connection that we can accept
+// 					client_socket = accept_new_connection(server_socket);
+// 					FD_SET(client_socket, &current_sockets);
+// 				} else {
+// 					handle_connection(i, mime_types, mime_types_rev);
+// 					FD_CLR(i, &current_sockets);
+// 				}
+// 			}
+// 		}
+// 	}
+// 	return 0;
+// }

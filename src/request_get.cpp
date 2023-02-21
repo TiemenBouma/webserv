@@ -18,6 +18,8 @@ int get_request(Connection &connection) {
     // }
 
     //[INFO] Open the file in binary mode
+	std::cout << "file: " << std::endl;
+	std::cout << "file: " << connection._resp._file_path << std::endl;
 
     file.open(connection._resp._file_path.c_str(), std::ios::binary);
 
