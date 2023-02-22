@@ -14,7 +14,7 @@ void	receive_request(Connection &connection) {
 	std::string							value;
 	struct pollfd 						poll_fd;
 
-	std::cout << "[DEBUG]: receive_request" << std::endl;
+	//std::cout << "[DEBUG]: receive_request" << std::endl;
 	poll_fd.events = POLLIN | POLLHUP;
 	poll_fd.revents = 0;
 	poll_fd.fd = connection._socket;
@@ -23,15 +23,15 @@ void	receive_request(Connection &connection) {
 	poll(&poll_fd, 1, 1);
 
 	//-----------------DEBUGING POLL
-	if (poll_fd.revents & POLLIN) {
-		std::cout << "[DEBUG]: POLLIN in receive is working" << std::endl;
-	} else {
-		std::cout << "[DEBUG]: POLLIN in receive is not working" << std::endl;
-	}
+	// if (poll_fd.revents & POLLIN) {
+	// 	std::cout << "[DEBUG]: POLLIN in receive is working" << std::endl;
+	// } else {
+	// 	std::cout << "[DEBUG]: POLLIN in receive is not working" << std::endl;
+	// }
 	//----------------END DEBUGING POLL
 
 	if (poll_fd.revents & POLLHUP) {
-		std::cout << "[DEBUG]: POLLHUP active REQUEST CANCELLED" << std::endl;
+		//std::cout << "[DEBUG]: POLLHUP active REQUEST CANCELLED" << std::endl;
 		//connection._request._error_log += "POLLHUB Error\n";
 		connection._request._state = REQUEST_CANCELLED; //just for now cancel request, later need to check if correct.
 		//connection ended can close up
@@ -48,7 +48,7 @@ void	receive_request(Connection &connection) {
 			return;
 		}
 		connection._request._whole_request += std::string(buffer, buffer + read_ret);
-		std::cout << "[DEBUG]: whole request:\n" << connection._request._whole_request << std::endl;
+		//std::cout << "[DEBUG]: whole request:\n" << connection._request._whole_request << std::endl;
 	}
 
 	if (connection._request._state == REQUEST_START)

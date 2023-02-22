@@ -34,7 +34,7 @@ void error_request(Connection &connection) {
 		connection._resp.set_header_content_length(file);
 
 		//[INFO] WRITE/SEND THE HEADERS
-		std::cout << "SERVER: Sending ERROR response: \n" << std::endl;
+		//std::cout << "SERVER: Sending ERROR response: \n" << std::endl;
 		std::string response_str = connection._resp.serialize_headers();
 		connection._resp.write_to_socket(response_str.c_str(), response_str.size());
 
@@ -47,7 +47,7 @@ void error_request(Connection &connection) {
             connection._resp.write_to_socket(buffer, n);
 
         }
-		cout << "SERVER: End error response" << endl;
+		//cout << "SERVER: End error response" << endl;
         file.close();
     } 
 	else

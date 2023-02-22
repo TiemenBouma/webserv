@@ -143,7 +143,7 @@ std::vector<std::string>	Request::get_extention() const {
 	if (it != _mime_types.end()) {
 			extention = it->second;
 	} else {
-			std::cout << "DEBUG: No extension found for: " << _header_content_type << std::endl;
+		//	std::cout << "DEBUG: No extension found for: " << _header_content_type << std::endl;
 			extention.push_back("html");
 	}
 	//string extention2 = "." + extention[0];

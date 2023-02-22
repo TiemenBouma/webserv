@@ -10,7 +10,7 @@ int get_request(Connection &connection) {
     std::string file_dir;
 
     //[INFO] Open the file in binary mode
-	cout << "DEBUG: open page: " << connection._resp._file_path << endl;
+	//cout << "DEBUG: open page: " << connection._resp._file_path << endl;
 
     file.open(connection._resp._file_path.c_str(), std::ios::binary);
 
@@ -23,7 +23,7 @@ int get_request(Connection &connection) {
 		connection._resp.set_header_content_length(file);
 
 		//[INFO] WRITE/SEND THE HEADERS
-		std::cout << "SERVER: Sending GET response: \n" << std::endl;
+		//std::cout << "SERVER: Sending GET response: \n" << std::endl;
 		std::string response_string = connection._resp.serialize_headers();
 		//std::cout << "DEBUG send response:\n" << response_string << std::endl;
 		connection._resp.write_to_socket(response_string.c_str(), response_string.size());
@@ -41,7 +41,7 @@ int get_request(Connection &connection) {
         file.close();
     } 
 	else {//Server side error
-        std::cout << "DEBUG: Error opening file 500 error" << std::endl; 
+        //std::cout << "DEBUG: Error opening file 500 error" << std::endl; 
         connection._resp.set_status_code("500");
 		error_request(connection);
     }

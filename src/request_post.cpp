@@ -78,7 +78,7 @@ int post_request(Connection &connection) {
 		connection._resp.set_header_content_length(file_send);
 
 		//[INFO] WRITE/SEND THE HEADERS
-		std::cout << "SERVER: Sending POST response: \n" << std::endl;
+		//std::cout << "SERVER: Sending POST response: \n" << std::endl;
 		std::string response_string = connection._resp.serialize_headers();
 		//std::cout << "DEBUG send response:\n" << response_string << std::endl;
 		connection._resp.write_to_socket(response_string.c_str(), response_string.size());
@@ -96,7 +96,7 @@ int post_request(Connection &connection) {
         file_send.close();
     } 
 	else {//Server side error
-        std::cout << "DEBUG: Error opening file 500 error" << std::endl; 
+       //std::cout << "DEBUG: Error opening file 500 error" << std::endl; 
         connection._resp.set_status_code("500");
 		error_request(connection);
     }

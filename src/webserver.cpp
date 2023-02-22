@@ -50,11 +50,11 @@ int start_webserver(std::vector<ConfigServer> servers) {
 
 			
 			//[DEBUG]TIEMEN LOOK AT THIS
-			struct pollfd new_pollfd = {new_connection._socket, POLLIN, 0};
-			poll(&new_pollfd, 1, 0);
-			if (new_pollfd.revents & POLLIN) {
-				cout << "[DEBUG]POLLIN new connection Active\n";
-			}
+			// struct pollfd new_pollfd = {new_connection._socket, POLLIN, 0};
+			// poll(&new_pollfd, 1, 0);
+			// if (new_pollfd.revents & POLLIN) {
+			// 	cout << "[DEBUG]POLLIN new connection Active\n";
+			// }
 
 			if (new_connection._socket < 0) //check if this needs to be contionue or someting else
 				continue;

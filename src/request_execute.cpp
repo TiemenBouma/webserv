@@ -67,11 +67,11 @@ int execute_request(Connection &connection) {
 	// response._file_path = server.root + response._location_serv->index;
 
 	if (connection._request.get_method() == "GET") {
-		std::cout << "DEBUG: GET request" << std::endl;
+		//std::cout << "DEBUG: GET request" << std::endl;
 		get_request(connection);
 	}
 	else if (connection._request.get_method() == "POST") {
-		std::cout << "DEBUG: POST request" << std::endl;
+		//std::cout << "DEBUG: POST request" << std::endl;
 		post_request(connection);
 	}
 	else if (connection._request.get_method() == "DELETE") {
