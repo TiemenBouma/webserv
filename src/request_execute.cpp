@@ -74,7 +74,9 @@ int execute_request(Connection &connection) {
 		std::cout << "DEBUG: POST request" << std::endl;
 		post_request(connection);
 	}
-	//else if (client_req.get_method() == "DELETE")
+	else if (connection._request.get_method() == "DELETE") {
+		delete_request(connection);
+	}
 
 
 	return 0;

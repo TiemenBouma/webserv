@@ -30,6 +30,8 @@ int execute_request(Connection &connection);
 //GET POST DELETE
 int get_request(Connection &connection);
 int post_request(Connection &connection);
+int delete_request(Connection &connection);
+
 
 //ERROR HANDLING
 void error_request(Connection &connection);

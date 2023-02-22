@@ -8,6 +8,17 @@
 #include <ctime>
 #include <sstream>
 
+void add_location_to_server(Connection &connection, std::string loc) {
+	Location location;
+	location.location = loc;
+	location.autoindex = false;
+	location.accepted_methods.push_back("GET");
+	location.accepted_methods.push_back("DELETE");
+	location.index = loc;
+	connection._server.locations.push_back(location);
+	//DEBUG ADD LOCATION
+	connection._server.print_locations(connection._server.locations);
+}
 
 string get_time() {
 	std::time_t t = std::time(0);   // get time now
@@ -50,6 +61,9 @@ int post_request(Connection &connection) {
 	file_receive << body;
 	file_receive.close();
 
+	//Add location to server for Delete to work
+	string loc = path_upload + upload_file_name;
+	add_location_to_server(connection, loc);
 
 	//[INFO] SENDING RESPONSE
 	ifstream file_send;
