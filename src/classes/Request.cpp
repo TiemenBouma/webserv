@@ -7,7 +7,7 @@ Request::Request(map_str_vec_str &mime_types)
 : _mime_types(mime_types)
 {
 	_valid_request = false;
-	_error_log = "";
+	//_error_log = "";
 	_whole_request_at = 0;
 	_content_length = 0;
 	_state = REQUEST_START;
@@ -22,7 +22,7 @@ Request &Request::operator=(const Request &other) {
 	_header_content_type = other._header_content_type;
 	_header_content_length = other._header_content_length;
 	_valid_request = other._valid_request;
-	_error_log = other._error_log;
+	//_error_log = other._error_log;
 	//_mime_types = other._mime_types;
 	_whole_request_at = other._whole_request_at;
 	_content_length = other._content_length;
@@ -78,17 +78,17 @@ void Request::set_method_url_version() {
 	//cout << "[DEBUG] method: " << _method << endl;
 	if (_method != "GET" && _method != "POST" && _method != "DELETE") {
 		_valid_request = false;
-		_error_log += "Invalid request. No method.\n";
+		//_error_log += "Invalid request. No method.\n";
 		_state = REQUEST_CANCELLED;
 	}
 	if (_url.size() < 1) {
 		_valid_request = false;
-		_error_log += "Invalid request. No URL.\n";
+		//_error_log += "Invalid request. No URL.\n";
 		_state = REQUEST_CANCELLED;
 	}
 	if (_http_version != "HTTP/1.1") {
 		_valid_request = false;
-		_error_log += "Invalid request. Only HTTP/1.1 is supported.\n";
+		//_error_log += "Invalid request. Only HTTP/1.1 is supported.\n";
 		_state = REQUEST_CANCELLED;
 	}
 }
@@ -99,7 +99,7 @@ void Request::set_method_url_version() {
 void Request::set_headers() {
 	if (_whole_request.find("\r\n\r\n") == std::string::npos) {
 		_valid_request = false;
-		_error_log += "Invalid request. No headers.\n";
+		//_error_log += "Invalid request. No headers.\n";
 		_state = REQUEST_CANCELLED;
 		return ;
 	}
@@ -118,19 +118,19 @@ void Request::set_headers() {
 			iss >> _content_length;
 		}
 	}
-	_size_headers = _whole_request_at;
-	_left_in_buff = _read_ret - _whole_request_at;
+	_headers_length = _whole_request_at;
+	//_left_in_buff = _read_ret - _whole_request_at;
 	_state = REQUEST_READING_BODY;
 
 }
 
 void Request::set_body() {
-	_body += _whole_request.substr(_whole_request_at, _size_headers + _content_length);
-	if (_whole_request.size() < _size_headers + _content_length) {
+	_body += _whole_request.substr(_whole_request_at, _headers_length + _content_length);
+	if (_whole_request.size() < _headers_length + _content_length) {
 		_whole_request_at = _whole_request.size() + 1;
 		_state = REQUEST_READING_BODY;
 	} else {
-		_whole_request_at = _size_headers + _content_length;
+		_whole_request_at = _headers_length + _content_length;
 		_state = REQUEST_READING_DONE;
 	}
 
@@ -151,8 +151,8 @@ std::vector<std::string>	Request::get_extention() const {
 }
 
 std::string	Request::get_method() const {return _method;}
-std::string	Request::get_path() const {return _url;} 
-void		Request::set_path(const std::string &path) {_url = path;}
+std::string	Request::get_url() const {return _url;} 
+void		Request::set_url(const std::string &url) {_url = url;}
 std::string	Request::get_http_version() const {return _http_version;} 
 std::string	Request::get_headers() const {return _headers;} 
 std::string	Request::get_body() const {return _body;} 
@@ -161,11 +161,11 @@ std::string	Request::get_content_type() const {return _header_content_type;}
 std::string	Request::get_content_length() const {return _header_content_length;}
 
 bool	Request::get_valid_request() const {return _valid_request;} 
-std::string	Request::get_error_log() const {return _error_log;} 
+//std::string	Request::get_error_log() const {return _error_log;} 
 
 std::ostream & operator<<(std::ostream &os, const Request &other) {
-	os << other.get_method() << " " << other.get_path() << " " << other.get_http_version() 
+	os << other.get_method() << " " << other.get_url() << " " << other.get_http_version() 
 		<< std::endl << other.get_headers() << "IS VALID:" << other.get_valid_request() << std::endl
-		<< "ERROR LOG:" << other.get_error_log() << std::endl;
+		<< "ERROR LOG:" <<  std::endl;
 	return os;
 }

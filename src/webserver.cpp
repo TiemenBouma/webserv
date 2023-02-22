@@ -69,10 +69,6 @@ int start_webserver(std::vector<ConfigServer> servers) {
 				continue;
 			}
 			receive_request(connections[i]);
-			//DEBUG
-			if (connections[i]._request._state == REQUEST_CANCELLED)
-				cout << connections[i]._request.get_error_log() << endl;
-			//DEBUG END
 			if (connections[i]._request._state == REQUEST_DONE)
 				execute_request(connections[i]);// Maybe rename to handeling or someting like that.
 			if (connections[i]._request._state == REQUEST_DONE ||

@@ -32,7 +32,7 @@ void	receive_request(Connection &connection) {
 
 	if (poll_fd.revents & POLLHUP) {
 		std::cout << "[DEBUG]: POLLHUP active REQUEST CANCELLED" << std::endl;
-		connection._request._error_log += "POLLHUB Error\n";
+		//connection._request._error_log += "POLLHUB Error\n";
 		connection._request._state = REQUEST_CANCELLED; //just for now cancel request, later need to check if correct.
 		//connection ended can close up
 		//code
@@ -40,14 +40,14 @@ void	receive_request(Connection &connection) {
 	}
 	if (poll_fd.revents & POLLIN) {
 		//cout << "[DEBUG]: start read" << endl;
-		connection._request._read_ret = read(connection._socket, buffer, 1024 * 8);
+		int read_ret = read(connection._socket, buffer, 1024 * 8);
 		//cout << "[DEBUG] end read" << endl;
-		if (connection._request._read_ret <= 0) {
+		if (read_ret <= 0) {
 			connection._request._state = REQUEST_CANCELLED;
-			connection._request._error_log += "Read Error\n";
+			//connection._request._error_log += "Read Error\n";
 			return;
 		}
-		connection._request._whole_request += std::string(buffer, buffer + connection._request._read_ret);
+		connection._request._whole_request += std::string(buffer, buffer + read_ret);
 		std::cout << "[DEBUG]: whole request:\n" << connection._request._whole_request << std::endl;
 	}
 

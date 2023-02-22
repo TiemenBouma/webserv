@@ -18,7 +18,7 @@ void set_location(Connection &connection) {
 	ConfigServer &server = connection._server;
 
 	Location loc;
-	string uri = request.get_path();
+	string uri = request.get_url();
 	response._location_serv = NULL;
 
 	for (size_t i = 0; i < server.locations.size(); i++) {
@@ -37,9 +37,9 @@ void set_location(Connection &connection) {
 }
 
 int execute_request(Connection &connection) {
-	Request &request = connection._request;
+	//Request &request = connection._request;
 	Response &response = connection._resp;
-	ConfigServer &server = connection._server;
+	//ConfigServer &server = connection._server;
 	//all checks set error code in response. If all checks are done errorcode needs to be checked before next fase.
 
 	response.set_client_socket(connection._socket);
@@ -61,10 +61,10 @@ int execute_request(Connection &connection) {
 		//return error page
 	}
 	//check if I need to check the homepage here
-	if (request.get_path() == "/") {
-		response._file_path = response._location_serv->index;
-	}
-	response._file_path = server.root + response._location_serv->index;
+	// if (request.get_url() == "/") {
+	// 	response._file_path = response._location_serv->index;
+	// }
+	// response._file_path = server.root + response._location_serv->index;
 
 	if (connection._request.get_method() == "GET") {
 		std::cout << "DEBUG: GET request" << std::endl;

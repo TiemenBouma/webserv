@@ -43,7 +43,7 @@ int post_request(Connection &connection) {
 	string time = get_time();
 	std::vector<std::string> extention = connection._request.get_extention();
 	string first_extention = "." + extention[0];
-	string upload_file_name = "upload" + time + first_extention;
+	string upload_file_name = "upload_" + time + first_extention;
 	string upload_file_location = root + path_upload + upload_file_name;
 
 
