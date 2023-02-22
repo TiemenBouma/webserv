@@ -7,7 +7,7 @@
 //#include "webserver.h"
 
 ConfigServer::ConfigServer()
-: keywords(_init_keywords()), listen_port(-1)
+: keywords(_init_keywords()), listen_port(-1), size_content(-1)
 {}
 
 ConfigServer::ConfigServer(ConfigServer const &other) {
@@ -72,6 +72,8 @@ void	ConfigServer::_parse_number(T &dst, std::string::iterator it)
 		value += *it;
 	if (*it != ';')
 		throw(ExpectedSemicolon());
+	if (all_num(value) == false)
+		throw(ValueMustBeNumber());
 	std::stringstream ss(value);
 	ss >> dst;
 }
@@ -380,15 +382,31 @@ void	ConfigServer::print_locations(std::vector<Location> locs)
 	}
 }
 
+bool	ConfigServer::all_num(std::string str)
+{
+	for (std::string::iterator it = str.begin(); it != str.end(); it++)
+	{
+		if (std::isdigit(*it) == false)
+			return (false);
+	}
+	return (true);
+}
+
 void	ConfigServer::check_req_direcs()
 {
 	if (listen_port < 0)
 		throw(WrongListenPort());
 	if (root == "")
-		throw(WrongRoot());
+		throw(NoRoot());
+	if (error_pages.find(404) == error_pages.end())
+		error_pages.insert(std::pair<int, std::string>(404, "../data/webpages/default_error_pages/not_found2.html"));
+	if (error_pages.find(405) == error_pages.end())
+		error_pages.insert(std::pair<int, std::string>(405, "../data/webpages/default_error_pages/method_not_allowed2.html"));
+	if (size_content <= 0)
+		throw(WrongSizeContent());
 }
 
-/* 
+/*
 	[INFO]FUNCTION OUTSIDE CLASS
 */
 
@@ -417,7 +435,6 @@ int	parse_config(std::string config, std::vector<ConfigServer> &servers)
 		it += skipspace(it);
 		serv.parse_keyword(it);
 		serv.check_req_direcs();
-		std::cout << std::endl << "parsed server" << std::endl << std::endl;
 		servers.push_back(serv);
 	}
 	return (0);

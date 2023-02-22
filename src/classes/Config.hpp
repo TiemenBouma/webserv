@@ -56,6 +56,7 @@ public:
 	int		cmp_directive(std::string::iterator it, std::string directive);
 	bool	case_ins_strcmp(const std::string s1, const std::string s2);
 	void	print_locations(std::vector<Location> locs);
+	bool	all_num(std::string str);
 
 	void	check_req_direcs();
 
@@ -131,12 +132,28 @@ public:
 				return ("The directive listen_port must be set and can't be negative.");
 			}
 	};
-	class WrongRoot: public std::exception
+	class NoRoot: public std::exception
 	{
 		public:
 			const char *	what() const throw()
 			{
 				return ("The directive root must be set.");
+			}
+	};
+	class WrongSizeContent: public std::exception
+	{
+		public:
+			const char *	what() const throw()
+			{
+				return ("The directive client_max_body_size must be set and can't be 0 or negative.");
+			}
+	};
+	class ValueMustBeNumber: public std::exception
+	{
+		public:
+			const char *	what() const throw()
+			{
+				return ("The value of the listen and client_max_body_size must be an integer.");
 			}
 	};
 };
