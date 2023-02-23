@@ -12,8 +12,6 @@
 
 
 //class Response;
-
-
 class Connection {
 public:
 	Connection();

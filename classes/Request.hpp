@@ -5,8 +5,7 @@
 #include <string>
 #include <vector>
 #include <map>
-
-
+#include "Config.hpp"
 
 enum request_state {
 	REQUEST_START,
@@ -21,13 +20,14 @@ class Request
 {
 public:
 	int			_state;
-	std::string	_buff_request;
+	//std::string	_buff_request;
 	std::string	_whole_request;
 	size_t		_whole_request_at;
 	size_t		_left_in_buff;
 	size_t		_size_headers;
 	size_t		_content_length;
 	size_t		_read_ret;
+	Location	*_location_serv;
 	Request(map_str_vec_str &mime_types);
 	Request &operator=(const Request &other);
 	void set_method(std::stringstream &req_stream);
@@ -43,6 +43,7 @@ public:
 
 	std::string	get_method() const;
 	std::string	get_path() const;
+	void		set_path(const std::string &path);
 	std::string	get_http_version() const;
 	std::string	get_headers() const;
 	std::string	get_body() const;

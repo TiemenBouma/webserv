@@ -22,7 +22,6 @@ int main(int argc, char const *argv[])
         perror("In socket");
         exit(EXIT_FAILURE);
     }
-    
 
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;

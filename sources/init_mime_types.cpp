@@ -137,6 +137,10 @@ std::vector<std::string> extensions;
 	mime_types["application/x-xpinstall"] = extensions;
 
 	extensions.clear();
+	extensions.push_back("form");
+	mime_types["application/x-www-form-urlencoded"] = extensions;
+
+	extensions.clear();
 	extensions.push_back("zip");
 	mime_types["application/zip"] = extensions;
 
@@ -206,6 +210,7 @@ void init_mime_types_reverse(std::map<std::string, std::string> & mime_types_rev
 	mime_types_rev["pem"] = "application/x-x509-ca-cert";
 	mime_types_rev["crt"] = "application/x-x509-ca-cert";
 	mime_types_rev["xpi"] = "application/x-xpinstall";
+	mime_types_rev["form"] = "application/x-www-form-urlencoded";
 	mime_types_rev["zip"] = "application/zip";
 	mime_types_rev["deb"] = "application/octet-stream";
 	mime_types_rev["bin"] = "application/octet-stream";
