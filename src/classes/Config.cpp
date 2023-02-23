@@ -382,6 +382,7 @@ void	ConfigServer::print_locations(std::vector<Location> locs)
 	}
 }
 
+<<<<<<< HEAD
 bool	ConfigServer::all_num(std::string str)
 {
 	for (std::string::iterator it = str.begin(); it != str.end(); it++)
@@ -406,6 +407,8 @@ void	ConfigServer::check_req_direcs()
 		throw(WrongSizeContent());
 }
 
+=======
+>>>>>>> throw_feature
 /*
 	[INFO]FUNCTION OUTSIDE CLASS
 */
@@ -430,7 +433,7 @@ int	parse_config(std::string config, std::vector<ConfigServer> &servers)
 		it += strlen("server");
 		it += skipspace(it);
 		if (*it != '{')
-			throw(ConfigServer::NoBracketAferServer());
+			throw(ConfigServer::NoBracketAfterServer());
 		it += 1;
 		it += skipspace(it);
 		serv.parse_keyword(it);
