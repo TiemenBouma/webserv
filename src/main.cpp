@@ -1,7 +1,7 @@
 #include <fstream> 
 #include "webserver.h"
 
-void error_msg(const char *msg, int code)
+void error_msg(std::string msg, int code)
 {
 	perror(msg);
     exit(code);
@@ -14,15 +14,15 @@ int	main(int argc, char *argv[])
 	std::string	fullInput;
 	std::vector<ConfigServer> servers;
 
-	// this checks the state of the configFile ifstream.
-	if (configFile.good() == false)
-	{
-		std::cout << "invalid_file" << std::endl;
-		exit(1);
-	}
-	// [INFO] server needs a config file
+	// [INFO] server needs a config file.
 	if (argc != 2)
-		error_msg("Expected: ./webserv config_file", EXIT_FAILURE);
+		error_msg("\n[ERROR] Expected input: [./webserv] [config file].", EXIT_FAILURE);
+
+	// [INFO] checking for valid configFile.
+	if (configFile.good() == false)
+		error_msg("[ERROR] Invalid config file.", EXIT_FAILURE);
+
+
     while (std::getline(configFile, line)) {
 	//	std::cout << line << std::endl;
 		fullInput += line;
