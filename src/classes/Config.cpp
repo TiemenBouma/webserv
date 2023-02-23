@@ -382,7 +382,6 @@ void	ConfigServer::print_locations(std::vector<Location> locs)
 	}
 }
 
-<<<<<<< HEAD
 bool	ConfigServer::all_num(std::string str)
 {
 	for (std::string::iterator it = str.begin(); it != str.end(); it++)
@@ -407,8 +406,6 @@ void	ConfigServer::check_req_direcs()
 		throw(WrongSizeContent());
 }
 
-=======
->>>>>>> throw_feature
 /*
 	[INFO]FUNCTION OUTSIDE CLASS
 */
