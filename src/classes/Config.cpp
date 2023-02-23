@@ -390,7 +390,7 @@ void	ConfigServer::print_locations(std::vector<Location> locs)
 	}
 }
 
-/* 
+/*
 	[INFO]FUNCTION OUTSIDE CLASS
 */
 
@@ -414,7 +414,7 @@ int	parse_config(std::string config, std::vector<ConfigServer> &servers)
 		it += strlen("server");
 		it += skipspace(it);
 		if (*it != '{')
-			throw(ConfigServer::NoBracketAferServer());
+			throw(ConfigServer::NoBracketAfterServer());
 		it += 1;
 		it += skipspace(it);
 		serv.parse_keyword(it);

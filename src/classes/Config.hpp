@@ -59,7 +59,7 @@ public:
 
 
 
-	class NoBracketAferServer: public std::exception
+	class NoBracketAfterServer: public std::exception
 	{
 		public:
 			const char *	what() const throw()
