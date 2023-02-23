@@ -1,5 +1,8 @@
 webserver
+webserv
 clients
 one_client
 obj/
 .vscode
+src/main.cpp
+.gitignore
