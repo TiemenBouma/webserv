@@ -13,3 +13,4 @@ int delete_request(Connection &connection) {
 	}
 	return 0;
 }
+// delte location if it is on the server.
