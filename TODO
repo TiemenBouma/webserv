@@ -1,0 +1,8 @@
+
+
+Testing parser:
+
+[x] Invalid file, invalid extension
+[x] Invalid input , too few or too many files
+[x]  makefile in root
+[x]  two config.hpp header files?

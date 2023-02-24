@@ -7,8 +7,6 @@
 #include <map>
 #include "Config.hpp"
 
-
-
 enum request_state {
 	REQUEST_START,
 	REQUEST_READING_HEADERS,
