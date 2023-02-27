@@ -30,79 +30,46 @@ Request &Request::operator=(const Request &other) {
 	return *this;
 }
 
-// [INFO] Constructor for the Request class does the initial parsing.
-// Request::Request(std::stringstream & request_data, std::map<std::string, std::vector<std::string> > &mime_types, std::map<std::string, std::string>   &mime_types_rev) 
-// : _mime_types(&mime_types)/*, _mime_types_rev(&mime_types_rev)*/ {
-// 	_whole_request_at = 0;
-// 	_content_length = 0;
-// 	(void)mime_types_rev;
-// 	// [INFO] Extract the method, URL, and version from the first line of the request
-// 	request_data >> _method >> _url >> _http_version;
-
-// 	// [INFO] Ensure the request is using HTTP/1.1
-// 	if (_http_version != "HTTP/1.1") {
-// 		_valid_request = false;
-// 		_error_log += "Invalid request. Only HTTP/1.1 is supported.\n";
-// 	}
-
-// 	// [INFO] Extract the headers and body of the request
-// 	std::string line;
-// 	while (std::getline(request_data, line)) {
-// 		if (line.empty()) {
-// 			break;
-// 		}	
-// 		_headers += line + "\n";
-// 	}
-
-// 	//[CHECK] check if this IF ESLE is correct
-// 	if (request_data.tellg() == LLONG_MAX || request_data.tellg() < 0) {
-// 		_valid_request = true;
-// 		_error_log +=  "No body in HTTP request.\n";
-// 	}
-// 	else if (static_cast<long long>(request_data.tellg()) < 
-// 			static_cast<long long>(request_data.str().length()))
-// 		_body = request_data.str().substr(request_data.tellg());
-// 	else {
-// 		_valid_request = false;
-// 		_error_log +=  "Invalid request. tellg() out of range\n";
-// 	}
-// }
-
 // [INFO] Extract the method, URL, and version from the first line of the request
 void Request::set_method_url_version() {
-	_state = REQUEST_READING_HEADERS;
 	std::stringstream first_line(_whole_request.substr(0, _whole_request.find('\n')));
 	first_line >> _method >> _url >> _http_version;
 	_whole_request_at = _whole_request.find('\n') + 1;
 
-	//cout << "[DEBUG] method: " << _method << endl;
 	if (_method != "GET" && _method != "POST" && _method != "DELETE") {
 		_valid_request = false;
-		//_error_log += "Invalid request. No method.\n";
 		_state = REQUEST_CANCELLED;
+		return;
 	}
 	if (_url.size() < 1) {
 		_valid_request = false;
-		//_error_log += "Invalid request. No URL.\n";
 		_state = REQUEST_CANCELLED;
+		return;
 	}
+	//which HTTP versions do we accept?
 	if (_http_version != "HTTP/1.1") {
 		_valid_request = false;
-		//_error_log += "Invalid request. Only HTTP/1.1 is supported.\n";
 		_state = REQUEST_CANCELLED;
+		return;
+	}
+	_state = REQUEST_READING_HEADERS;
+}
+
+void Request::reading_headers() {
+
+	if (_whole_request.find("\r\n\r\n") == std::string::npos) {
+		if (_whole_request.size() >= BUFFER_SIZE_8K)
+			_state = REQUEST_CANCELLED;
+		return ;
+	}
+	if (_whole_request.find("\r\n\r\n") != std::string::npos) {
+		_state = REQUEST_SETTING_HEADERS;
 	}
 }
 
-
-
 //[INFO] Sort the headers into their respective variables, easier to add other headers. Just add if else.
 void Request::set_headers() {
-	if (_whole_request.find("\r\n\r\n") == std::string::npos) {
-		_valid_request = false;
-		//_error_log += "Invalid request. No headers.\n";
-		_state = REQUEST_CANCELLED;
-		return ;
-	}
+
 	std::stringstream headers_stream(_whole_request.substr(_whole_request_at, _whole_request.find("\r\n\r\n")));
 	_whole_request_at = _whole_request.find("\r\n\r\n", _whole_request_at) + 4;
 	std::string line;
@@ -110,7 +77,6 @@ void Request::set_headers() {
 		if (line.find("Content-Type") != std::string::npos) {
 			_header_content_type = line.substr(line.find(":") + 2);
 			_header_content_type = _header_content_type.substr(0, _header_content_type.size() - 1); // INFO: minus 1 because last char is \r I think
-
 		}
 		else if (line.find("Content-Length") != std::string::npos) {
 			_header_content_length = line.substr(line.find(":") + 2);
@@ -121,7 +87,6 @@ void Request::set_headers() {
 	_headers_length = _whole_request_at;
 	//_left_in_buff = _read_ret - _whole_request_at;
 	_state = REQUEST_READING_BODY;
-
 }
 
 void Request::set_body() {

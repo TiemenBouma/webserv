@@ -10,6 +10,7 @@
 enum request_state {
 	REQUEST_START,
 	REQUEST_READING_HEADERS,
+	REQUEST_SETTING_HEADERS,
 	REQUEST_READING_BODY,
 	REQUEST_READING_DONE,
 	REQUEST_DONE,
@@ -26,6 +27,7 @@ public:
 
 	//SETTERS
 	void set_method_url_version();
+	void reading_headers();
 	void set_headers();
 	void set_body();
 

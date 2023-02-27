@@ -27,7 +27,6 @@ SRC = 	classes/Request.cpp \
 		sources/request_error.cpp \
 		sources/init_mime_types.cpp \
 		sources/webserver_init.cpp  \
-		sources/webserver_handle_connection.cpp \
 		sources/webserver_receive_request.cpp \
 		sources/main.cpp
 
