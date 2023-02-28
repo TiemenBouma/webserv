@@ -16,10 +16,8 @@ void	init_server(std::vector<ConfigServer> &servers) {
 	for (size_t i = 0; i < servers.size(); i++) {
 		servers[i].server_soc = socket(AF_INET, SOCK_STREAM, 0);
 		setsockopt(servers[i].server_soc, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option));
-		if (servers[i].server_soc < 0) {
-			std::cerr << "Error socket: " << strerror(errno) << std::endl;
-			exit(1);
-		}
+		if (servers[i].server_soc < 0) 
+			error_message("(SOCKET) check webserver_init.cpp", 10);
 		fcntl(servers[i].server_soc, F_SETFL, O_NONBLOCK);
 
 			//[INFO] set server address
@@ -28,15 +26,11 @@ void	init_server(std::vector<ConfigServer> &servers) {
 		server_addr.sin_addr.s_addr = INADDR_ANY;
 
 		//[INFO] bind socket to address
-		if (bind(servers[i].server_soc, (SA *) &server_addr, sizeof(server_addr)) < 0) {
-			std::cerr << "Error bind: " << strerror(errno) << std::endl;
-			exit(2);
-		}
+		if (bind(servers[i].server_soc, (SA *) &server_addr, sizeof(server_addr)) < 0) 
+			error_message("(BIND) check webserver_init.cpp", 20);
 		//[INFO] listen for connections
-		if (listen(servers[i].server_soc, MAX_CONNECTIONS) < 0) {
-			std::cerr << "Error listen: " << strerror(errno) << std::endl;
-			exit(3);
-		}
+		if (listen(servers[i].server_soc, MAX_CONNECTIONS) < 0)
+			error_message("(LISTEN) check webserver_init.cpp", 30);
 	}
 }
 

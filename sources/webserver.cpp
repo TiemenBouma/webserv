@@ -6,6 +6,8 @@
 #include <fcntl.h>
 #include <unistd.h> //for close ()
 
+static const std::string YELLOW = "\x1b[32m";
+static const std::string RESET = "\x1b[0m\n\n";
 
 int	accept_new_connection(int server_sock) {
 	int addr_len = sizeof(SA_IN);
@@ -34,10 +36,11 @@ int start_webserver(std::vector<ConfigServer> servers) {
 
 	// [INFO]handle connections
 	while (true) {
-		if (poll(&*fds.begin(), fds.size(), 0) < 0) {
-			std::cerr <<"Error: Poll: Exit webserver.\n";
-			exit(1);
-		}
+		cout << YELLOW << "[Server] Success, now running.." << endl;
+
+		if (poll(&*fds.begin(), fds.size(), 0) < 0)
+			error_message("(Poll) protected, returned error. Exit webserver", 6);
+
 		//[INFO]listening  and accepting to new connection comming in
 		for (size_t i = 0; i < total_ports; i++) {
 			if (!(fds[i].revents & POLLIN)) {
