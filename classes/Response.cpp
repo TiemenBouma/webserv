@@ -66,8 +66,11 @@ std::string	Response::serialize_headers() const {
 	return response;
 }
 
-void Response::write_to_socket(const char *buffer, size_t size) const {
-	write(_client_socket, buffer, size);
+ssize_t Response::write_to_socket(const char *buffer, size_t size) const {
+	ssize_t ret = write(_client_socket, buffer, size);
+	if (ret == -1)
+		std::cout << "[SERVER] Error writing to socket" << std::endl;
+	return ret;
 }
 
 void  Response::set_header_content_type(const std::string &file_dir) {

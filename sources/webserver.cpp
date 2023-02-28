@@ -47,9 +47,12 @@ int start_webserver(std::vector<ConfigServer> servers) {
 			new_connection._socket = accept_new_connection(servers[i].server_soc);
 
 
-			if (new_connection._socket < 0) //[INFO]if accepts fail Connection will not be added to connection list.
+			if (new_connection._socket < 0) { //[INFO]if accepts fail Connection will not be added to connection list.
+				cout << "[SERVER] accept() call failed" << endl;
 				continue;
+			}
 			fcntl(new_connection._socket, F_SETFL, O_NONBLOCK);
+			cout << endl << "[SERVER] new connection socket: " << new_connection._socket << endl;
 			connections.push_back(new_connection);
 		}
 
@@ -59,13 +62,17 @@ int start_webserver(std::vector<ConfigServer> servers) {
 			if (!(fds[i].revents & POLLIN)) {
 				continue;
 			}
+			cout << "[SERVER] receiving request" << endl;
 			receive_request(connections[i]);
-			if (connections[i]._request._state == REQUEST_DONE)
+			if (connections[i]._request._state == REQUEST_DONE) {
+				cout << "[SERVER] execute request: " << connections[i]._request.get_method() << " " << connections[i]._request.get_url() <<  endl;
 				execute_request(connections[i]);
+			}
 			if (connections[i]._request._state == REQUEST_DONE ||
 				connections[i]._request._state == REQUEST_CANCELLED) {
-				close(connections[i]._socket);
-				connections.erase(connections.begin() + i);
+					cout << "[SERVER] close connection: " << connections[i]._request.get_method() << " " << connections[i]._request.get_url()  << endl;
+					close(connections[i]._socket);
+					connections.erase(connections.begin() + i);
 			}
 		}
 	}

@@ -7,6 +7,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <sys/types.h>
 
 class Response {
 public:
@@ -46,7 +47,7 @@ public:
 	void	set_header_content_length(std::ifstream &file);//[INFO] calculating content length
 	std::string	serialize_all() const; //general serialize
 	std::string	serialize_headers() const; //for get request
-	void write_to_socket(const char *buffer, size_t size) const;
+	ssize_t write_to_socket(const char *buffer, size_t size) const;
 
 };
 

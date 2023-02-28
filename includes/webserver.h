@@ -36,7 +36,7 @@ int delete_request(Connection &connection);
 
 
 //ERROR HANDLING
-void    error_request(Connection &connection);
+int    error_request(Connection &connection);
 
 
 

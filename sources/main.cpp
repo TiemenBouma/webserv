@@ -33,8 +33,8 @@ int	main(int argc, char *argv[])
     }
 	try {
 		parse_config(fullInput, servers);
-		std::cout << "DEBUG: configuration file content: " << std::endl;
-		print_servers(servers);
+		//std::cout << "DEBUG: configuration file content: " << std::endl;
+		//print_servers(servers);
 	}
 	catch (std::exception& e) {
 		std::cout << "exception caught: " << std::endl;

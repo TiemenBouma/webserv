@@ -85,7 +85,6 @@ void Request::set_headers() {
 		}
 	}
 	_headers_length = _whole_request_at;
-	//_left_in_buff = _read_ret - _whole_request_at;
 	_state = REQUEST_READING_BODY;
 }
 

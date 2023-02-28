@@ -30,6 +30,7 @@ void	receive_request(Connection &connection) {
 	//----------------END DEBUGING POLL
 
 	if (poll_fd.revents & POLLHUP) {
+		cout << "[DEBUG]POLLHUP" << endl;
 		if (connection._request._state == REQUEST_READING_DONE)
 			connection._request._state = REQUEST_DONE;
 		else
@@ -40,18 +41,23 @@ void	receive_request(Connection &connection) {
 	if (poll_fd.revents & POLLIN) {
 		int read_ret = read(connection._socket, buffer, 1024 * 8);
 		if (read_ret < 0) {
+			cout << "[SERVER]read() ERROR" << endl;
 			connection._request._state = REQUEST_CANCELLED;
 			return;
 		}
-		if (read_ret == 0 && connection._request._state == REQUEST_READING_DONE) {
-			connection._request._state = REQUEST_DONE;
+		if (read_ret == 0) {
+			if (connection._request._state == REQUEST_READING_DONE) {
+				connection._request._state = REQUEST_DONE;
+			}
+			else {
+				cout << "[SERVER]read() CANCELLED" << endl;
+				connection._request._state = REQUEST_CANCELLED;
+			}
 			return;
 		}
-		else {
-			connection._request._state = REQUEST_CANCELLED;
-			return;
-		}
+
 		connection._request._whole_request += std::string(buffer, buffer + read_ret);
+		//cout << "[DEBUG]whole request: " << connection._request._whole_request << endl;
 	}
 	else {
 		connection._request._state = REQUEST_CANCELLED;

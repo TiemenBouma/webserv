@@ -15,7 +15,7 @@ string find_error_page(Connection &connection) {
 	return error_page;
 }
 
-void error_request(Connection &connection) {
+int error_request(Connection &connection) {
     std::ifstream file;
     std::string error_page;
 
@@ -36,20 +36,24 @@ void error_request(Connection &connection) {
 		//[INFO] WRITE/SEND THE HEADERS
 		//std::cout << "SERVER: Sending ERROR response: \n" << std::endl;
 		std::string response_str = connection._resp.serialize_headers();
-		connection._resp.write_to_socket(response_str.c_str(), response_str.size());
+		ssize_t ret = connection._resp.write_to_socket(response_str.c_str(), response_str.size());
+		if (ret == -1) {
+			return 1;
+		}
 
 		//[INFO] write/send the body of the response in chunks for speed
         const std::streamsize BUFSIZE = 8192;
         char buffer[BUFSIZE];
         std::streamsize n;
         while ((n = file.read(buffer, BUFSIZE).gcount()) > 0) {
-			write(1, buffer, n);
-            connection._resp.write_to_socket(buffer, n);
-
+            ssize_t ret = connection._resp.write_to_socket(buffer, n);
+			if (ret == -1)
+				return 1;
         }
 		//cout << "SERVER: End error response" << endl;
         file.close();
     } 
 	else
         std::cout << "SERVER: Error open error_page" << std::endl;
+		return 0;
 }
