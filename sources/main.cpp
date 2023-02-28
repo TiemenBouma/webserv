@@ -1,6 +1,5 @@
 #include <fstream> 
 #include "webserver.h"
-#include "../classes/Config.hpp"
 
 static const std::string COLOUR = "\x1b[34m";
 static const std::string RESET = "\x1b[0m\n\n";

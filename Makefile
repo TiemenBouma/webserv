@@ -15,20 +15,20 @@ HEADERS 		:=	includes/webserver.h \
 
 INCLUDE_FLAGS 	:= $(addprefix -I , $(sort $(dir $(HEADERS))))
 
+		classes/Config.cpp \
 SRC = 	classes/Request.cpp \
 		classes/Response.cpp \
-		classes/Connection.cpp \
-		classes/Config.cpp \
 		sources/webserver.cpp \
+		classes/Connection.cpp \
 		sources/request_get.cpp \
-		sources/request_execute.cpp \
 		sources/request_post.cpp \
-		sources/request_delete.cpp \
 		sources/request_error.cpp \
-		sources/init_mime_types.cpp \
+		sources/request_delete.cpp \
 		sources/webserver_init.cpp  \
-		sources/webserver_handle_connection.cpp \
+		sources/request_execute.cpp \
+		sources/init_mime_types.cpp \
 		sources/webserver_receive_request.cpp \
+		sources/webserver_handle_connection.cpp \
 		sources/main.cpp
 
 
