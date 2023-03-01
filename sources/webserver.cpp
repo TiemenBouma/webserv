@@ -6,7 +6,7 @@
 #include <fcntl.h>
 #include <unistd.h> //for close ()
 
-static const std::string YELLOW = "\x1b[32m";
+static const std::string GREEN = "\x1b[32m";
 static const std::string RESET = "\x1b[0m\n\n";
 
 int	accept_new_connection(int server_sock) {
@@ -36,8 +36,6 @@ int start_webserver(std::vector<ConfigServer> servers) {
 
 	// [INFO]handle connections
 	while (true) {
-		cout << YELLOW << "[Server] Success, now running.." << endl;
-
 		if (poll(&*fds.begin(), fds.size(), 0) < 0)
 			error_message("(Poll) protected, returned error. Exit webserver", 6);
 
