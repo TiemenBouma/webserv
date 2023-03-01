@@ -38,7 +38,7 @@ string get_time() {
 //For now it opens the file in URL and appends the body to it.
 int post_request(Connection &connection) {
 	std::string body = connection._request.get_body();
-	std::string path_upload = connection._resp._location_serv->path_uploads;
+	std::string path_upload = connection._response._location_serv->path_uploads;
 	string root = connection._server.root;
 	string time = get_time();
 	std::vector<std::string> extention = connection._request.get_extention();
@@ -55,7 +55,7 @@ int post_request(Connection &connection) {
 	file_receive.open(upload_file_location.c_str(), std::ios::app);
 	if (!file_receive.is_open()) {
 		std::cerr << "Error open: " << strerror(errno) << std::endl;
-			connection._resp.set_status_code("500");
+			connection._response.set_status_code("500");
 		return (1);
 	}
 	file_receive << body;
@@ -67,21 +67,21 @@ int post_request(Connection &connection) {
 
 	//[INFO] SENDING RESPONSE
 	ifstream file_send;
- 	file_send.open(connection._resp._file_path.c_str(), std::ios::binary);
+ 	file_send.open(connection._response._file_path.c_str(), std::ios::binary);
 
     if (file_send.is_open()) {
 
         //[INFO] Determine the MIME type of the file
-        connection._resp.set_header_content_type(connection._resp._file_path);
+        connection._response.set_header_content_type(connection._response._file_path);
 
         //[INFO] Get the file size
-		connection._resp.set_header_content_length(file_send);
+		connection._response.set_header_content_length(file_send);
 
 		//[INFO] WRITE/SEND THE HEADERS
 		//std::cout << "SERVER: Sending POST response: \n" << std::endl;
-		std::string response_string = connection._resp.serialize_headers();
+		std::string response_string = connection._response.serialize_headers();
 		//std::cout << "DEBUG send response:\n" << response_string << std::endl;
-		ssize_t ret = connection._resp.write_to_socket(response_string.c_str(), response_string.size());
+		ssize_t ret = connection._response.write_to_socket(response_string.c_str(), response_string.size());
 		if (ret == -1) {
 			return 1;
 		}
@@ -91,7 +91,7 @@ int post_request(Connection &connection) {
         std::streamsize n;
         while ((n = file_send.read(buffer, BUFSIZE).gcount()) > 0) {
 			//std::cout << "DEBUG: writing body: " << std::string(buffer).substr(0, n) <<  std::endl;
-            ret = connection._resp.write_to_socket(buffer, n);
+            ret = connection._response.write_to_socket(buffer, n);
 			if (ret == -1) {
 				return 1;
 		}
@@ -102,7 +102,7 @@ int post_request(Connection &connection) {
     } 
 	else {//Server side error
        //std::cout << "DEBUG: Error opening file 500 error" << std::endl; 
-        connection._resp.set_status_code("500");
+        connection._response.set_status_code("500");
 		error_request(connection);
     }
 	return (0);

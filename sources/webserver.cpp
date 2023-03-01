@@ -6,7 +6,6 @@
 #include <fcntl.h>
 #include <unistd.h> //for close ()
 
-
 int	accept_new_connection(int server_sock) {
 	int addr_len = sizeof(SA_IN);
 	int client_socket;
@@ -20,7 +19,7 @@ int start_webserver(std::vector<ConfigServer> servers) {
 	map_str_vec_str										mime_types;
 	map_str_str											mime_types_rev;
 	size_t												total_ports = servers.size();
-	
+
 	// [INFO]init mime types, for the surfix
 	init_mime_types(mime_types);
 	init_mime_types_reverse(mime_types_rev);

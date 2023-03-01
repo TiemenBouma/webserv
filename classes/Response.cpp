@@ -100,3 +100,5 @@ void  Response::set_header_content_length(std::ifstream &file) {
 	_header_content_length += ss.str();
 	add_header(_header_content_length);
 }
+
+
