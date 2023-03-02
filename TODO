@@ -1,13 +1,15 @@
 
-
 Testing parser:
+
+[] duplicate keywords (two times autoindex)
+[] not quitting program when an exception is caught
+[] accepting request GETT or POOST
+[] not handling comments in config file
 
 [x] Invalid file, invalid extension
 [x] Invalid input , too few or too many files
-[x]  makefile in root
-[x]  two config.hpp header files?
-[] exit with error in parser, merge sietse if it works in his branch
-[] handel comments in config file (for Sietse)
+[x] makefile in root
+[x] two config.hpp header files?
 
 EVAL SHEET
 
@@ -18,12 +20,15 @@ EVAL SHEET
 [] check if control+Z is an issue 
 [] check which error pages are needed
 	[]discuss file permission error	
-	[]check CGI error
+	[]check CGI error page, what number
 	[]teapot errorpage (Swenne)
-[] check default status codes 
-[] Writing or reading ANY file descriptor without going through the select() (or equivalent) is strictly FORBIDDEN (CHECK WITH TESS)
+[] check default status codes, what should we handle
+[] Check if we are going to do the NONBLOCKING method
 [] Search for all read/recv/write/send on a socket and check that, if an error is returned, the client is removed.
 	[] Protected fcntl() for < 0 or not necessary?
 	[] accept new connection fail (protected?)
 
+ERRORS
 
+getting 500 internal server error when changing the homepage html extension
+getting no error page for wrong urls, I changed te config - need help getting css to work again.
