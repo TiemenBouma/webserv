@@ -27,7 +27,7 @@ SRC = 	sources/main.cpp \
 		sources/request_delete.cpp \
 		sources/webserver_init.cpp  \
 		sources/webserver_receive.cpp \
-		sources/main.cpp
+		sources/init_mime_types.cpp
 
 
 OBJ = $(SRC:%.cpp=objects/%.o)
