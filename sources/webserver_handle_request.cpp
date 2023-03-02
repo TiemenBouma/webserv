@@ -26,5 +26,3 @@ int execute_request(Connection &connection) {
 	}
 	return 0;
 }
-// http 404 not found
-//http 200 OK

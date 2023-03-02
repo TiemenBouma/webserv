@@ -21,13 +21,13 @@ SRC = 	classes/Request.cpp \
 		classes/Config.cpp \
 		sources/webserver.cpp \
 		sources/request_get.cpp \
-		sources/request_execute.cpp \
+		sources/webserver_handle_request.cpp \
 		sources/request_post.cpp \
 		sources/request_delete.cpp \
 		sources/request_error.cpp \
 		sources/init_mime_types.cpp \
 		sources/webserver_init.cpp  \
-		sources/webserver_receive_request.cpp \
+		sources/webserver_receive.cpp \
 		sources/main.cpp
 
 
