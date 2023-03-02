@@ -21,5 +21,9 @@ EVAL SHEET
 	[]check CGI error
 	[]teapot errorpage (Swenne)
 [] check default status codes 
-[] Writing or reading ANY file descriptor without going through the select() (or equivalent) is strictly FORBIDDEN (SWENNE CHECK WITH TESS)
+[] Writing or reading ANY file descriptor without going through the select() (or equivalent) is strictly FORBIDDEN (CHECK WITH TESS)
+[] Search for all read/recv/write/send on a socket and check that, if an error is returned, the client is removed.
+	[] Protected fcntl() for < 0 or not necessary?
+	[] accept new connection fail (protected?)
+
 

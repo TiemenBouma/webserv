@@ -1,6 +1,4 @@
 #include "webserver.h"
-
-// #include "../includes/webserver.h"
 #include <poll.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -17,20 +15,21 @@ void	init_server(std::vector<ConfigServer> &servers) {
 		servers[i].server_soc = socket(AF_INET, SOCK_STREAM, 0);
 		setsockopt(servers[i].server_soc, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option));
 		if (servers[i].server_soc < 0) 
-			error_message("(SOCKET) check webserver_init.cpp", 10);
+			error_message("socket() protected, returned error", 10);
 		fcntl(servers[i].server_soc, F_SETFL, O_NONBLOCK);
 
-			//[INFO] set server address
+		//[INFO] set server address
 		server_addr.sin_family = AF_INET;
 		server_addr.sin_port = htons(servers[i].listen_port);
 		server_addr.sin_addr.s_addr = INADDR_ANY;
 
 		//[INFO] bind socket to address
 		if (bind(servers[i].server_soc, (SA *) &server_addr, sizeof(server_addr)) < 0) 
-			error_message("(BIND) check webserver_init.cpp", 20);
+			error_message("bind() protected, returned error", 20);
+
 		//[INFO] listen for connections
 		if (listen(servers[i].server_soc, MAX_CONNECTIONS) < 0)
-			error_message("(LISTEN) check webserver_init.cpp", 30);
+			error_message("listen() protected, returned error", 30);
 	}
 }
 
