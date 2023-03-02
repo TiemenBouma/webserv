@@ -21,13 +21,14 @@ SRC = 	sources/main.cpp \
 		sources/webserver.cpp \
 		classes/Connection.cpp \
 		sources/request_get.cpp \
+		sources/webserver_handle_request.cpp \
 		sources/request_post.cpp \
 		sources/request_error.cpp \
 		sources/request_delete.cpp \
 		sources/webserver_init.cpp  \
-		sources/request_execute.cpp \
-		sources/init_mime_types.cpp \
-		sources/webserver_receive_request.cpp 
+		sources/webserver_receive.cpp \
+		sources/init_mime_types.cpp
+
 
 OBJ = $(SRC:%.cpp=objects/%.o)
 

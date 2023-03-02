@@ -37,6 +37,6 @@ int     delete_request(Connection &connection);
 
 //ERROR HANDLING
 int     error_request(Connection &connection);
-void    error_msg(std::string msg, int code);
+void    error_message(std::string msg, int code);
 
 #endif

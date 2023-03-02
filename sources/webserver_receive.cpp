@@ -66,6 +66,9 @@ void	receive_request(Connection &connection) {
 
 	if (connection._request._state == REQUEST_START)
 		connection._request.set_method_url_version();
+	if (connection._request._state == REQUEST_CANCELLED)
+		connection._response._status_code = "400";
+
 	if (connection._request._state == REQUEST_READING_HEADERS) {
 		connection._request.reading_headers();
 	}

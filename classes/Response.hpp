@@ -49,6 +49,8 @@ public:
 	std::string	serialize_headers() const; //for get request
 	ssize_t write_to_socket(const char *buffer, size_t size) const;
 
+
+
 };
 
 #endif
