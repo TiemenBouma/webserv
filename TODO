@@ -2,6 +2,10 @@
 
 Testing parser:
 
+[] duplicate keywords (two times autoindex)
+[] not quitting program when an exception is caught
+[] accepting request GETT or POOST
+
 [x] Invalid file, invalid extension
 [x] Invalid input , too few or too many files
 [x]  makefile in root
