@@ -21,14 +21,13 @@ SRC = 	sources/main.cpp \
 		sources/webserver.cpp \
 		classes/Connection.cpp \
 		sources/request_get.cpp \
-		sources/webserver_handle_request.cpp \
 		sources/request_post.cpp \
 		sources/request_error.cpp \
 		sources/request_delete.cpp \
 		sources/webserver_init.cpp  \
 		sources/webserver_receive.cpp \
+		sources/webserver_handle_request.cpp \
 		sources/init_mime_types.cpp
-
 
 OBJ = $(SRC:%.cpp=objects/%.o)
 
@@ -57,9 +56,19 @@ re: fclean all
 run: all
 	./$(NAME) $(CONF)
 
-test: re
+siege: re
 	$(ECHO) "$(CYAN)Running Siege$(END)"
 	siege -R siege_test/siege.conf > siege_test/test_output.txt
 	$(ECHO) "$(GREEN)Siege Success [OK]$(END)"
+
+test: 
+	@echo "$(RED)$(NNN)	___ TESTING ___ $(NNN)$(RESET)"
+	curl -svo /dev/null http://localhost:8080
+	
+#	for connection:
+# curl http://localhost:8080
+# For response (header and body)
+# curl -sv /dev/null http://localhost:8080
+
 
 .PHONY: clean fclean re
