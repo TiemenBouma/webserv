@@ -8,6 +8,17 @@
 #include <ctime>
 #include <sstream>
 
+void add_location_to_server(Connection &connection, std::string loc) {
+	Location location;
+	location.location = loc;
+	location.autoindex = false;
+	location.accepted_methods.push_back("GET");
+	location.accepted_methods.push_back("DELETE");
+	location.index = loc;
+	connection._server.locations.push_back(location);
+	//DEBUG ADD LOCATION
+	connection._server.print_locations(connection._server.locations);
+}
 
 string get_time() {
 	std::time_t t = std::time(0);   // get time now
@@ -32,7 +43,7 @@ int post_request(Connection &connection) {
 	string time = get_time();
 	std::vector<std::string> extention = connection._request.get_extention();
 	string first_extention = "." + extention[0];
-	string upload_file_name = "upload" + time + first_extention;
+	string upload_file_name = "upload_" + time + first_extention;
 	string upload_file_location = root + path_upload + upload_file_name;
 
 
@@ -50,6 +61,9 @@ int post_request(Connection &connection) {
 	file_receive << body;
 	file_receive.close();
 
+	//Add location to server for Delete to work
+	string loc = path_upload + upload_file_name;
+	add_location_to_server(connection, loc);
 
 	//[INFO] SENDING RESPONSE
 	ifstream file_send;
@@ -64,29 +78,32 @@ int post_request(Connection &connection) {
 		connection._resp.set_header_content_length(file_send);
 
 		//[INFO] WRITE/SEND THE HEADERS
-		std::cout << "SERVER: Sending POST response: \n" << std::endl;
+		//std::cout << "SERVER: Sending POST response: \n" << std::endl;
 		std::string response_string = connection._resp.serialize_headers();
 		//std::cout << "DEBUG send response:\n" << response_string << std::endl;
-		connection._resp.write_to_socket(response_string.c_str(), response_string.size());
-
+		ssize_t ret = connection._resp.write_to_socket(response_string.c_str(), response_string.size());
+		if (ret == -1) {
+			return 1;
+		}
 		//[INFO] write/send the body of the response in chunks for speed
-        const std::streamsize BUFSIZE = 8192;
+        const std::streamsize BUFSIZE = BUFFER_SIZE_8K;
         char buffer[BUFSIZE];
         std::streamsize n;
         while ((n = file_send.read(buffer, BUFSIZE).gcount()) > 0) {
 			//std::cout << "DEBUG: writing body: " << std::string(buffer).substr(0, n) <<  std::endl;
-            connection._resp.write_to_socket(buffer, n);
+            ret = connection._resp.write_to_socket(buffer, n);
+			if (ret == -1) {
+				return 1;
+		}
         }
 
 		//[INFO] END OF GET REQUEST
         file_send.close();
     } 
 	else {//Server side error
-        std::cout << "DEBUG: Error opening file 500 error" << std::endl; 
+       //std::cout << "DEBUG: Error opening file 500 error" << std::endl; 
         connection._resp.set_status_code("500");
 		error_request(connection);
     }
-
-
 	return (0);
 }

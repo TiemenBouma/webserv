@@ -4,6 +4,7 @@ webserv
 clients
 one_client
 obj/
+objects
 .vscode
 <<<<<<< HEAD
 src/main.cpp
@@ -11,3 +12,4 @@ src/main.cpp
 data/uploads
 >>>>>>> sietse
 .gitignore
+archive/

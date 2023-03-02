@@ -1,5 +1,5 @@
 #include <fstream> 
-#include "webserver.h"
+#include <webserver.h>
 
 static const std::string COLOUR = "\x1b[34m";
 static const std::string RESET = "\x1b[0m\n\n";
@@ -32,8 +32,8 @@ int	main(int argc, char *argv[])
     }
 	try {
 		parse_config(fullInput, servers);
-		std::cout << "DEBUG: configuration file content: " << std::endl;
-		print_servers(servers);
+		//std::cout << "DEBUG: configuration file content: " << std::endl;
+		//print_servers(servers);
 	}
 	catch (std::exception& e) {
 		std::cout << "exception caught: " << std::endl;

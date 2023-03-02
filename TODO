@@ -4,6 +4,22 @@ Testing parser:
 
 [x] Invalid file, invalid extension
 [x] Invalid input , too few or too many files
-[x] makefile in root
-[x] two config.hpp header files?
-[]  separate webpages from configfiles
+[x]  makefile in root
+[x]  two config.hpp header files?
+[] exit with error in parser, merge sietse if it works in his branch
+[] handel comments in config file (for Sietse)
+
+EVAL SHEET
+
+[] autoindex not working yet.
+[] discuss with other teams what redirection is.
+	[]Setup routes in a server to different directories.
+[] Check poll() timelimit and return value
+[] check if control+Z is an issue 
+[] check which error pages are needed
+	[]discuss file permission error	
+	[]check CGI error
+	[]teapot errorpage (Swenne)
+[] check default status codes 
+[] Writing or reading ANY file descriptor without going through the select() (or equivalent) is strictly FORBIDDEN (SWENNE CHECK WITH TESS)
+
