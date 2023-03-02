@@ -22,7 +22,7 @@ int start_webserver(std::vector<ConfigServer> servers) {
 	map_str_vec_str										mime_types;
 	map_str_str											mime_types_rev;
 	size_t												total_ports = servers.size();
-	
+
 	// [INFO]init mime types, for the surfix
 	init_mime_types(mime_types);
 	init_mime_types_reverse(mime_types_rev);

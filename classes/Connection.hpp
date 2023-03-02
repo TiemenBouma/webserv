@@ -14,16 +14,20 @@
 //class Response;
 class Connection {
 public:
+	int					_port;
+	int					_socket;
+	Request				_request;
+	Response			_response;
+	ConfigServer 		&_server;
+	
 	Connection();
 	Connection(const Connection &other);
 	Connection &operator=(const Connection &other);
 	~Connection();
 	Connection(ConfigServer &server, map_str_vec_str &mime_types, map_str_str &mime_types_rev);
-	int					_port;
-	int					_socket;
-	Request				_request;
-	Response			_resp;
-	ConfigServer 		&_server;
+
+	void set_location();
+	int	check_method();
 
 };
 
