@@ -1,7 +1,10 @@
 webserv
+webserver
 clients
 one_client
 obj/
+objects
 .vscode
 data/uploads
 .gitignore
+archive/

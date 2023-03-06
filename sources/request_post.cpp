@@ -1,6 +1,5 @@
 #include "webserver.h"
 #include "typedef.h"
-// #include "../includes/webserver.h"
 
 #include <iostream>
 #include <fstream>
@@ -25,11 +24,11 @@ string get_time() {
     std::tm* now = std::localtime(&t);
     std::stringstream ss;
 	ss << (now->tm_year + 1900) << '-' 
-         << (now->tm_mon + 1) << '-'
-         <<  now->tm_mday << '_'
-		 <<  now->tm_hour << ':'
-		 <<  now->tm_min << ':'
-		 <<  now->tm_sec;
+        << (now->tm_mon + 1) << '-'
+        <<  now->tm_mday << '_'
+		<<  now->tm_hour << ':'
+		<<  now->tm_min << ':'
+		<<  now->tm_sec;
 	string timestamp;
 	ss >> timestamp;
 	return timestamp;

@@ -21,7 +21,7 @@ int error_request(Connection &connection) {
 
 	//[INFO] find the error page
 	error_page = find_error_page(connection);
-   
+
     //[INFO] Open the file in binary mode
     file.open(error_page.c_str(), std::ios::binary);
 	cout << "DEBUG: errorpage: " << error_page << endl;

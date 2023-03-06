@@ -1,15 +1,17 @@
 
-
 Testing parser:
+
+[] duplicate keywords (two times autoindex)
+[] not quitting program when an exception is caught
+[] accepting request GETT or POOST
+[] not handling comments in config file
 
 [x] Invalid file, invalid extension
 [x] Invalid input , too few or too many files
-[x]  makefile in root
-[x]  two config.hpp header files?
-[] exit with error in parser, merge sietse if it works in his branch
-[] handel comments in config file (for Sietse)
+[x] makefile in root
+[x] two config.hpp header files?
 
-EVAL SHEET
+Team discussion:
 
 [] autoindex not working yet.
 [] discuss with other teams what redirection is.
@@ -18,8 +20,231 @@ EVAL SHEET
 [] check if control+Z is an issue 
 [] check which error pages are needed
 	[]discuss file permission error	
-	[]check CGI error
+	[]check CGI error page, what number
 	[]teapot errorpage (Swenne)
-[] check default status codes 
-[] Writing or reading ANY file descriptor without going through the select() (or equivalent) is strictly FORBIDDEN (SWENNE CHECK WITH TESS)
+[] check default status codes, what should we handle
+[] Check if we are going to do the NONBLOCKING method
+[] Search for all read/recv/write/send on a socket and check that, if an error is returned, the client is removed.
+	[] Protected fcntl() for < 0 or not necessary?
+	[] accept new connection fail (protected?)
 
+
+ERRORS
+
+getting 500 internal server error when changing the homepage html extension
+getting no error page for wrong urls, I changed te config - need help getting css to work again.
+
+
+SUBJECT:
+
+# Introduction
+The Hypertext Transfer Protocol (HTTP) is an application protocol for distributed, collaborative, hypermedia information systems.
+
+HTTP is the foundation of data communication for the World Wide Web, where hypertext documents include hyperlinks to other resources that the user can easily access.
+For example, by a mouse click or by tapping the screen in a web browser. HTTP was developed to facilitate hypertext and the World Wide Web.
+
+The primary function of a web server is to store, process, and deliver web pages to clients. 
+The communication between client and server takes place using the Hypertext Transfer Protocol (HTTP).
+
+Pages delivered are most frequently HTML documents, which may include images, style sheets, and scripts in addition to the text content.
+
+Multiple web servers may be used for a high-traffic website. A user agent, commonly a web browser or web crawler, 
+	initiates communication by requesting a specific resource using HTTP and the server responds with the content of that resource or an error message if unable to do so. 
+
+The resource is typically a real file on the server’s secondary storage, but this is not necessarily the case and depends on how the webserver is implemented.
+
+While the primary function is to serve content, full implementation of HTTP also includes ways of receiving content from clients. 
+This feature is used for submitting web forms, including the uploading of files.
+
+# General rules
+• Your program should not crash in any circumstances (even when it runs out of memory), and should not quit unexpectedly.
+• You have to turn in a Makefile which will compile your source files. It must not relink.
+• Your Makefile must at least contain the rules: $(NAME), all, clean, fclean and re.
+• Compile your code with c++ and the flags -Wall -Wextra -Werror
+• Your code must comply with the C++ 98 standard. Then, it should still compile if you add the flag -std=c++98.
+• Try to always develop using the most C++ features you can (for example, choose <cstring> over <string.h>). 
+• You are allowed to use C functions, but always prefer their C++ versions if possible.
+• Any external library and Boost libraries are forbidden.
+
+Program name: webserv
+Description: A HTTP server in C++ 98. When you finally understand why a URL starts with HTTP
+Turn in files: Makefile, *.{h, hpp}, *.cpp, *.tpp, *.ipp,
+configuration files: Makefile NAME, all, clean, fclean, re
+Arguments: [A configuration file]
+External functs: Everything in C++ 98.
+execve, dup, dup2, pipe, strerror, gai_strerror,
+errno, dup, dup2, fork, htons, htonl, ntohs, ntohl,
+select, poll, epoll (epoll_create, epoll_ctl,
+epoll_wait), kqueue (kqueue, kevent), socket,
+accept, listen, send, recv, bind, connect,
+getaddrinfo, freeaddrinfo, setsockopt, getsockname,
+getprotobyname, fcntl
+Libft authorized n/a
+
+Your executable will be run as follows:
+./webserv [configuration file]
+
+# Requirements
+• Your program has to take a configuration file as argument, or use a default path.
+• You can’t execve another web server.
+• Your server must never block and the client can be bounced properly if necessary.
+• It must be non-blocking and use only 1 poll() (or equivalent) for all the I/O operations between the client and the server (listen included).
+• poll() (or equivalent) must check read and write at the same time.
+• You must never do a read or a write operation without going through poll() (or equivalent).
+• Checking the value of errno is strictly forbidden after a read or a write operation.
+• You don’t need to use poll() (or equivalent) before reading your configuration file.
+
+Because you have to use non-blocking file descriptors, it is possible to use read/recv or write/send functions with no poll() (or equivalent), and your server wouldn’t be blocking.
+But it would consume more system resources. Thus, if you try to read/recv or write/send in any file descriptor without using poll() (or equivalent), your grade will be 0.
+
+• You can use every macro and define like FD_SET, FD_CLR, FD_ISSET, FD_ZERO (understanding what and how they do it is very useful).
+• A request to your server should never hang forever.
+• Your server must be compatible with the web browser of your choice.
+• We will consider that NGINX is HTTP 1.1 compliant and may be used to compare headers and answer behaviors.
+• Your HTTP response status codes must be accurate.
+• You server must have default error pages if none are provided.
+• You can’t use fork for something else than CGI (like PHP, or Python, and so forth).
+• You must be able to serve a fully static website.
+• Clients must be able to upload files.
+• You need at least GET, POST, and DELETE methods.
+• Stress tests your server. It must stay available at all cost.
+• Your server must be able to listen to multiple ports (see Configuration file).
+
+
+# Configuration file
+
+In the configuration file, you should be able to:
+• Choose the port and host of each ’server’.
+◦ Turn on or off directory listing. 
+• Setup the server_names or not.
+• Limit client body size.
+• Setup default error pages.
+• The first server for a host:port will be the default for this host:port 
+	(that means it will answer to all the requests that don’t belong to an other server).
+
+• Setup routes with one or multiple of the following rules/configuration (routes wont be using regexp):
+◦ 	Define a list of accepted HTTP methods for the route.
+◦ 	Define a HTTP redirection.
+◦ 	Define a directory or a file from where the file should be searched 
+	(for example, if url /kapouet is rooted to /tmp/www, url /kapouet/pouic/toto/pouet is /tmp/www/pouic/toto/pouet).
+◦ 	Set a default file to answer if the request is a directory.
+◦ 	Execute CGI based on certain file extension (for example .php).
+◦ 	Make it work with POST and GET methods.
+◦ 	Make the route able to accept uploaded files and configure where they should be saved.
+
+∗ Do you wonder what a CGI is?
+∗ Because you won’t call the CGI directly, use the full path as PATH_INFO.
+∗ Just remember that, for chunked request, your server needs to unchunk it, the CGI will expect EOF as end of the body.
+∗ Same things for the output of the CGI. If no content_length is returned from the CGI, EOF will mark the end of the returned data.
+∗ Your program should call the CGI with the file requested as first argument.
+∗ The CGI should be run in the correct directory for relative path file access.
+∗ Your server should work with one CGI (php-CGI, Python, and so forth).
+
+You must provide some configuration files and default basic files to test and demonstrate every feature works during evaluation.
+You can get some inspiration from the ’server’ part of NGINX configuration file.
+The important thing is resilience. Your server should never die.
+Write your tests with a more convenient language such as Python or Golang, and so forth. 
+
+# Bonus part
+Here are the extra features you can add:
+
+• Support cookies and session management (prepare quick examples).
+• Handle multiple CGI.
+
+The bonus part will only be assessed if the mandatory part is PERFECT. 
+Perfect means the mandatory part has been integrally done and works without malfunctioning.
+If you have not passed ALL the mandatory requirements, your bonus part will not be evaluated at all.
+
+
+
+### EVALSHEET:
+
+# Mandatory Part
+
+Check the code and ask questions
+- Launch the installation of siege with homebrew.
+- Ask explanations about the basics of an HTTP server.
+- Ask what function the group used for I/O Multiplexing.
+- Ask for an explanation of how does select() (or equivalent) work.
+- Ask if they use only one select() (or equivalent) and how they've managed the server to accept and the client to read/write.
+- The select() (or equivalent) should be in the main loop and should check file descriptors for read and write AT THE SAME TIME. 
+- There should be only one read or one write per client per select() (or equivalent). 
+- Ask the group to show you the code from the select() (or equivalent) to the read and write of a client.
+- Search for all read/recv/write/send on a socket and check that, if an error is returned, the client is removed.
+- Search for all read/recv/write/send and check if the returned value is correctly checked (checking only -1 or 0 values is not enough, both should be checked).
+- If errno is checked after read/recv/write/send, the grade is 0 and the evaluation process ends now.
+- Writing or reading ANY file descriptor without going through the select() (or equivalent) is strictly FORBIDDEN.
+- The project must compile without any re-link issue. If not, use the 'Invalid compilation' flag.
+- If any point is unclear or is not correct, use the flag for 'Incomplete work'.
+
+
+Configuration
+In the configuration file, check whether you can do the following and
+test the result:
+
+- Search for the HTTP response status codes list on the internet. During this evaluation, if any status codes is wrong, don't give any related points.
+- Setup multiple servers with different ports.
+- Setup multiple servers with different hostnames (use something like: curl --resolve example.com:80:127.0.0.1 http://example.com/).
+- Setup default error page (try to change the error 404).
+- Limit the client body (use: curl -X POST -H "Content-Type: plain/text" --data "BODY IS HERE write something shorter or longer than body limit").
+- Setup routes in a server to different directories.
+- Setup a default file to search for if you ask for a directory.
+- Setup a list of methods accepted for a certain route (e.g., try to delete something with and without permission).
+
+
+Basic checks
+Using telnet, curl, prepared files, demonstrate that the following
+features work properly:
+
+- GET requests -> should work
+- POST requests -> should work
+- DELETE requests -> should work
+- UNKNOWN requests -> should not produce any crash
+- For every test the status code must be correct
+-Upload some file to the server and get it back
+
+
+Check CGI
+Pay attention to the following:
+- The server is working fine using a CGI.
+- The CGI should be run in the correct directory for relative path file access.
+- With the help of the evaluation group you should check that everything is working properly. You have to test the CGI with the methods "GET", "POST" and "DELETE".
+- You need to test with files containing errors to see if the error handling works properly. You can use a script containing an infinite loop or an error; you are free to do - - whatever tests you want within the limits of acceptability that remain at your discretion. The group being evaluated should help you with this.
+- The server should never crash and an error should be visible in case of a problem.
+
+
+Check with a browser
+Use the reference browser of the team. Open the network part of it, and try to connect to the server using it.
+Look at the request header and response header.
+It should be compatible to serve a fully static website.
+- Try a wrong URL on the server.
+- Try to list a directory.
+- Try a redirected URL.
+- Try anything you want to.
+
+
+Port issues
+In the configuration file setup multiple ports and use different websites. Use the browser to ensure that the configuration works as expected and shows the right website.
+In the configuration, try to setup the same port multiple times. It should not work.
+Launch multiple servers at the same time with different configurations but with common ports. Does it work? If it does, ask why the server should work if one of the configurations isn't functional. Keep going.
+
+
+Siege & stress test
+Use Siege to run some stress tests.
+Availability should be above 99.5% for a simple GET on an empty page with a siege -b on that page.
+Verify there is no memory leak (Monitor the process memory usage. It should not go up indefinitely).
+Check if there is no hanging connection.
+You should be able to use siege indefinitely without having to restart the server (take a look at siege -b).
+
+
+# Bonus part
+Evaluate the bonus part if, and only if, the mandatory part has been entirely and perfectly done, and the error management handles unexpected or bad usage. In case all the mandatory points were not passed during the defense, bonus points must be totally ignored.
+
+Cookies and session
+There is a working session and cookies system on the webserver.
+
+CGI
+There is more than one CGI system.
+
+Ratings
+Don’t forget to check the flag corresponding to the defense
