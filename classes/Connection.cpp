@@ -104,7 +104,6 @@ void Connection::reading_headers() {
 	}
 	if (_request._whole_request.find("\r\n\r\n") != std::string::npos) {
 		_request._headers_length = _request._whole_request.find("\r\n\r\n") + 4;
-		cout << "DEBUG: HEADER length " << _request._headers_length << endl;
 		_request._state = REQUEST_SETTING_HEADERS;
 	}
 }
@@ -135,7 +134,6 @@ void Connection::set_headers() {
 
 void Connection::set_body() {
 	_request._body += _request._whole_request.substr(_request._whole_request_at);
-	cout << "DEBUG: " << _request._whole_request.size() << " " << _request._headers_length + _request._content_length << endl;
 	if (_request._whole_request.size() < _request._headers_length + _request._content_length) {
 		_request._whole_request_at = _request._whole_request.size() + 1;
 	} 
