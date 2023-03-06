@@ -23,7 +23,8 @@ void	receive_request(Connection &connection) {
 		return;
 
 	//TIMEOUT 1ms for poll might not be good or allowed.
-	poll(&poll_fd, 1, 1);
+	if (poll(&poll_fd, 1, 1) == -1)
+		return;
 	if (poll_fd.revents & POLLHUP) {
 		cout << "[DEBUG]POLLHUP" << endl;
 		if (connection._request._state == REQUEST_READING_DONE)

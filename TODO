@@ -16,15 +16,16 @@ Team discussion:
 [] autoindex not working yet.
 [] discuss with other teams what redirection is.
 	[]Setup routes in a server to different directories.
-[] Check poll() timelimit and return value
+[x] Check poll() return value
+[] Check poll() timelimit 
 [] check if control+Z is an issue 
-[] check which error pages are needed
+[x] check which error pages are needed
 	[]discuss file permission error	
 	[]check CGI error page, what number
 	[]teapot errorpage (Swenne)
-[] check default status codes, what should we handle
+[x] check default status codes, what should we handle
 [] Check if we are going to do the NONBLOCKING method
-[] Search for all read/recv/write/send on a socket and check that, if an error is returned, the client is removed.
+[x] Search for all read/recv/write/send on a socket and check that, if an error is returned, the client is removed.
 	[] Protected fcntl() for < 0 or not necessary?
 	[] accept new connection fail (protected?)
 

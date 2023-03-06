@@ -16,7 +16,8 @@ void	init_server(std::vector<ConfigServer> &servers) {
 		setsockopt(servers[i].server_soc, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option));
 		if (servers[i].server_soc < 0) 
 			error_message("socket() protected, returned error", 10);
-		fcntl(servers[i].server_soc, F_SETFL, O_NONBLOCK);
+		if (fcntl(servers[i].server_soc, F_SETFL, O_NONBLOCK) == -1)
+			error_message("fcntl() call failed in initilisation webserver. Exit webserver", 1);
 
 		//[INFO] set server address
 		server_addr.sin_family = AF_INET;

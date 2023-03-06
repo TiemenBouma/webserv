@@ -52,7 +52,8 @@ int start_webserver(std::vector<ConfigServer> servers) {
 				cout << "[SERVER] accept() call failed" << endl;
 				continue;
 			}
-			fcntl(new_connection._socket, F_SETFL, O_NONBLOCK);
+			if (fcntl(new_connection._socket, F_SETFL, O_NONBLOCK) == -1)
+				continue;
 			cout << endl << "[SERVER] new connection socket: " << new_connection._socket << endl;
 			connections.push_back(new_connection);
 		}
