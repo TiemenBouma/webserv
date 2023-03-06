@@ -47,7 +47,7 @@ int post_request(Connection &connection) {
 	string upload_file_location = root + path_upload + upload_file_name;
 
 
-	//in extentions we have all extentions poible fo that mime type, not using extention atm.
+//in extentions we have all extentions poible fo that mime type, not using extention atm.
 
 //	std::cout << "DEBUG: file_path_location: " << upload_file_location << std::endl;
 //	std::cout << "DEBUG: body POST req: " << body << std::endl;
@@ -94,7 +94,7 @@ int post_request(Connection &connection) {
             ret = connection._response.write_to_socket(buffer, n);
 			if (ret == -1) {
 				return 1;
-		}
+			}
         }
 
 		//[INFO] END OF GET REQUEST

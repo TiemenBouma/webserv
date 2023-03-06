@@ -5,12 +5,12 @@ int execute_request(Connection &connection) {
 	//[INFO] Preparing response, error checking
 	connection._response.set_client_socket(connection._socket);
 	connection.set_location();
-	if (connection._response._status_code == "404") {
+	if (connection._response._status_code != "200") {
 		error_request(connection);
 		return 1;
 	}
 	connection.check_method();
-	if (connection._response._status_code == "405") {
+	if (connection._response._status_code != "200") {
 		error_request(connection);
 		return 1;
 	}

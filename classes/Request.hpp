@@ -26,9 +26,7 @@ public:
 	Request &operator=(const Request &other);
 
 	//SETTERS
-	void set_method_url_version();
-	void reading_headers();
-	void set_headers();
+
 	void set_body();
 
 	//GETTERS
@@ -52,9 +50,9 @@ public:
 	Location	*_location_serv;
 	bool _valid_request;
 
-private:
 
-	//MEMBERS (PRIVATE, static, set once after parsing request)
+
+	//MEMBERS (set once after parsing request)
 	std::string _method;
 	std::string _url;
 	std::string _http_version;
