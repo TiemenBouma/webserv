@@ -61,6 +61,19 @@ int	Connection::check_method() {
 	return 1;
 }
 
+int Connection::check_time_out() {
+	time_t current_time;
+	time(&current_time);
+	double diff_time = difftime(_request._start_time, current_time);
+	if (diff_time > 30) {
+		_response._status_code = "408";
+		_response.set_status_message("request timeout");
+		_request._state = REQUEST_CANCELLED;
+		return 1;
+	}
+	return 0;
+}
+
 // [INFO] Extract the method, URL, and version from the first line of the request
 // sets errorcode if someting goes wrong.
 void Connection::set_method_url_version() {

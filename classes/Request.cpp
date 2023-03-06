@@ -6,14 +6,36 @@
 Request::Request(map_str_vec_str &mime_types)
 : _mime_types(mime_types)
 {
-	_valid_request = false;
-	//_error_log = "";
+	_state = 0;
+	_whole_request = "";
 	_whole_request_at = 0;
+	_header_content_length = "";
 	_content_length = 0;
-	_state = REQUEST_START;
+	_location_serv = NULL;
+	_valid_request = false;
+	time(&_start_time);
+
+	_method = "";
+	_url = "";
+	_http_version = "";
+	_headers = "";
+	_body = "";
+	_header_content_type = "";
+	_header_content_length = "";
+
+
 }
 
 Request &Request::operator=(const Request &other) {
+	_state = other._state;
+	_whole_request = other._whole_request;
+	_whole_request_at = other._whole_request_at;
+	_header_content_length = other._header_content_length;
+	_content_length = other._content_length;
+	_location_serv = other._location_serv;
+	_valid_request = other._valid_request;
+	_start_time = other._start_time;
+
 	_method = other._method;
 	_url = other._url;
 	_http_version = other._http_version;
@@ -21,12 +43,6 @@ Request &Request::operator=(const Request &other) {
 	_body = other._body;
 	_header_content_type = other._header_content_type;
 	_header_content_length = other._header_content_length;
-	_valid_request = other._valid_request;
-	//_error_log = other._error_log;
-	//_mime_types = other._mime_types;
-	_whole_request_at = other._whole_request_at;
-	_content_length = other._content_length;
-	_state = other._state;
 	return *this;
 }
 

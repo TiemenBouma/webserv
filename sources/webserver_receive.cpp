@@ -14,21 +14,16 @@ void	receive_request(Connection &connection) {
 	std::string							value;
 	struct pollfd 						poll_fd;
 
-	poll_fd.events = POLLIN | POLLHUP;
+	poll_fd.events = POLLIN;
 	poll_fd.revents = 0;
 	poll_fd.fd = connection._socket;
 
+	//checking on timeout, returning if time is over 30 sec
+	if (connection.check_time_out())
+		return;
+
 	//TIMEOUT 1ms for poll might not be good or allowed.
 	poll(&poll_fd, 1, 1);
-
-	//-----------------DEBUGING POLL
-	// if (poll_fd.revents & POLLIN) {
-	// 	std::cout << "[DEBUG]: POLLIN in receive is working" << std::endl;
-	// } else {
-	// 	std::cout << "[DEBUG]: POLLIN in receive is not working" << std::endl;
-	// }
-	//----------------END DEBUGING POLL
-
 	if (poll_fd.revents & POLLHUP) {
 		cout << "[DEBUG]POLLHUP" << endl;
 		if (connection._request._state == REQUEST_READING_DONE)

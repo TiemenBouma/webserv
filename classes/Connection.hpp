@@ -11,6 +11,7 @@
 
 
 
+
 //class Response;
 class Connection {
 public:
@@ -29,6 +30,7 @@ public:
 	void set_location();
 	int	check_method();
 
+	int check_time_out();
 	void set_method_url_version();
 	void reading_headers();
 	void set_headers();

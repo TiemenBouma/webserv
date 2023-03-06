@@ -1,0 +1,6 @@
+ERROR PAGES
+400 Bad Request
+404 Not found
+405 Method not allowed
+408 Request time out
+431 Request header fields too long

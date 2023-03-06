@@ -6,6 +6,7 @@
 #include <vector>
 #include <map>
 #include "Config.hpp"
+#include <ctime>
 
 enum request_state {
 	REQUEST_START,
@@ -49,6 +50,7 @@ public:
 	size_t		_content_length;
 	Location	*_location_serv;
 	bool _valid_request;
+	time_t		_start_time;
 
 
 
