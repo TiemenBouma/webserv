@@ -11,7 +11,8 @@ HEADERS 		:=	includes/webserver.h \
 					classes/Connection.hpp \
 					classes/Request.hpp \
 					classes/Config.hpp \
-					classes/Response.hpp
+					classes/Response.hpp \
+					classes/Cgi.hpp
 
 INCLUDE_FLAGS 	:= $(addprefix -I , $(sort $(dir $(HEADERS))))
 
@@ -19,6 +20,7 @@ SRC = 	classes/Request.cpp \
 		classes/Response.cpp \
 		classes/Connection.cpp \
 		classes/Config.cpp \
+		classes/Cgi.cpp \
 		sources/webserver.cpp \
 		sources/request_get.cpp \
 		sources/request_execute.cpp \
