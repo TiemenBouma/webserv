@@ -18,7 +18,7 @@ typedef struct sockaddr SA;
 #define ROOT_DIR "../data/"
 const int PORT = 8080;
 const int MAX_CONNECTIONS = 100;
-const int BUFFER_SIZE = 1024;
+const int BUFFER_SIZE_8K = 8192;
 // typedef struct sockaddr_in SA_IN;
 // typedef struct sockaddr SA;
 
