@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-#define PATH_INFO "data/cgi-bin/"
+#define PATH_INFO "utils/cgi-bin/"
 #define CGI_READ_SIZE 100
 
 extern	char ** environ;

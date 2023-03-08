@@ -8,7 +8,6 @@ CONF 	:= utils/config_tiemen.conf
 HEADERS 		:=	includes/typedef.h \
 					classes/Config.hpp \
 					classes/Response.hpp \
-					classes/Cgi.hpp
 					classes/Request.hpp \
 					classes/Connection.hpp \
 					classes/Response.hpp \
@@ -18,7 +17,6 @@ INCLUDE_FLAGS 	:= $(addprefix -I , $(sort $(dir $(HEADERS))))
 
 SRC = 	sources/main.cpp \
 		classes/Config.cpp \
-		classes/Cgi.cpp \
 		classes/Request.cpp \
 		classes/Response.cpp \
 		sources/webserver.cpp \
