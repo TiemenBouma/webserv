@@ -1,20 +1,32 @@
 #include "webserver.h"
 #include "typedef.h"
+#include "Cgi.hpp"
 #include <fstream>
 
 #include <unistd.h>
 
+Location	get_curr_loc(ConfigServer	server, std::string filename)
+{
+	(void)filename;
+	(void)server;
+	return (Location());
+}
 
 int get_request(Connection &connection) {
-    std::ifstream file;
-    std::string file_dir;
+    std::ifstream	file;
+    std::string		file_dir;
+	Location		currect_loc;
 
     //[INFO] Open the file in binary mode
 
+	currect_loc = get_curr_loc(connection._server, connection._response._file_path);
     file.open(connection._response._file_path.c_str(), std::ios::binary);
+	std::cout << "[INFO] filename: " << connection._response._file_path << std::endl;
 
     if (file.is_open()) {
 
+		//[INFO] check for CGI
+		// if (check_if_cgi() == true)
         //[INFO] Determine the MIME type of the file
         connection._response.set_header_content_type(connection._response._file_path);
 
