@@ -22,6 +22,7 @@ Team discussion:
 	[]discuss file permission error	
 	[]check CGI error page, what number
 	[]teapot errorpage (Swenne)
+[] about response - header should always start with status 
 [] check default status codes, what should we handle
 [] Check if we are going to do the NONBLOCKING method
 [] Search for all read/recv/write/send on a socket and check that, if an error is returned, the client is removed.
@@ -33,6 +34,7 @@ ERRORS
 
 getting 500 internal server error when changing the homepage html extension
 getting no error page for wrong urls, I changed te config - need help getting css to work again.
+std::cout << "\tPath uploadss: '" << (*it).path_uploads << "'" << std::endl; (double ss)
 
 
 SUBJECT:
