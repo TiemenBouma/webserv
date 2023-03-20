@@ -35,6 +35,7 @@ ERRORS
 getting 500 internal server error when changing the homepage html extension
 getting no error page for wrong urls, I changed te config - need help getting css to work again.
 std::cout << "\tPath uploadss: '" << (*it).path_uploads << "'" << std::endl; (double ss)
+[] search all occurences of // maybe error page here for connections.cpp file
 
 
 SUBJECT:
