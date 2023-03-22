@@ -47,7 +47,6 @@ int start_webserver(std::vector<ConfigServer> servers) {
 			Connection new_connection(servers[i], mime_types, mime_types_rev);
 			new_connection._socket = accept_new_connection(servers[i].server_soc);
 
-
 			if (new_connection._socket < 0) { //[INFO]if accepts fail Connection will not be added to connection list.
 				cout << "[SERVER] accept() call failed" << endl;
 				continue;

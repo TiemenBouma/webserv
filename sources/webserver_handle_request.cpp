@@ -16,7 +16,10 @@ int execute_request(Connection &connection) {
 	}
 
 	if (connection._request.get_method() == "GET") {
-		get_request(connection);
+		// if (connection._response._location_serv->cgi == 1)
+		// 	gci_get_request();
+		// else
+			get_request(connection);
 	}
 	else if (connection._request.get_method() == "POST") {
 		post_request(connection);

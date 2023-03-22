@@ -68,6 +68,8 @@ int post_request(Connection &connection) {
 	ifstream file_send;
  	file_send.open(connection._response._file_path.c_str(), std::ios::binary);
 
+	//[CHECK] wrong extenttion in config
+
     if (file_send.is_open()) {
 
         //[INFO] Determine the MIME type of the file
@@ -102,6 +104,7 @@ int post_request(Connection &connection) {
 	else {//Server side error
        //std::cout << "DEBUG: Error opening file 500 error" << std::endl; 
         connection._response.set_status_code("500");
+		cerr << "[SERVER]Cant open file. check config" << endl;
 		error_request(connection);
     }
 	return (0);

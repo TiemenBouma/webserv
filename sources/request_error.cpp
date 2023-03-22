@@ -38,6 +38,8 @@ int error_request(Connection &connection) {
 		std::string response_str = connection._response.serialize_headers();
 		ssize_t ret = connection._response.write_to_socket(response_str.c_str(), response_str.size());
 		if (ret == -1) {
+			std::cout << "SERVER: Error write_to_socket()" << std::endl;
+			file.close();
 			return 1;
 		}
 
@@ -48,12 +50,14 @@ int error_request(Connection &connection) {
         while ((n = file.read(buffer, BUFSIZE).gcount()) > 0) {
             ssize_t ret = connection._response.write_to_socket(buffer, n);
 			if (ret == -1)
-				return 1;
+				std::cout << "SERVER: Error write_to_socket()" << std::endl;
         }
 		//cout << "SERVER: End error response" << endl;
         file.close();
     } 
-	else
+	else {
         std::cout << "SERVER: Error open error_page" << std::endl;
-		return 0;
+		return 1;
+	}
+	return 0;
 }

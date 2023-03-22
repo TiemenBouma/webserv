@@ -15,25 +15,26 @@ Team discussion:
 
 [] autoindex not working yet.
 [] discuss with other teams what redirection is.
-	[]Setup routes in a server to different directories.
+	[]Setup routes in a server to different directories. 301 status
 [x] Check poll() return value
 [] Check poll() timelimit 
 [] check if control+Z is an issue 
 [x] check which error pages are needed
-	[]discuss file permission error	
+	[x]discuss file permission error	
 	[]check CGI error page, what number
 	[]teapot errorpage (Swenne)
 [x] check default status codes, what should we handle
 [] Check if we are going to do the NONBLOCKING method
 [x] Search for all read/recv/write/send on a socket and check that, if an error is returned, the client is removed.
 	[] Protected fcntl() for < 0 or not necessary?
-	[] accept new connection fail (protected?)
-
+	[x] accept new connection fail (protected?)
+[]
 
 ERRORS
 
-getting 500 internal server error when changing the homepage html extension
-getting no error page for wrong urls, I changed te config - need help getting css to work again.
+[]in DELETE request getting 500 internal server error when changing the homepage html extension. 
+[] Check if it works without css. (Tiemen)
+	getting no error page for wrong urls, I changed te config - need help getting css to work again.
 
 
 SUBJECT:
