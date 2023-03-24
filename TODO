@@ -32,8 +32,8 @@ Team discussion:
 
 ERRORS
 
-[]in DELETE request getting 500 internal server error when changing the homepage html extension. 
-[] Check if it works without css. (Tiemen)
+[x]in DELETE request getting 500 internal server error when changing the homepage html extension. 
+[x] Check if it works without css. (Tiemen)
 	getting no error page for wrong urls, I changed te config - need help getting css to work again.
 
 
