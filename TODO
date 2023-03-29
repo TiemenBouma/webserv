@@ -1,46 +1,53 @@
 
 Testing parser:
 
+	OLD: (SIETSE)
 [] duplicate keywords (two times autoindex)
-[] accepting request GETT or POOST
 [] not handling comments in config file
 
-[] segfault when using ./webserv wrong_file.html (accepts as config)
-	COMMENT: (Tiemen) I tested this, I did not get a segfault with wrong file. But I added exit(1); in main in line 41 for the program to exit.
-[] not quitting with exception caught for ./webserv utils/config.cfg
-[] not quitting with exception caught for ./webserv [any other file]
+	NEW: (Swenne)
+[x] moved non-member functions from Config.cpp to parser.cpp
+[] wrong exception caught for ./webserv [any other file]
+[] Check error behavior for ./webserv utils/error.conf
+[] Check behavior when accepting request GETT or POOST (typos)
 
+	DONE: (Tiemen) 
+[x] no segfault when using ./webserv wrong_file.html (accepts as config)
+[x] added exit(1); in main in line 41 for the program to exit.
+
+	DONE: (Sietse)
 [x] Invalid file, invalid extension
 [x] Invalid input , too few or too many files
 [x] makefile in root
 [x] two config.hpp header files?
 
-ERRORS
-
+	ERRORS: (Swenne)
 [x]in DELETE request getting 500 internal server error when changing the homepage html extension. 
 [x] Check if it works without css. (Tiemen)
 [x] getting no error page for wrong urls, I changed te config - need help getting css to work again.
 
-Team discussion:
+	Team discussion:
 
-[] autoindex not working yet.
 [] discuss with other teams what redirection is.
 	[]Setup routes in a server to different directories. 301 status
-[x] Check poll() return value
 [] Check poll() timelimit 
 	COMMENT: (Tiemen) Someowhat related: we can use Poll() only once, So I need to remove 1 poll() in the server.
-[] check if control+Z is an issue 
-[x] check which error pages are needed
-	[x]discuss file permission error	
+[] check if control+Z is an issue (killing terminal problem)
+[x] discuss file permission error	
 	[]check CGI error page, what number
-	[]teapot errorpage (Swenne)
-[x] check default status codes, what should we handle
 [] Check if we are going to do the NONBLOCKING method
 	COMMENT: (Tiemen) Whas was this again?
+	ANSWER: If cgi runs with a while(1) script, it should not block other sockets/requests
+[] Protected fcntl() for < 0 or not necessary?
+
+	SOLVED:
+[x] Check poll() return value
+[x] autoindex not working yet.
+[x] check which error pages are needed
+[x] accept new connection fail (protected?)
+[x] check default status codes, what should we handle
 [x] Search for all read/recv/write/send on a socket and check that, if an error is returned, the client is removed.
-	[] Protected fcntl() for < 0 or not necessary?
-	[x] accept new connection fail (protected?)
-[]
+
 
 
 

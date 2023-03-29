@@ -15,6 +15,7 @@ HEADERS 		:=	includes/typedef.h \
 INCLUDE_FLAGS 	:= $(addprefix -I , $(sort $(dir $(HEADERS))))
 
 SRC = 	sources/main.cpp \
+		sources/parser.cpp\
 		classes/Config.cpp \
 		classes/Request.cpp \
 		classes/Response.cpp \
