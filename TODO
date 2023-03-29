@@ -6,6 +6,7 @@ Testing parser:
 [] not handling comments in config file
 
 [] segfault when using ./webserv wrong_file.html (accepts as config)
+	COMMENT: (Tiemen) I tested this, I did not get a segfault with wrong file. But I added exit(1); in main in line 41 for the program to exit.
 [] not quitting with exception caught for ./webserv utils/config.cfg
 [] not quitting with exception caught for ./webserv [any other file]
 
@@ -17,8 +18,8 @@ Testing parser:
 ERRORS
 
 [x]in DELETE request getting 500 internal server error when changing the homepage html extension. 
-[] Check if it works without css. (Tiemen)
-[] getting no error page for wrong urls, I changed te config - need help getting css to work again.
+[x] Check if it works without css. (Tiemen)
+[x] getting no error page for wrong urls, I changed te config - need help getting css to work again.
 
 Team discussion:
 
@@ -27,6 +28,7 @@ Team discussion:
 	[]Setup routes in a server to different directories. 301 status
 [x] Check poll() return value
 [] Check poll() timelimit 
+	COMMENT: (Tiemen) Someowhat related: we can use Poll() only once, So I need to remove 1 poll() in the server.
 [] check if control+Z is an issue 
 [x] check which error pages are needed
 	[x]discuss file permission error	
@@ -34,6 +36,7 @@ Team discussion:
 	[]teapot errorpage (Swenne)
 [x] check default status codes, what should we handle
 [] Check if we are going to do the NONBLOCKING method
+	COMMENT: (Tiemen) Whas was this again?
 [x] Search for all read/recv/write/send on a socket and check that, if an error is returned, the client is removed.
 	[] Protected fcntl() for < 0 or not necessary?
 	[x] accept new connection fail (protected?)
