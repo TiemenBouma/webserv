@@ -11,11 +11,13 @@ HEADERS 		:=	includes/typedef.h \
 					classes/Request.hpp \
 					classes/Connection.hpp \
 					classes/Response.hpp \
+					classes/Cgi.hpp \
 					includes/webserver.h
 
 INCLUDE_FLAGS 	:= $(addprefix -I , $(sort $(dir $(HEADERS))))
 
 SRC = 	sources/main.cpp \
+		classes/Cgi.cpp \
 		classes/Config.cpp \
 		classes/Request.cpp \
 		classes/Response.cpp \

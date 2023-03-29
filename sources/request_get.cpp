@@ -5,11 +5,45 @@
 
 #include <unistd.h>
 
-Location	get_curr_loc(ConfigServer	server, std::string filename)
+void	cgi_get_request(Connection& connection)
 {
-	(void)filename;
-	(void)server;
-	return (Location());
+	int	pid;
+	Cgi	cgi;
+	const std::string	headers = "HTTP/1.1 200 OK\n";
+
+	if ((pid = fork()) == -1)
+	{
+		connection._response.set_status_code("500");
+		error_request(connection);
+	}
+	else if (pid == 0)
+	{
+		std::cout << "[SERVER] executing cgi on: '" << connection._response._file_path << "'" << std::endl;
+		try {
+			if (access(connection._response._file_path.c_str(), X_OK) == -1)
+				throw(Cgi::CgiSystemFailure());
+			std::string	cgi_out = cgi.cgi(connection._response._file_path, PATH_INFO);
+			ssize_t ret = connection._response.write_to_socket(headers.c_str(), headers.size());
+			if (ret == -1) {
+				std::cout << "[ERROR] in cgi headers" << std::endl;
+				exit(1);
+			}
+			ret = connection._response.write_to_socket(cgi_out.c_str(), cgi_out.size());
+			if (ret == -1) {
+				std::cout << "[ERROR] in cgi body" << std::endl;
+				exit(1);
+			}
+		}
+		catch (std::exception& e) {
+			std::cout << "Cgi exception caught." << std::endl;
+			std::cout << e.what() << std::endl;
+		connection._response.set_status_code("500");
+		error_request(connection);
+		}
+		exit(1);
+	}
+
+	// std::cout << "cgi output: " << cgi_out << std::endl;
 }
 
 int get_request(Connection &connection) {
@@ -19,14 +53,10 @@ int get_request(Connection &connection) {
 
     //[INFO] Open the file in binary mode
 
-	currect_loc = get_curr_loc(connection._server, connection._response._file_path);
     file.open(connection._response._file_path.c_str(), std::ios::binary);
-	std::cout << "[INFO] filename: " << connection._response._file_path << std::endl;
 
     if (file.is_open()) {
 
-		//[INFO] check for CGI
-		// if (check_if_cgi() == true)
         //[INFO] Determine the MIME type of the file
         connection._response.set_header_content_type(connection._response._file_path);
 

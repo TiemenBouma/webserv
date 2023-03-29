@@ -377,7 +377,7 @@ void	ConfigServer::print_locations(std::vector<Location> locs)
 		std::cout << std::endl;
 		std::cout << "\tIndex: '" << (*it).index << "'" << std::endl;
 		std::cout << "\tDefault file: '" << (*it).default_file << "'" << std::endl;
-		std::cout << "\tCgi path: '" << (*it).cgi << "'" << std::endl;
+		std::cout << "\tCgi: '" << (*it).cgi << "'" << std::endl;
 		std::cout << "\tPath uploadss: '" << (*it).path_uploads << "'" << std::endl;
 	}
 }
