@@ -109,10 +109,11 @@ void Connection::set_method_url_version() {
 void Connection::reading_headers() {
 
 	if (_request._whole_request.find("\r\n\r\n") == std::string::npos) {
-		if (_request._whole_request.size() >= BUFFER_SIZE_8K)
+		if (_request._whole_request.size() >= BUFFER_SIZE_8K) {
 			_request._state = REQUEST_CANCELLED;
 			_response._status_code = "431";
 			_response.set_status_message("request header fields too large");
+		}
 		return ;
 	}
 	if (_request._whole_request.find("\r\n\r\n") != std::string::npos) {
