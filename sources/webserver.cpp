@@ -6,9 +6,6 @@
 #include <fcntl.h>
 #include <unistd.h> //for close ()
 
-static const std::string GREEN = "\x1b[32m";
-static const std::string RESET = "\x1b[0m\n\n";
-
 int	accept_new_connection(int server_sock) {
 	int addr_len = sizeof(SA_IN);
 	int client_socket;

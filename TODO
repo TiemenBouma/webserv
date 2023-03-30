@@ -7,6 +7,7 @@ Testing parser:
 
 	NEW: (Swenne)
 [x] moved non-member functions from Config.cpp to parser.cpp
+[] autoindex, displays listing of directories from root or location?
 [] wrong exception caught for ./webserv [any other file]
 [] Check error behavior for ./webserv utils/error.conf
 [] Check behavior when accepting request GETT or POOST (typos)

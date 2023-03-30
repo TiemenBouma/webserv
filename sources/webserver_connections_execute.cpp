@@ -1,3 +1,13 @@
+/**
+ * @file webserver_connections_execute.cpp
+ * @author tbauma
+ * 
+ * @brief webserver 42 network
+ * @version 0.2
+ * 
+ * @date 2023-03-29
+ */
+
 #include "webserver.h"
 
 int execute_request(Connection &connection) {

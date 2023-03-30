@@ -22,14 +22,13 @@ SRC = 	sources/main.cpp \
 		sources/webserver.cpp \
 		classes/Connection.cpp \
 		sources/request_get.cpp \
-		sources/webserver_handle_request.cpp \
 		sources/request_post.cpp \
 		sources/request_error.cpp \
 		sources/request_delete.cpp \
 		sources/webserver_init.cpp  \
-		sources/webserver_receive.cpp \
-		sources/init_mime_types.cpp
-
+		sources/webserver_init_mime_types.cpp \
+		sources/webserver_connections_execute.cpp \
+		sources/webserver_connections_receive.cpp 
 
 OBJ = $(SRC:%.cpp=objects/%.o)
 
@@ -37,7 +36,7 @@ all: $(NAME)
 
 $(NAME) : $(OBJ)
 	@c++ $(FLAGS) $(OBJ) -o $(NAME) $(INCLUDE_FLAGS)
-	$(ECHO) "Compiled with $(CC) $(FLAGS)"
+	$(ECHO) "Compiled with $(CC) $(FLAGS)\n"
 
 objects/%.o : %.cpp
 	@mkdir -p $(dir $@)

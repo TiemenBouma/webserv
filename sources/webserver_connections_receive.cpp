@@ -1,3 +1,11 @@
+/**
+ * @file webserver_connections_receive.cpp
+ * @author tbouma
+ * @brief webserv 42 network
+ * @version 0.1
+ * @date 2023-03-29
+ */
+
 #include "webserver.h"
 #include <poll.h>
 #include <unistd.h>
