@@ -11,7 +11,7 @@ Request::Request(map_str_vec_str &mime_types)
 	_whole_request_at = 0;
 	_header_content_length = "";
 	_content_length = 0;
-	_location_serv = NULL;
+	_location_server = NULL;
 	_valid_request = false;
 	time(&_start_time);
 
@@ -32,7 +32,7 @@ Request &Request::operator=(const Request &other) {
 	_whole_request_at = other._whole_request_at;
 	_header_content_length = other._header_content_length;
 	_content_length = other._content_length;
-	_location_serv = other._location_serv;
+	_location_server = other._location_server;
 	_valid_request = other._valid_request;
 	_start_time = other._start_time;
 

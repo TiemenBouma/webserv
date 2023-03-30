@@ -89,7 +89,7 @@ void  Response::set_header_content_type(const std::string &file_dir) {
 	}
 }
 
-void  Response::set_header_content_length(std::ifstream &file) {
+void  Response::set_header_content_length_file(std::ifstream &file) {
 	file.seekg(0, std::ios::end);
 	std::streamsize size = file.tellg();
 	file.seekg(0, std::ios::beg);
@@ -102,3 +102,10 @@ void  Response::set_header_content_length(std::ifstream &file) {
 }
 
 
+void  Response::set_header_content_length_string(string &data) {
+	_header_content_length = "Content-Length: ";
+	std::stringstream ss;
+	ss << data.size();
+	_header_content_length += ss.str();
+	add_header(_header_content_length);
+}

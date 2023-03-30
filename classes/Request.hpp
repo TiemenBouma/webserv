@@ -48,7 +48,7 @@ public:
 	size_t		_whole_request_at;
 	size_t		_headers_length;
 	size_t		_content_length;
-	Location	*_location_serv;
+	Location	*_location_server;
 	bool _valid_request;
 	time_t		_start_time;
 

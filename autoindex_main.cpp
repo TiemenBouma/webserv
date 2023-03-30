@@ -22,7 +22,7 @@
 #include <cstdlib>     // for exit() - to exit the program with an error code when necessary.
 
 using namespace std;
-void error_pages_generator(ofstream outfile, int error_number, string msg_error_type)
+void error_pages_generator(ofstream &outfile, int error_number, string msg_error_type)
 {
     outfile << "<!DOCTYPE html>";
     outfile << "<html>\n";
@@ -39,7 +39,7 @@ void error_pages_generator(ofstream outfile, int error_number, string msg_error_
     outfile << "</html>\n";
 }
 
-vector<string> autoindex_response(char *directory_path)
+vector<string> autoindex_response(string &directory_path, vector<string> &dir_content)
 {
     vector<string> response;
     cout << "<html>\n";
@@ -48,7 +48,7 @@ vector<string> autoindex_response(char *directory_path)
     cout << "<h1>Index of " << directory_path << "</h1>\n";
     cout << "<hr>\n";
     cout << "<pre>\n";
-    for (vector<string>::const_iterator it = response.begin(); it != response.end(); ++it) 
+    for (vector<string>::const_iterator it = dir_content.begin(); it != dir_content.end(); ++it) 
     {
         const string& filename = *it;
         if (filename == "." || filename == "..")
@@ -62,28 +62,30 @@ vector<string> autoindex_response(char *directory_path)
     return(response);
 }
 
-int main(int argc, char* argv[]) 
+int autoindex(string &dir) 
 {
 // [IDEA] main describing expected input with argv[0]
-    if (argc != 2)
-    {
-        cerr << "Usage: [" << argv[0] << "] [directory]\n";
-        return 1;
-    }
+    // if (argc != 2)
+    // {
+    //     cerr << "Usage: [" << argv[0] << "] [directory]\n";
+    //     return 1;
+    // }
 
 // [CHECK] simple error handling, need more protection?
-    DIR* dirp = opendir(argv[1].c_str());
+    DIR* dirp = opendir(dir.c_str());
     if (dirp == NULL) 
     {
-        cerr << "Error: " << argv[1] << " is not a directory.\n";
+        cerr << "Error: " << dir << " is not a directory.\n";
         return 1;
     }
 
 // [SUBJECT] not sure if we can use dirent.h functions/struct.
     struct dirent* dp;
-    vector<string> filenames = autoindex_response(argv[1]); //using arg for now
-    while ((dp = readdir(dirp)) != NULL)
-        filenames.push_back(dp->d_name);
+	vector<string> dir_content;
+    while ((dp = readdir(dirp)) != NULL) {
+		 dir_content.push_back(dp->d_name);
+	}
+    vector<string> filenames = autoindex_response(dir, dir_content); //using arg for now
     closedir(dirp);
 
 // [IDEA] error pages generator, outstream file for now -testing.
@@ -93,7 +95,7 @@ int main(int argc, char* argv[])
         cerr << "Error: Failed to open output file.\n";
         return 1;
     }
-    error_pages_generator(outfile, 404); // using 404 for now
+    error_pages_generator(outfile, 404, "No page"); // using 404 for now
     outfile.close();
 
     return 0;

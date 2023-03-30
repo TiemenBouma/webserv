@@ -23,7 +23,7 @@ int get_request(Connection &connection) {
         connection._response.set_header_content_type(connection._response._file_path);
 
         //[INFO] Get the file size
-		connection._response.set_header_content_length(file);
+		connection._response.set_header_content_length_file(file);
 
 		//[INFO] WRITE/SEND THE HEADERS
 		//std::cout << "SERVER: Sending GET response: \n" << std::endl;

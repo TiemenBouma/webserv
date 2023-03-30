@@ -31,7 +31,7 @@ int error_request(Connection &connection) {
         connection._response.set_header_content_type(error_page);
 
         //[INFO] Get the file size
-		connection._response.set_header_content_length(file);
+		connection._response.set_header_content_length_file(file);
 
 		//[INFO] WRITE/SEND THE HEADERS
 		//std::cout << "SERVER: Sending ERROR response: \n" << std::endl;

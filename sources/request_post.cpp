@@ -37,7 +37,7 @@ string get_time() {
 //For now it opens the file in URL and appends the body to it.
 int post_request(Connection &connection) {
 	std::string body = connection._request.get_body();
-	std::string path_upload = connection._response._location_serv->path_uploads;
+	std::string path_upload = connection._response._location_server->path_uploads;
 	string root = connection._server.root;
 	string time = get_time();
 	std::vector<std::string> extention = connection._request.get_extention();
@@ -76,7 +76,7 @@ int post_request(Connection &connection) {
         connection._response.set_header_content_type(connection._response._file_path);
 
         //[INFO] Get the file size
-		connection._response.set_header_content_length(file_send);
+		connection._response.set_header_content_length_file(file_send);
 
 		//[INFO] WRITE/SEND THE HEADERS
 		//std::cout << "SERVER: Sending POST response: \n" << std::endl;
