@@ -12,6 +12,7 @@
 #include "Request.hpp"
 #include "Config.hpp"
 #include "typedef.h"
+#include "colors.h"
 
 using namespace std;
 
@@ -38,5 +39,14 @@ int     delete_request(Connection &connection);
 //ERROR HANDLING
 int     error_request(Connection &connection);
 void    error_message(std::string msg, int code);
+
+//PARSERSING/CONFIG
+int	    parse_config(std::string config, std::vector<ConfigServer> &servers);
+void	print_servers(std::vector<ConfigServer> servers);
+int	    check_brackets(std::string config);
+int	    skipspace(std::string::iterator it);
+string	it_to_str(std::string::iterator it);
+
+
 
 #endif

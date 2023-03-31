@@ -6,9 +6,6 @@
 #include <fcntl.h>
 #include <unistd.h> //for close ()
 
-static const std::string GREEN = "\x1b[32m";
-static const std::string RESET = "\x1b[0m\n\n";
-
 int	accept_new_connection(int server_sock) {
 	int addr_len = sizeof(SA_IN);
 	int client_socket;
@@ -47,12 +44,12 @@ int start_webserver(std::vector<ConfigServer> servers) {
 			Connection new_connection(servers[i], mime_types, mime_types_rev);
 			new_connection._socket = accept_new_connection(servers[i].server_soc);
 
-
 			if (new_connection._socket < 0) { //[INFO]if accepts fail Connection will not be added to connection list.
 				cout << "[SERVER] accept() call failed" << endl;
 				continue;
 			}
-			fcntl(new_connection._socket, F_SETFL, O_NONBLOCK);
+			if (fcntl(new_connection._socket, F_SETFL, O_NONBLOCK) == -1)
+				continue;
 			cout << endl << "[SERVER] new connection socket: " << new_connection._socket << endl;
 			connections.push_back(new_connection);
 		}

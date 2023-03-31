@@ -53,6 +53,10 @@ void	cgi_get_request(Connection& connection)
 	// std::cout << "cgi output: " << cgi_out << std::endl;
 }
 
+// int gci_get_request() {
+
+// }
+
 int get_request(Connection &connection) {
     std::ifstream	file;
     std::string		file_dir;
@@ -68,7 +72,7 @@ int get_request(Connection &connection) {
         connection._response.set_header_content_type(connection._response._file_path);
 
         //[INFO] Get the file size
-		connection._response.set_header_content_length(file);
+		connection._response.set_header_content_length_file(file);
 
 		//[INFO] WRITE/SEND THE HEADERS
 		//std::cout << "SERVER: Sending GET response: \n" << std::endl;
@@ -95,6 +99,7 @@ int get_request(Connection &connection) {
     } 
 	else {//Server side error
         connection._response.set_status_code("500");
+		cerr << "[SERVER] error. Cant open file. check config" << endl;
 		error_request(connection);
     }
     return 0;

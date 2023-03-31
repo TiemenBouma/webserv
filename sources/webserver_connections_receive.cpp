@@ -1,3 +1,11 @@
+/**
+ * @file webserver_connections_receive.cpp
+ * @author tbouma
+ * @brief webserv 42 network
+ * @version 0.1
+ * @date 2023-03-29
+ */
+
 #include "webserver.h"
 #include <poll.h>
 #include <unistd.h>
@@ -23,7 +31,8 @@ void	receive_request(Connection &connection) {
 		return;
 
 	//TIMEOUT 1ms for poll might not be good or allowed.
-	poll(&poll_fd, 1, 1);
+	if (poll(&poll_fd, 1, 1) == -1)
+		return;
 	if (poll_fd.revents & POLLHUP) {
 		cout << "[DEBUG]POLLHUP" << endl;
 		if (connection._request._state == REQUEST_READING_DONE)

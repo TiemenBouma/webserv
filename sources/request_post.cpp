@@ -37,7 +37,7 @@ string get_time() {
 //For now it opens the file in URL and appends the body to it.
 int post_request(Connection &connection) {
 	std::string body = connection._request.get_body();
-	std::string path_upload = connection._response._location_serv->path_uploads;
+	std::string path_upload = connection._response._location_server->path_uploads;
 	string root = connection._server.root;
 	string time = get_time();
 	std::vector<std::string> extention = connection._request.get_extention();
@@ -68,13 +68,15 @@ int post_request(Connection &connection) {
 	ifstream file_send;
  	file_send.open(connection._response._file_path.c_str(), std::ios::binary);
 
+	//[CHECK] wrong extenttion in config
+
     if (file_send.is_open()) {
 
         //[INFO] Determine the MIME type of the file
         connection._response.set_header_content_type(connection._response._file_path);
 
         //[INFO] Get the file size
-		connection._response.set_header_content_length(file_send);
+		connection._response.set_header_content_length_file(file_send);
 
 		//[INFO] WRITE/SEND THE HEADERS
 		//std::cout << "SERVER: Sending POST response: \n" << std::endl;
@@ -102,6 +104,7 @@ int post_request(Connection &connection) {
 	else {//Server side error
        //std::cout << "DEBUG: Error opening file 500 error" << std::endl; 
         connection._response.set_status_code("500");
+		cerr << "[SERVER]Cant open file. check config" << endl;
 		error_request(connection);
     }
 	return (0);

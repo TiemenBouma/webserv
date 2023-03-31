@@ -33,12 +33,12 @@ void Connection::set_location() {
 
 	Location loc;
 	string uri = _request.get_url();
-	_response._location_serv = NULL;
+	_response._location_server = NULL;
 
 	for (size_t i = 0; i < _server.locations.size(); i++) {
 		if (_server.locations[i].location == uri) {
-			_response._location_serv = &_server.locations[i];
-			_response._file_path = _server.root + _response._location_serv->index;
+			_response._location_server = &_server.locations[i];
+			_response._file_path = _server.root + _response._location_server->index;
 			return;
 		}
 	}
@@ -51,8 +51,8 @@ void Connection::set_location() {
 
 int	Connection::check_method() {
 
-	for (size_t i = 0; i < _response._location_serv->accepted_methods.size(); i++) {
-		if (_response._location_serv->accepted_methods[i] == _request.get_method())
+	for (size_t i = 0; i < _response._location_server->accepted_methods.size(); i++) {
+		if (_response._location_server->accepted_methods[i] == _request.get_method())
 			return 0;
 	}
 	_response._status_code = "405";
@@ -109,10 +109,11 @@ void Connection::set_method_url_version() {
 void Connection::reading_headers() {
 
 	if (_request._whole_request.find("\r\n\r\n") == std::string::npos) {
-		if (_request._whole_request.size() >= BUFFER_SIZE_8K)
+		if (_request._whole_request.size() >= BUFFER_SIZE_8K) {
 			_request._state = REQUEST_CANCELLED;
 			_response._status_code = "431";
 			_response.set_status_message("request header fields too large");
+		}
 		return ;
 	}
 	if (_request._whole_request.find("\r\n\r\n") != std::string::npos) {

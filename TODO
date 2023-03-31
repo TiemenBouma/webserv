@@ -1,41 +1,154 @@
 
 Testing parser:
 
+	OLD: (SIETSE)
 [] duplicate keywords (two times autoindex)
-[] not quitting program when an exception is caught
-[] accepting request GETT or POOST
 [] not handling comments in config file
 
+	NEW: (Swenne)
+[x] moved non-member functions from Config.cpp to parser.cpp
+[] autoindex, displays listing of directories from root or location?
+[] wrong exception caught for ./webserv [any other file]
+[] Check error behavior for ./webserv utils/error.conf
+[] Check behavior when accepting request GETT or POOST (typos)
+
+	DONE: (Tiemen) 
+[x] no segfault when using ./webserv wrong_file.html (accepts as config)
+[x] added exit(1); in main in line 41 for the program to exit.
+
+	DONE: (Sietse)
 [x] Invalid file, invalid extension
 [x] Invalid input , too few or too many files
 [x] makefile in root
 [x] two config.hpp header files?
 
-Team discussion:
+	ERRORS: (Swenne)
+[x]in DELETE request getting 500 internal server error when changing the homepage html extension. 
+[x] Check if it works without css. (Tiemen)
+[x] getting no error page for wrong urls, I changed te config - need help getting css to work again.
 
-[] autoindex not working yet.
+	Team discussion:
+
 [] discuss with other teams what redirection is.
-	[]Setup routes in a server to different directories.
-[] Check poll() timelimit and return value
-[] check if control+Z is an issue 
-[] check which error pages are needed
-	[]discuss file permission error	
+	[]Setup routes in a server to different directories. 301 status
+[] Check poll() timelimit 
+	COMMENT: (Tiemen) Someowhat related: we can use Poll() only once, So I need to remove 1 poll() in the server.
+[] check if control+Z is an issue (killing terminal problem)
+[x] discuss file permission error	
 	[]check CGI error page, what number
-	[]teapot errorpage (Swenne)
-[] check default status codes, what should we handle
 [] Check if we are going to do the NONBLOCKING method
-[] Search for all read/recv/write/send on a socket and check that, if an error is returned, the client is removed.
-	[] Protected fcntl() for < 0 or not necessary?
-	[] accept new connection fail (protected?)
+	COMMENT: (Tiemen) Whas was this again?
+	ANSWER: If cgi runs with a while(1) script, it should not block other sockets/requests
+[] Protected fcntl() for < 0 or not necessary?
+
+	SOLVED:
+[x] Check poll() return value
+[x] autoindex not working yet.
+[x] check which error pages are needed
+[x] accept new connection fail (protected?)
+[x] check default status codes, what should we handle
+[x] Search for all read/recv/write/send on a socket and check that, if an error is returned, the client is removed.
 
 
-ERRORS
-
-getting 500 internal server error when changing the homepage html extension
-getting no error page for wrong urls, I changed te config - need help getting css to work again.
 
 
-SUBJECT:
+
+### 				EVALSHEET:
+
+# Mandatory Part
+
+Check the code and ask questions
+- Launch the installation of siege with homebrew.
+- Ask explanations about the basics of an HTTP server.
+- Ask what function the group used for I/O Multiplexing.
+- Ask for an explanation of how does select() (or equivalent) work.
+- Ask if they use only one select() (or equivalent) and how they've managed the server to accept and the client to read/write.
+- The select() (or equivalent) should be in the main loop and should check file descriptors for read and write AT THE SAME TIME. 
+- There should be only one read or one write per client per select() (or equivalent). 
+- Ask the group to show you the code from the select() (or equivalent) to the read and write of a client.
+- Search for all read/recv/write/send on a socket and check that, if an error is returned, the client is removed.
+- Search for all read/recv/write/send and check if the returned value is correctly checked (checking only -1 or 0 values is not enough, both should be checked).
+- If errno is checked after read/recv/write/send, the grade is 0 and the evaluation process ends now.
+- Writing or reading ANY file descriptor without going through the select() (or equivalent) is strictly FORBIDDEN.
+- The project must compile without any re-link issue. If not, use the 'Invalid compilation' flag.
+- If any point is unclear or is not correct, use the flag for 'Incomplete work'.
+
+
+# Configuration
+In the configuration file, check whether you can do the following and test the result:
+
+- Search for the HTTP response status codes list on the internet. During this evaluation, if any status codes is wrong, don't give any related points.
+- Setup multiple servers with different ports.
+- Setup multiple servers with different hostnames 
+(use something like: curl --resolve example.com:80:127.0.0.1 http://example.com/).
+- Setup default error page (try to change the error 404).
+- Limit the client body 
+(use: curl -X POST -H "Content-Type: plain/text" --data "BODY IS HERE write something shorter or longer than body limit").
+- Setup routes in a server to different directories.
+- Setup a default file to search for if you ask for a directory.
+- Setup a list of methods accepted for a certain route (e.g., try to delete something with and without permission).
+
+
+# Basic checks
+Using telnet, curl, prepared files, demonstrate that the following
+features work properly:
+
+- GET requests -> should work
+- POST requests -> should work
+- DELETE requests -> should work
+- UNKNOWN requests -> should not produce any crash
+- For every test the status code must be correct
+-Upload some file to the server and get it back
+
+
+# Check CGI
+Pay attention to the following:
+- The server is working fine using a CGI.
+- The CGI should be run in the correct directory for relative path file access.
+- With the help of the evaluation group you should check that everything is working properly. You have to test the CGI with the methods "GET", "POST" and "DELETE".
+- You need to test with files containing errors to see if the error handling works properly. You can use a script containing an infinite loop or an error; you are free to do - - whatever tests you want within the limits of acceptability that remain at your discretion. The group being evaluated should help you with this.
+- The server should never crash and an error should be visible in case of a problem.
+
+
+# Check with a browser
+Use the reference browser of the team. Open the network part of it, and try to connect to the server using it.
+Look at the request header and response header.
+It should be compatible to serve a fully static website.
+- Try a wrong URL on the server.
+- Try to list a directory.
+- Try a redirected URL.
+- Try anything you want to.
+
+
+# Port issues
+In the configuration file setup multiple ports and use different websites. Use the browser to ensure that the configuration works as expected and shows the right website.
+In the configuration, try to setup the same port multiple times. It should not work.
+Launch multiple servers at the same time with different configurations but with common ports. Does it work? If it does, ask why the server should work if one of the configurations isn't functional. Keep going.
+
+
+# Siege & stress test
+Use Siege to run some stress tests.
+Availability should be above 99.5% for a simple GET on an empty page with a siege -b on that page.
+Verify there is no memory leak (Monitor the process memory usage. It should not go up indefinitely).
+Check if there is no hanging connection.
+You should be able to use siege indefinitely without having to restart the server (take a look at siege -b).
+
+
+# Bonus part
+Evaluate the bonus part if, and only if, the mandatory part has been entirely and perfectly done, and the error management handles unexpected or bad usage. In case all the mandatory points were not passed during the defense, bonus points must be totally ignored.
+
+# Cookies and session
+There is a working session and cookies system on the webserver.
+# CGI
+There is more than one CGI system.
+# Ratings
+Don’t forget to check the flag corresponding to the defense
+
+
+
+
+### 	SUBJECT :
+
 
 # Introduction
 The Hypertext Transfer Protocol (HTTP) is an application protocol for distributed, collaborative, hypermedia information systems.
@@ -156,95 +269,3 @@ Perfect means the mandatory part has been integrally done and works without malf
 If you have not passed ALL the mandatory requirements, your bonus part will not be evaluated at all.
 
 
-
-### EVALSHEET:
-
-# Mandatory Part
-
-Check the code and ask questions
-- Launch the installation of siege with homebrew.
-- Ask explanations about the basics of an HTTP server.
-- Ask what function the group used for I/O Multiplexing.
-- Ask for an explanation of how does select() (or equivalent) work.
-- Ask if they use only one select() (or equivalent) and how they've managed the server to accept and the client to read/write.
-- The select() (or equivalent) should be in the main loop and should check file descriptors for read and write AT THE SAME TIME. 
-- There should be only one read or one write per client per select() (or equivalent). 
-- Ask the group to show you the code from the select() (or equivalent) to the read and write of a client.
-- Search for all read/recv/write/send on a socket and check that, if an error is returned, the client is removed.
-- Search for all read/recv/write/send and check if the returned value is correctly checked (checking only -1 or 0 values is not enough, both should be checked).
-- If errno is checked after read/recv/write/send, the grade is 0 and the evaluation process ends now.
-- Writing or reading ANY file descriptor without going through the select() (or equivalent) is strictly FORBIDDEN.
-- The project must compile without any re-link issue. If not, use the 'Invalid compilation' flag.
-- If any point is unclear or is not correct, use the flag for 'Incomplete work'.
-
-
-Configuration
-In the configuration file, check whether you can do the following and
-test the result:
-
-- Search for the HTTP response status codes list on the internet. During this evaluation, if any status codes is wrong, don't give any related points.
-- Setup multiple servers with different ports.
-- Setup multiple servers with different hostnames (use something like: curl --resolve example.com:80:127.0.0.1 http://example.com/).
-- Setup default error page (try to change the error 404).
-- Limit the client body (use: curl -X POST -H "Content-Type: plain/text" --data "BODY IS HERE write something shorter or longer than body limit").
-- Setup routes in a server to different directories.
-- Setup a default file to search for if you ask for a directory.
-- Setup a list of methods accepted for a certain route (e.g., try to delete something with and without permission).
-
-
-Basic checks
-Using telnet, curl, prepared files, demonstrate that the following
-features work properly:
-
-- GET requests -> should work
-- POST requests -> should work
-- DELETE requests -> should work
-- UNKNOWN requests -> should not produce any crash
-- For every test the status code must be correct
--Upload some file to the server and get it back
-
-
-Check CGI
-Pay attention to the following:
-- The server is working fine using a CGI.
-- The CGI should be run in the correct directory for relative path file access.
-- With the help of the evaluation group you should check that everything is working properly. You have to test the CGI with the methods "GET", "POST" and "DELETE".
-- You need to test with files containing errors to see if the error handling works properly. You can use a script containing an infinite loop or an error; you are free to do - - whatever tests you want within the limits of acceptability that remain at your discretion. The group being evaluated should help you with this.
-- The server should never crash and an error should be visible in case of a problem.
-
-
-Check with a browser
-Use the reference browser of the team. Open the network part of it, and try to connect to the server using it.
-Look at the request header and response header.
-It should be compatible to serve a fully static website.
-- Try a wrong URL on the server.
-- Try to list a directory.
-- Try a redirected URL.
-- Try anything you want to.
-
-
-Port issues
-In the configuration file setup multiple ports and use different websites. Use the browser to ensure that the configuration works as expected and shows the right website.
-In the configuration, try to setup the same port multiple times. It should not work.
-Launch multiple servers at the same time with different configurations but with common ports. Does it work? If it does, ask why the server should work if one of the configurations isn't functional. Keep going.
-
-
-Siege & stress test
-Use Siege to run some stress tests.
-Availability should be above 99.5% for a simple GET on an empty page with a siege -b on that page.
-Verify there is no memory leak (Monitor the process memory usage. It should not go up indefinitely).
-Check if there is no hanging connection.
-You should be able to use siege indefinitely without having to restart the server (take a look at siege -b).
-
-
-# Bonus part
-Evaluate the bonus part if, and only if, the mandatory part has been entirely and perfectly done, and the error management handles unexpected or bad usage. In case all the mandatory points were not passed during the defense, bonus points must be totally ignored.
-
-Cookies and session
-There is a working session and cookies system on the webserver.
-
-CGI
-There is more than one CGI system.
-
-Ratings
-Don’t forget to check the flag corresponding to the defense
