@@ -5,6 +5,13 @@
 
 #include <unistd.h>
 
+/* 
+questions:
+Is content length neccesary?
+What error message should be given on write_to_socket failure?
+Add environment variables or not?
+ */
+
 void	cgi_get_request(Connection& connection)
 {
 	int	pid;
@@ -37,8 +44,8 @@ void	cgi_get_request(Connection& connection)
 		catch (std::exception& e) {
 			std::cout << "Cgi exception caught." << std::endl;
 			std::cout << e.what() << std::endl;
-		connection._response.set_status_code("500");
-		error_request(connection);
+			connection._response.set_status_code("500");
+			error_request(connection);
 		}
 		exit(1);
 	}
