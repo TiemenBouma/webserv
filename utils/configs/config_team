@@ -29,6 +29,14 @@ server {
 		accepted_methods GET POST;
 	}
 
+	location /cgi_uploads {
+		autoindex off;
+		cgi on;
+		index cgi-bin/cgi_test.py;
+		accepted_methods POST;
+	}
+	
+
 	location /dog {
 		autoindex off;
 		accepted_methods GET;
@@ -37,7 +45,7 @@ server {
 
 	location /cgi {
 		cgi on;
-		index cgi-bin/cgi_tst.py;
+		index cgi-bin/cgi_test.py;
 		accepted_methods GET;
 	}
 
