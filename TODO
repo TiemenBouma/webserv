@@ -1,5 +1,12 @@
 
+
 Testing parser:
+
+	NEW ERRORS:
+[] autoidex of utils//uploads
+[] root utils; (without dash)
+[] path uploadss type (when printing locations)
+[] Invalid config file. Try [data/config_tiemen.conf]
 
 	OLD: (SIETSE)
 [] duplicate keywords (two times autoindex)
@@ -23,7 +30,7 @@ Testing parser:
 [x] two config.hpp header files?
 
 	ERRORS: (Swenne)
-[x]in DELETE request getting 500 internal server error when changing the homepage html extension. 
+[x] in DELETE request getting 500 internal server error when changing the homepage html extension. 
 [x] Check if it works without css. (Tiemen)
 [x] getting no error page for wrong urls, I changed te config - need help getting css to work again.
 
@@ -35,10 +42,9 @@ Testing parser:
 	COMMENT: (Tiemen) Someowhat related: we can use Poll() only once, So I need to remove 1 poll() in the server.
 [] check if control+Z is an issue (killing terminal problem)
 [x] discuss file permission error	
-	[]check CGI error page, what number
+[] check CGI error page, what number
 [] Check if we are going to do the NONBLOCKING method
-	COMMENT: (Tiemen) Whas was this again?
-	ANSWER: If cgi runs with a while(1) script, it should not block other sockets/requests
+	If cgi runs with a while(1) script, it should not block other sockets/requests
 [] Protected fcntl() for < 0 or not necessary?
 
 	SOLVED:
