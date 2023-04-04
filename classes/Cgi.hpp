@@ -32,9 +32,9 @@ class	Cgi
 			}
 	};
 };
-bool		is_cgiable(std::string location, ConfigServer server);
 
 void	cgi_get_request(Connection& connection);
+void	cgi_post_request(Connection& connection);
 
 
 

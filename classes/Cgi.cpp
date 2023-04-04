@@ -56,20 +56,3 @@ std::string	Cgi::cgi(std::string program, std::string path_info)
 	close(fds[0]);
 	return (ret);
 }
-
-bool	is_cgiable(std::string location, ConfigServer server)
-{
-	std::vector<Location>::iterator	it = server.locations.begin();
-
-	for (; it != server.locations.end(); it++)
-	{
-		if ((*it).location == location)
-		{
-			if ((*it).cgi == true)
-				return (true);
-			else
-				return (false);
-		}
-	}
-	return (false);
-}

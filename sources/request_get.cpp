@@ -10,12 +10,12 @@ questions:
 Is content length neccesary?
 What error message should be given on write_to_socket failure?
 Add environment variables or not?
- */
+*/
 
 void	cgi_get_request(Connection& connection)
 {
-	int	pid;
-	Cgi	cgi;
+	int					pid;
+	Cgi					cgi;
 	const std::string	headers = "HTTP/1.1 200 OK\n";
 
 	if ((pid = fork()) == -1)
@@ -25,7 +25,7 @@ void	cgi_get_request(Connection& connection)
 	}
 	else if (pid == 0)
 	{
-		std::cout << "[SERVER] executing cgi on: '" << connection._response._file_path << "'" << std::endl;
+		std::cout << "[SERVER] executing GET cgi on: '" << connection._response._file_path << "'" << std::endl;
 		try {
 			if (access(connection._response._file_path.c_str(), X_OK) == -1)
 				throw(Cgi::CgiSystemFailure());
