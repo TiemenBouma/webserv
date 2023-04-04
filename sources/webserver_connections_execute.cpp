@@ -9,6 +9,7 @@
  */
 
 #include "webserver.h"
+#include "Cgi.hpp"
 #include <dirent.h>     // DIR
 #include <string>	   // string
 #include <vector>	   // vector
@@ -90,13 +91,16 @@ int execute_request(Connection &connection) {
 			string index_location = connection._server.root + connection._response._location_server->location;
 			autoindex_get(connection, index_location);
 		}
-		// if (connection._response._location_server->cgi == 1)
-		// 	gci_get_request();
+		if (connection._response._location_server->cgi == 1)
+			cgi_get_request(connection);
 		else
 			get_request(connection);
 	}
 	else if (connection._request.get_method() == "POST") {
-		post_request(connection);
+		if (connection._response._location_server->cgi == 1)
+			cgi_post_request(connection);
+		else
+			post_request(connection);
 	}
 	else if (connection._request.get_method() == "DELETE") {
 		delete_request(connection);

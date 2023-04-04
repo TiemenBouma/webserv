@@ -12,7 +12,7 @@ public:
 	std::vector<std::string>	accepted_methods;
 	std::string 				index;
 	std::string					default_file;
-	std::string 				cgi_path;
+	bool		 				cgi;
 	std::string					path_uploads;
 };
 

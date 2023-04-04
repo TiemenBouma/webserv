@@ -7,14 +7,17 @@ CONF 	:= utils/configs/config_team
 
 HEADERS 		:=	includes/typedef.h \
 					classes/Config.hpp \
+					classes/Response.hpp \
 					classes/Request.hpp \
 					classes/Connection.hpp \
 					classes/Response.hpp \
+					classes/Cgi.hpp \
 					includes/webserver.h
 
 INCLUDE_FLAGS 	:= $(addprefix -I , $(sort $(dir $(HEADERS))))
 
 SRC = 	sources/main.cpp \
+		classes/Cgi.cpp \
 		sources/parser.cpp\
 		classes/Config.cpp \
 		classes/Request.cpp \

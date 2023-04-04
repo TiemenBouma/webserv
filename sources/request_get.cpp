@@ -1,17 +1,66 @@
 #include "webserver.h"
 #include "typedef.h"
+#include "Cgi.hpp"
 #include <fstream>
 
 #include <unistd.h>
 
+/* 
+questions:
+Is content length neccesary?
+What error message should be given on write_to_socket failure?
+Add environment variables or not?
+*/
+
+void	cgi_get_request(Connection& connection)
+{
+	int					pid;
+	Cgi					cgi;
+	const std::string	headers = "HTTP/1.1 200 OK\n";
+
+	if ((pid = fork()) == -1)
+	{
+		connection._response.set_status_code("500");
+		error_request(connection);
+	}
+	else if (pid == 0)
+	{
+		std::cout << "[SERVER] executing GET cgi on: '" << connection._response._file_path << "'" << std::endl;
+		try {
+			if (access(connection._response._file_path.c_str(), X_OK) == -1)
+				throw(Cgi::CgiSystemFailure());
+			std::string	cgi_out = cgi.cgi(connection._response._file_path, PATH_INFO);
+			ssize_t ret = connection._response.write_to_socket(headers.c_str(), headers.size());
+			if (ret == -1) {
+				std::cout << "[ERROR] in cgi headers" << std::endl;
+				exit(1);
+			}
+			ret = connection._response.write_to_socket(cgi_out.c_str(), cgi_out.size());
+			if (ret == -1) {
+				std::cout << "[ERROR] in cgi body" << std::endl;
+				exit(1);
+			}
+		}
+		catch (std::exception& e) {
+			std::cout << "Cgi exception caught." << std::endl;
+			std::cout << e.what() << std::endl;
+			connection._response.set_status_code("500");
+			error_request(connection);
+		}
+		exit(1);
+	}
+
+	// std::cout << "cgi output: " << cgi_out << std::endl;
+}
 
 // int gci_get_request() {
 
 // }
 
 int get_request(Connection &connection) {
-    std::ifstream file;
-    std::string file_dir;
+    std::ifstream	file;
+    std::string		file_dir;
+	Location		currect_loc;
 
     //[INFO] Open the file in binary mode
 
