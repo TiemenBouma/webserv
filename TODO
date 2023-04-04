@@ -1,6 +1,11 @@
 
 Testing parser:
 
+	NEW ERRORS:
+[] autoidex of utils//uploads
+[] root utils; (without dash)
+[] path uploadss type (when printing locations)
+
 	OLD: (SIETSE)
 [] duplicate keywords (two times autoindex)
 [] not handling comments in config file

@@ -20,8 +20,7 @@ server {
 
 	location /uploads {
 		autoindex on;
-		index webpages/post.html;
-		path_uploads /uploads/;
+		path_uploads /check/uploads;
 		accepted_methods GET POST;
 	}
 
@@ -35,11 +34,6 @@ server {
 		autoindex off;
 		accepted_methods GET;
 		index /favicon.ico;
-	}
-
-	location /not_found.html {
-		index webpages/error_pages/not_found.html;
-		accepted_methods GET;
 	}
 
 }
