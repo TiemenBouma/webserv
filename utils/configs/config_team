@@ -4,6 +4,11 @@ server {
 	root           utils/;
 	client_max_body_size 2000000;
 	server_name www.our_webserv_team.com;
+	error_page 400 /webpages/tiemen/error_pages/400bad_request.html;
+	error_page 404 /webpages/tiemen/error_pages/404not_found.html;
+	error_page 405 /webpages/tiemen/error_pages/405method_not_allowed.html;
+	error_page 431 /webpages/tiemen/error_pages/431request_header_field_too_large.html;
+	error_page 500 /webpages/tiemen/error_pages/500internal_error.html;
 
 	location / {
 		autoindex off;
@@ -31,8 +36,9 @@ server {
 	}
 
 	location /cgi {
+		cgi on;
 		cgi off;
-		index cgi-bin/cgi_test.py;
+		index cgi-bin/cgi_tst.py;
 		accepted_methods GET;
 	}
 
