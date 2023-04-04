@@ -1,9 +1,0 @@
-      request target
-method - resource - version
---- ----------- --------                STARTLINE
-GET /orderd/123 HTTP/1.1
------------------ --------              HEADER
-Host:127.0.0:8000
-User-Agent: Manueal-Http-Request
------------ ---------------------       BODY (post)
-            type of browser
