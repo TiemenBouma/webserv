@@ -54,7 +54,7 @@ fclean: clean
 
 re: fclean all
 
-run: all
+run: re
 	./$(NAME) $(CONF)
 
 test: re

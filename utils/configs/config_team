@@ -5,11 +5,6 @@ server {
 	client_max_body_size 2000000;
 	server_name www.our_webserv_team.com;
 
-	error_page 400 /error_pages/400bad_request.html;
-	error_page 404 /error_pages/404not_found.html;
-	error_page 405 /error_pages/405method_not_allowed.html;
-	error_page 431 /error_pages/431request_header_field_too_large.html;
-	error_page 500 /error_pages/500internal_error.html;
 
 	location / {
 		autoindex off;
@@ -36,18 +31,12 @@ server {
 		index /images/404.jpg;
 	}
 
-	location /cgi {
-		cgi_path scripts/script.py;
-		accepted_methods GET;
-	}
-
 	location /favicon.ico {
 		autoindex off;
 		accepted_methods GET;
 		index /favicon.ico;
 	}
 
-	
 	location /not_found.html {
 		index webpages/error_pages/not_found.html;
 		accepted_methods GET;
