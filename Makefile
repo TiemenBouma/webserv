@@ -1,58 +1,68 @@
+include includes/colors.mk
+
 NAME 	:= webserv
-FLAGS 	:= -Wall -Werror -Wextra -std=c++98
 INC		:= -I includes
-CONF 	:= data/config_tiemen.conf
+FLAGS 	:= -Wall -Werror -Wextra -std=c++98
+CONF 	:= utils/config_tiemen.conf
 
-CC = c++
-RM = rm -rf
-
-HEADERS 		:=	includes/webserver.h \
-					includes/typedef.h \
-					classes/Connection.hpp \
-					classes/Request.hpp \
+HEADERS 		:=	includes/typedef.h \
 					classes/Config.hpp \
-					classes/Response.hpp
+					classes/Response.hpp \
+					classes/Request.hpp \
+					classes/Connection.hpp \
+					classes/Response.hpp \
+					classes/Cgi.hpp \
+					includes/webserver.h
 
 INCLUDE_FLAGS 	:= $(addprefix -I , $(sort $(dir $(HEADERS))))
 
-SRC = 	classes/Request.cpp \
-		classes/Response.cpp \
-		classes/Connection.cpp \
+SRC = 	sources/main.cpp \
+		classes/Cgi.cpp \
+		sources/parser.cpp\
 		classes/Config.cpp \
+		classes/Request.cpp \
+		classes/Response.cpp \
 		sources/webserver.cpp \
+		classes/Connection.cpp \
 		sources/request_get.cpp \
-		sources/request_execute.cpp \
 		sources/request_post.cpp \
-		sources/request_delete.cpp \
 		sources/request_error.cpp \
-		sources/init_mime_types.cpp \
+		sources/request_delete.cpp \
 		sources/webserver_init.cpp  \
-		sources/webserver_handle_connection.cpp \
-		sources/webserver_receive_request.cpp \
-		sources/main.cpp
+		sources/webserver_init_mime_types.cpp \
+		sources/webserver_connections_execute.cpp \
+		sources/webserver_connections_receive.cpp 
 
-
-OBJ = $(SRC:%.cpp=obj/%.o)
+OBJ = $(SRC:%.cpp=objects/%.o)
 
 all: $(NAME)
 
 $(NAME) : $(OBJ)
-	c++ $(FLAGS) $(OBJ) -o $(NAME) $(INCLUDE_FLAGS)
+	@c++ $(FLAGS) $(OBJ) -o $(NAME) $(INCLUDE_FLAGS)
+	$(ECHO) "Compiled with $(CC) $(FLAGS)\n"
 
-obj/%.o : %.cpp
+objects/%.o : %.cpp
 	@mkdir -p $(dir $@)
-	c++ -c $(FLAGS) $< -o $@ $(INCLUDE_FLAGS)
+	@c++ -c $(FLAGS) $< -o $@ $(INCLUDE_FLAGS)
+	$(ECHO) "Compiling $^"
 
 clean:
-	$(RM) $(OBJ)
-	$(RM) obj/
+	@$(RM) $(OBJ)
+	@$(RM) objects/ obj/
+	$(ECHO) "Removing objects"
 
 fclean: clean
-	$(RM) $(NAME)
+	@$(RM) $(NAME)
+	$(ECHO) "Removing $(NAME)"
 
 re: fclean all
 
-test: all
+run: all
 	./$(NAME) $(CONF)
+
+test: re
+	$(ECHO) "$(CYAN)Running Siege$(END)"
+	siege -R siege_test/siege.conf > siege_test/test_output.txt
+	$(ECHO) "$(GREEN)Siege Success [OK]$(END)"
 
 .PHONY: clean fclean re
