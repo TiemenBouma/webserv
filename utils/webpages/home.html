@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<!-- saved from url=(0022)http://localhost:8080/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+	<title>Hello (Web)World</title>
+	<style>
+		body {
+			background-color: #000000;
+			color: #fff;
+			font-family: Fantasy, sans-serif;
+			margin: 0;
+			padding: 0;
+		}
+		h1 {
+			font-size: 60px;
+			font-weight: bold;
+			text-align: center;
+			padding-top: 80px;
+		}
+		.container {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 50vh;
+		}
+		.col {
+			display: flex;
+			flex-direction: column;
+			margin: 0 10px;
+			align-items: center;
+			justify-content: center;
+			flex-basis: 50%;
+			text-align: center;
+		}
+		.btn {
+			margin: 11px ;
+			padding: 20px 50px;
+			border-radius: 20px;
+			font-size: 22px;
+			/* font-weight: bold; */
+			text-align: center;
+			background-color: #3498db;
+			color: #fff;
+			cursor: pointer;
+			text-shadow: 1px 1px 1px #000000;
+			box-shadow: 1px 1px 2px #46686b;
+			transition: background-color 0.2s;
+		}
+		.btn:hover {
+			background-color: #2980b9;
+            text-shadow: 1px 1px 1px #000000;
+		}
+        .form {
+            margin: 30px;
+            padding: 10px;
+            border-radius: 20px;
+            background-color: #3498db;
+            box-shadow: 1px 1px 4px #46686b;
+            text-shadow: 1px 1px 1px #000000;
+            text-align: center;
+        }
+        input[type="text"] {
+            margin: 10px 10px 10px;
+            padding: 10px 10px 10px;
+            border-radius: 50x;
+            border: 5px  ;
+            font-size: 16px;
+            /* font-weight: bold; */
+            text-align: center;
+            width: 80%;
+            background-color: #fff;
+            color: #000;
+            text-shadow: 2px 2px 2px #ffffff;
+            box-shadow: 2px 2px 4px #000000;
+        }
+        input[type="email"] {
+            margin: 10px 10px 10px;
+            padding: 10px 10px 10px;
+            border-radius: 5px;
+            border: 5px  ;
+            font-size: 16px;
+            /* font-weight: bold; */
+            text-align: center;
+            width: 80%;
+            background-color: #fff;
+            color: #000;
+            text-shadow: 2px 2px 2px #ffffff;
+            box-shadow: 2px 2px 4px #000000;
+        }
+        input[type="submit"] {
+            margin: 30px 10px;
+            padding: 5px;
+            border-radius: 5px;
+            border: 50px ;
+            font-size: 17px;
+            /* font-weight: bold; */
+            text-align: center;
+            width: 30%;
+            background-color: #ffe99f;
+            color: #000;
+            text-shadow: 2px 2px 2px #ffffff;
+            box-shadow: 5px #9f9f9f;
+        }
+	</style>
+    <script type="text/javascript">
+        // <![CDATA[
+        var colour="#666666";
+        var sparkles=40;
+        
+        var x=ox=400;
+        var y=oy=300;
+        var swide=800;
+        var shigh=600;
+        var sleft=sdown=0;
+        var tiny=new Array();
+        var star=new Array();
+        var starv=new Array();
+        var starx=new Array();
+        var stary=new Array();
+        var tinyx=new Array();
+        var tinyy=new Array();
+        var tinyv=new Array();
+        window.onload=function() { if (document.getElementById) {
+        var i, rats, rlef, rdow;
+        for (var i=0; i<sparkles; i++) {
+        var rats=createDiv(3, 3);
+        rats.style.visibility="hidden";
+        document.body.appendChild(tiny[i]=rats);
+        starv[i]=0;
+        tinyv[i]=0;
+        var rats=createDiv(5, 5);
+        rats.style.backgroundColor="transparent";
+        rats.style.visibility="hidden";
+        var rlef=createDiv(1, 5);
+        var rdow=createDiv(5, 1);
+        rats.appendChild(rlef);
+        rats.appendChild(rdow);
+        rlef.style.top="2px";
+        rlef.style.left="0px";
+        rdow.style.top="0px";
+        rdow.style.left="2px";
+        document.body.appendChild(star[i]=rats);
+        }
+        set_width();
+        sparkle();
+        }}
+        function sparkle() {
+        var c;
+        if (x!=ox || y!=oy) {
+        ox=x;
+        oy=y;
+        for (c=0; c<sparkles; c++) if (!starv[c]) {
+        star[c].style.left=(starx[c]=x)+"px";
+        star[c].style.top=(stary[c]=y)+"px";
+        star[c].style.clip="rect(0px, 5px, 5px, 0px)";
+        star[c].style.visibility="visible";
+        starv[c]=50;
+        break;
+        }
+        }
+        for (c=0; c<sparkles; c++) {
+        if (starv[c]) update_star(c);
+        if (tinyv[c]) update_tiny(c);
+        }
+        setTimeout("sparkle()", 40);
+        }
+        function update_star(i) {
+        if (--starv[i]==25) star[i].style.clip="rect(1px, 4px, 4px, 1px)";
+        if (starv[i]) {
+        stary[i]+=1+Math.random()*3;
+        if (stary[i]<shigh+sdown) {
+        star[i].style.top=stary[i]+"px";
+        starx[i]+=(i%5-2)/5;
+        star[i].style.left=starx[i]+"px";
+        }
+        else {
+        star[i].style.visibility="hidden";
+        starv[i]=0;
+        return;
+        }
+        }
+        else {
+        tinyv[i]=50;
+        tiny[i].style.top=(tinyy[i]=stary[i])+"px";
+        tiny[i].style.left=(tinyx[i]=starx[i])+"px";
+        tiny[i].style.width="2px";
+        tiny[i].style.height="2px";
+        star[i].style.visibility="hidden";
+        tiny[i].style.visibility="visible"
+        }
+        }
+        function update_tiny(i) {
+        if (--tinyv[i]==25) {
+        tiny[i].style.width="1px";
+        tiny[i].style.height="1px";
+        }
+        if (tinyv[i]) {
+        tinyy[i]+=1+Math.random()*3;
+        if (tinyy[i]<shigh+sdown) {
+        tiny[i].style.top=tinyy[i]+"px";
+        tinyx[i]+=(i%5-2)/5;
+        tiny[i].style.left=tinyx[i]+"px";
+        }
+        else {
+        tiny[i].style.visibility="hidden";
+        tinyv[i]=0;
+        return;
+        }
+        }
+        else tiny[i].style.visibility="hidden";
+        }
+        document.onmousemove=mouse;
+        function mouse(e) {
+        set_scroll();
+        y=(e)?e.pageY:event.y+sdown;
+        x=(e)?e.pageX:event.x+sleft;
+        }
+        function set_scroll() {
+        if (typeof(self.pageYOffset)=="number") {
+        sdown=self.pageYOffset;
+        sleft=self.pageXOffset;
+        }
+        else if (document.body.scrollTop || document.body.scrollLeft) {
+        sdown=document.body.scrollTop;
+        sleft=document.body.scrollLeft;
+        }
+        else if (document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)) {
+        sleft=document.documentElement.scrollLeft;
+        sdown=document.documentElement.scrollTop;
+        }
+        else {
+        sdown=0;
+        sleft=0;
+        }
+        }
+        window.onresize=set_width;
+        function set_width() {
+        if (typeof(self.innerWidth)=="number") {
+        swide=self.innerWidth;
+        shigh=self.innerHeight;
+        }
+        else if (document.documentElement && document.documentElement.clientWidth) {
+        swide=document.documentElement.clientWidth;
+        shigh=document.documentElement.clientHeight;
+        }
+        else if (document.body.clientWidth) {
+        swide=document.body.clientWidth;
+        shigh=document.body.clientHeight;
+        }
+        }
+        function createDiv(height, width) {
+        var div=document.createElement("div");
+        div.style.position="absolute";
+        div.style.height=height+"px";
+        div.style.width=width+"px";
+        div.style.overflow="hidden";
+        div.style.backgroundColor=colour;
+        return (div);
+        }
+        // ]]>
+        </script>
+        
+</head>
+<body>
+
+
+	<h1>Hello (Web)World</h1>
+	<div class="container">
+		<div class="col">
+			<button class="btn" onclick="window.location.href=&#39;http://localhost:8080/dog&#39;;">Images</button>
+			<button class="btn" onclick="window.location.href=&#39;http://localhost:8080/uploads&#39;;">Uploads</button>
+			<button class="btn" onclick="window.location.href=&#39;http://localhost:8080/cgi&#39;;">Scripts</button>
+		</div>
+		<div class="col">
+            <div class="form">
+                <form>
+                    <label for="title">Submit your information:</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name">
+                    <input type="email" id="email" name="email" placeholder="Enter your email">
+                    <input type="submit" value="Submit">
+                </form>
+            </div>
+		</div>
+	</div>
+
+<div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 413.364px; left: 717.8px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: visible; left: 915.6px; top: 207.213px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 328.206px; left: 654.4px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 664.2px; top: 202.343px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 256.265px; left: 699px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 699px; top: 140.084px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 251.307px; left: 726.6px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 716.8px; top: 124.44px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 242.631px; left: 749.2px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 729.6px; top: 125.598px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 300.525px; left: 698.8px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 718.4px; top: 169.345px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 470.782px; left: 707.4px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 717.2px; top: 347.717px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 589.43px; left: 728px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 728px; top: 476.631px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 639.225px; left: 748.6px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 738.8px; top: 520.848px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 621.819px; left: 769.2px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 749.6px; top: 509.683px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 618.604px; left: 690.8px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 710.4px; top: 497.115px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 561.283px; left: 707.4px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 717.2px; top: 444.724px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 550.336px; left: 725px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 725px; top: 426.159px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 261.91px; left: 873.6px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 863.8px; top: 128.325px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 503.151px; left: 661.2px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 641.6px; top: 373.683px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 458.936px; left: 587.8px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 607.4px; top: 343.054px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 459.271px; left: 597.4px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 607.2px; top: 337.975px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 453.424px; left: 585px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 585px; top: 331.893px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 450.671px; left: 573.6px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 563.8px; top: 336.389px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 490.025px; left: 547.2px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 527.6px; top: 376.273px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 526.368px; left: 457.8px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 477.4px; top: 401.658px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 510.424px; left: 476.4px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 486.2px; top: 399.556px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 516.6px; left: 497px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 497px; top: 400.211px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 494.952px; left: 523.6px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 513.8px; top: 377.56px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 442.608px; left: 561.2px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 541.6px; top: 327.795px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 362.638px; left: 501.8px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 521.4px; top: 239.991px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 330.813px; left: 530.4px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 540.2px; top: 211.247px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 280.421px; left: 553px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 553px; top: 168.063px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 267.43px; left: 570.6px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 560.8px; top: 151.909px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 262.997px; left: 587.2px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 567.6px; top: 139.707px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 255.702px; left: 508.8px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 528.4px; top: 127.895px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 248.03px; left: 525.4px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 535.2px; top: 139.366px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 255.797px; left: 539px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 539px; top: 135.241px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 262.12px; left: 553.6px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 543.8px; top: 138.894px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 316.441px; left: 563.2px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 543.6px; top: 201.089px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 352.016px; left: 480.8px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 500.4px; top: 232.971px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 1px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden; top: 499.551px; left: 814.4px;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden; left: 824.2px; top: 369.141px; clip: rect(1px, 4px, 4px, 1px);"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 3px; width: 3px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden;"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 3px; width: 3px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden;"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div><div style="position: absolute; height: 3px; width: 3px; overflow: hidden; background-color: rgb(102, 102, 102); visibility: hidden;"></div><div style="position: absolute; height: 5px; width: 5px; overflow: hidden; background-color: transparent; visibility: hidden;"><div style="position: absolute; height: 1px; width: 5px; overflow: hidden; background-color: rgb(102, 102, 102); top: 2px; left: 0px;"></div><div style="position: absolute; height: 5px; width: 1px; overflow: hidden; background-color: rgb(102, 102, 102); top: 0px; left: 2px;"></div></div></body></html>

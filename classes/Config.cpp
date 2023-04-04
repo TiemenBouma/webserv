@@ -206,6 +206,7 @@ void	ConfigServer::_parse_redirect(vector<Location> &dst, string::iterator &it, 
 	int	i;
 	Location	new_loc;
 
+	new_loc.cgi = 0;
 	new_loc.autoindex = 0;
 	_parse_location(new_loc.location, it);
 	//cout << "\tin data class: " << new_loc.location << endl;
@@ -240,8 +241,8 @@ void	ConfigServer::_parse_redirect(vector<Location> &dst, string::iterator &it, 
 				break;
 			case CGI:
 				_parse_bool(new_loc.cgi, it);
-		//		std::cout << "\tin data class: " << new_loc.cgi_path << std::endl;
-		//		std::cout << "\tparsed cgi path" << std::endl;
+				// std::cout << "\tin data class: " << new_loc.cgi << std::endl;
+				// std::cout << "\tparsed cgi path" << std::endl;
 				break;
 			case PATH_UPLOADS:
 				_parse_string(new_loc.path_uploads, it);
@@ -402,6 +403,6 @@ void	ConfigServer::print_locations(vector<Location> locs)
 		cout << "\tPath uploadss: '" << (*it).path_uploads << "'" << endl;
 		cout << "\tDefault file: '" << (*it).default_file << "'" << endl;
 		cout << "\tAutoindex: '" << (*it).autoindex << "'" << endl;
-		cout << "\tCgi path: '" << (*it).cgi << "'" << endl;
+		cout << "\tCgi: '" << (*it).cgi << "'" << endl;
 	}
 }

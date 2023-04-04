@@ -42,7 +42,8 @@ Testing parser:
 	COMMENT: (Tiemen) Someowhat related: we can use Poll() only once, So I need to remove 1 poll() in the server.
 [] check if control+Z is an issue (killing terminal problem)
 [x] discuss file permission error	
-[] check CGI error page, what number
+	[]check CGI error page, what number
+	[] check if cgi returns content type header
 [] Check if we are going to do the NONBLOCKING method
 	If cgi runs with a while(1) script, it should not block other sockets/requests
 [] Protected fcntl() for < 0 or not necessary?
