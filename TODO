@@ -36,6 +36,7 @@ Testing parser:
 [] check if control+Z is an issue (killing terminal problem)
 [x] discuss file permission error	
 	[]check CGI error page, what number
+	[] check if cgi returns content type header
 [] Check if we are going to do the NONBLOCKING method
 	COMMENT: (Tiemen) Whas was this again?
 	ANSWER: If cgi runs with a while(1) script, it should not block other sockets/requests
