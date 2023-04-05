@@ -32,7 +32,7 @@ server {
 	location /cgi_uploads {
 		autoindex off;
 		cgi on;
-		index cgi-bin/cgi_test.py;
+		index scripts/cgi_test_post.py;
 		accepted_methods POST;
 	}
 	
@@ -45,7 +45,7 @@ server {
 
 	location /cgi {
 		cgi on;
-		index scripts/cgi_test.py;
+		index scripts/cgi_test_get.py;
 		accepted_methods GET;
 	}
 
