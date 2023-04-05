@@ -381,10 +381,17 @@ void	ConfigServer::check_req_direcs()
 	if (root == "")
 		throw(NoRoot());
 	// [CHECK] keeping these error pages bellow ?
+	if (error_pages.find(400) == error_pages.end())
+		error_pages.insert(pair<int, string>(400, "utils/default_error_pages/400bad_request.html"));
 	if (error_pages.find(404) == error_pages.end())
-		error_pages.insert(pair<int, string>(404, "../data/webpages/default_error_pages/not_found2.html"));
+		error_pages.insert(pair<int, string>(404, "utils/default_error_pages/404not_found.html"));
 	if (error_pages.find(405) == error_pages.end())
-		error_pages.insert(pair<int, string>(405, "../data/webpages/default_error_pages/method_not_allowed2.html"));
+		error_pages.insert(pair<int, string>(405, "utils/default_error_pages/405method_not_allowed.html"));
+	if (error_pages.find(431) == error_pages.end())
+		error_pages.insert(pair<int, string>(431, "utils/default_error_pages/431request_header_fields_too_large.html"));
+	if (error_pages.find(500) == error_pages.end())
+		error_pages.insert(pair<int, string>(500, "utils/default_error_pages/500internal_error.html"));
+
 	if (size_content <= 0)
 		throw(WrongSizeContent());
 }
