@@ -29,7 +29,7 @@ void	cgi_get_request(Connection& connection)
 		try {
 			if (access(connection._response._file_path.c_str(), X_OK) == -1)
 				throw(Cgi::CgiSystemFailure());
-			std::string	cgi_out = cgi.cgi(connection._response._file_path, PATH_INFO, connection._request.get_body());
+			std::string	cgi_out = cgi.cgi(connection._response._file_path, PATH_INFO, "");
 			connection._response.set_header_content_length_string(cgi_out);
 			ssize_t ret = connection._response.write_to_socket(headers.c_str(), headers.size());
 			if (ret == -1) {

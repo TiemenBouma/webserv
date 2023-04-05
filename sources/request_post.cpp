@@ -117,8 +117,6 @@ void	cgi_post_request(Connection& connection)
 	int					pid;
 	Cgi					cgi;
 	const std::string	header = "HTTP/1.1 201 OK\n";
-	std::string 		upl_file_name = connection._server.root + connection._response._location_server->path_uploads + "upload_" + get_time() + ".cgi";
-	ofstream			cgi_out_file(upl_file_name);
 
 	if ((pid = fork()) == -1)
 	{
@@ -131,11 +129,7 @@ void	cgi_post_request(Connection& connection)
 		try {
 			if (access(connection._response._file_path.c_str(), X_OK) == -1)
 				throw(Cgi::CgiSystemFailure());
-			std::string	cgi_out_str = cgi.cgi(connection._response._file_path, PATH_INFO, "koekjes");
-			if (cgi_out_file.good() == false)
-				throw(Cgi::CgiSystemFailure());
-			cgi_out_file << cgi_out_str;
-			cgi_out_file.close();
+			std::string	cgi_out_str = cgi.cgi(connection._response._file_path, PATH_INFO, connection._request.get_body());
 			ssize_t ret = connection._response.write_to_socket(header.c_str(), header.size());
 			if (ret == -1) {
 				std::cout << "[ERROR] in cgi headers" << std::endl;

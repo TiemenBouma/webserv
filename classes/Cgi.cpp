@@ -36,7 +36,6 @@ std::string	Cgi::cgi(std::string program, std::string path_info, std::string bod
 		throw(CgiSystemFailure());
 	if (pid == 0)
 	{
-		body = "worteltaart";
 		char**	args = _make_exec_arg(program, path_info, body);
 
 		close(fds[0]);
