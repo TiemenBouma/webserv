@@ -1,0 +1,63 @@
+
+server {
+	listen         8080;
+	root           utils/;
+	client_max_body_size 2000000;
+	server_name www.our_webserv_team.com;
+	error_page 400 /webpages/tiemen/error_pages/400bad_request.html;
+	error_page 404 /webpages/tiemen/error_pages/404not_found.html;
+	error_page 405 /webpages/tiemen/error_pages/405method_not_allowed.html;
+	error_page 431 /webpages/tiemen/error_pages/431request_header_field_too_large.html;
+	error_page 500 /webpages/tiemen/error_pages/500internal_error.html;
+
+	location / {
+		autoindex off;
+		index webpages/home.html;
+		accepted_methods GET;
+	}
+
+	location /homepage {
+		autoindex off;
+		accepted_methods GET;
+		index webpages/home.html;
+	}
+
+	location /uploads {
+		autoindex on;
+		index webpages/post.html;
+		path_uploads /uploads/;
+		accepted_methods GET POST;
+	}
+
+	location /cgi_uploads {
+		autoindex off;
+		cgi on;
+		index cgi-bin/cgi_test.py;
+		accepted_methods POST;
+	}
+	
+
+	location /dog {
+		autoindex off;
+		accepted_methods GET;
+		index /images/404.jpg;
+	}
+
+	location /cgi {
+		cgi on;
+		index scripts/cgi_test.py;
+		accepted_methods GET;
+	}
+
+	location /favicon.ico {
+		autoindex off;
+		accepted_methods GET;
+		index /favicon.ico;
+	}
+
+	location /not_found.html {
+		index webpages/error_pages/not_found.html;
+		accepted_methods GET;
+	}
+
+}

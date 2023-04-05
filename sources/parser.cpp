@@ -108,6 +108,6 @@ void	print_servers(std::vector<ConfigServer> servers)
 			std::cout << "'" << (*mapit).first << ", " << (*mapit).second << "'" << std::endl;
 		std::cout << "Size content: '" << (*it).size_content << "'" << std::endl;
         // [DEBUG] if you want to print locations check above fun on Config.cpp 
-		//(*it).print_locations((*it).locations);
+		(*it).print_locations((*it).locations);
 	}
 }
