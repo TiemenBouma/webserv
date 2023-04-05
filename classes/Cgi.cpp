@@ -6,19 +6,22 @@ void	Cgi::exiterr(std::string e)
 	exit(0);
 }
 
-char**	Cgi::_make_exec_arg(std::string program, std::string path_info)
+char**	Cgi::_make_exec_arg(std::string program, std::string path_info, std::string body)
 {
 	std::string	full_prog_path = path_info + program;
-	char**	ret = new char*[2];
+	char**	ret = new char*[3];
 
 	ret[0] = strdup(full_prog_path.c_str());
 	if (ret[0] == NULL)
 		throw(CgiSystemFailure());
-	ret[1] = NULL;
+	ret[1] = strdup(body.c_str());
+	if (ret[1] == NULL)
+		throw(CgiSystemFailure());
+	ret[2] = NULL;
 	return (ret);
 }
 
-std::string	Cgi::cgi(std::string program, std::string path_info)
+std::string	Cgi::cgi(std::string program, std::string path_info, std::string body)
 {
 	int			pid;
 	char		buf[CGI_READ_SIZE];
@@ -33,13 +36,16 @@ std::string	Cgi::cgi(std::string program, std::string path_info)
 		throw(CgiSystemFailure());
 	if (pid == 0)
 	{
-		char**	args = _make_exec_arg(program, path_info);
+		body = "worteltaart";
+		char**	args = _make_exec_arg(program, path_info, body);
 
 		close(fds[0]);
 		dup2(fds[1], STDOUT_FILENO);
+		//write(fds[1], &body, size);
 		execve(args[0], args, environ);
 		throw(CgiSystemFailure());
 	}
+
 	wait(&status);
 	close(fds[1]);
 	struct pollfd poll_fd = {fds[0], POLLIN, 0};

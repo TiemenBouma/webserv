@@ -18,9 +18,9 @@ extern	char ** environ;
 class	Cgi
 {
 	private:
-		char**		_make_exec_arg(std::string program, std::string path_info);
+		char**		_make_exec_arg(std::string program, std::string path_info, std::string body);
 	public:
-		std::string	cgi(std::string program, std::string path_info);
+		std::string	cgi(std::string program, std::string path_info, std::string body);
 		void		exiterr(std::string e);
 
 	class CgiSystemFailure: public std::exception

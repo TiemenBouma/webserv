@@ -131,7 +131,7 @@ void	cgi_post_request(Connection& connection)
 		try {
 			if (access(connection._response._file_path.c_str(), X_OK) == -1)
 				throw(Cgi::CgiSystemFailure());
-			std::string	cgi_out_str = cgi.cgi(connection._response._file_path, PATH_INFO);
+			std::string	cgi_out_str = cgi.cgi(connection._response._file_path, PATH_INFO, "koekjes");
 			if (cgi_out_file.good() == false)
 				throw(Cgi::CgiSystemFailure());
 			cgi_out_file << cgi_out_str;
