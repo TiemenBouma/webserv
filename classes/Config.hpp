@@ -155,6 +155,14 @@ public:
 				return ("The value of the listen and client_max_body_size must be an integer.");
 			}
 	};
+	class DoubleDirective: public std::exception
+	{
+		public:
+			const char *	what() const throw()
+			{
+				return ("A directive cannot be specified twice. Except for error_pages");
+			}
+	};
 };
 
 int			parse_config(std::string config, std::vector<ConfigServer> &servers);
@@ -165,18 +173,18 @@ std::string	it_to_str(std::string::iterator it);
 
 enum	token_types
 {
-	LISTEN,
-	ROOT,
-	SERVER_NAME,
-	ERROR_PAGE,
-	CLIENT_BODY_SIZE,
-	REDIRECTION,
-	INDEX,
-	AUTOINDEX,
-	METHODS,
-	DEFAULT_FILE,
-	CGI,
-	PATH_UPLOADS
+	LISTEN				= 0x1,
+	ROOT				= 0x2,
+	SERVER_NAME			= 0x4,
+	ERROR_PAGE			= 0x8,
+	CLIENT_BODY_SIZE	= 0x10,
+	REDIRECTION			= 0x20,
+	INDEX				= 0x40,
+	AUTOINDEX			= 0x80,
+	METHODS				= 0x100,
+	DEFAULT_FILE		= 0x200,
+	CGI					= 0x400,
+	PATH_UPLOADS		= 0x800
 };
 
 #endif

@@ -23,9 +23,9 @@
 [] not handling comments in config file
 [] define back slash standard 
 	root never ends with it and location always starts with it
-[] no exception called for double keywords
+[x] no exception called for double keywords
 [] when printing locations, the code prints typo uploadss
-[] Check extensions. Give an exception "Invalid config file. Try [right_file]
+[x] Check extensions. Give an exception "Invalid config file. Try [right_file]
 [] wrong exception caught for ./webserv [any other file]
 [] add all error pages in default folder,
 	if time is left or someone is bored, generate error pages.
@@ -34,7 +34,7 @@
 
 	NEW: (Sietse)
 [] add environment variabes cgi
-[] add pass post content to cgi
+[x] add pass post content to cgi
 [] add cgi that can upload image
 [] add cgi the can processes and uploads a form
 

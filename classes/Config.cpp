@@ -3,6 +3,7 @@
 #include <stack>
 #include <sstream>
 #include <cstring>
+#include <cmath>
 
 #include "Config.hpp"
 #include "webserver.h"
@@ -203,8 +204,9 @@ void	ConfigServer::_parse_location(string &dst, string::iterator &it)
 
 void	ConfigServer::_parse_redirect(vector<Location> &dst, string::iterator &it, vector<string> keywords)
 {
-	int	i;
+	int			i;
 	Location	new_loc;
+	int			double_direc_check = 0;
 
 	new_loc.cgi = 0;
 	new_loc.autoindex = 0;
@@ -217,35 +219,53 @@ void	ConfigServer::_parse_redirect(vector<Location> &dst, string::iterator &it, 
 		while (cmp_directive(it, keywords[i]) == 0)
 			i++;
 	//	cout << "\tin location block: i: " << i << ", directive found: " << keywords[i] << endl;
-		switch (i)
+		switch (static_cast<int>(pow(2, i)))
 		{
 			case INDEX:
+				if ((double_direc_check & INDEX) == INDEX)
+					throw(DoubleDirective());
 				_parse_string(new_loc.index, it);
+				double_direc_check |= INDEX;
 		//		cout << "\tin data class: " << new_loc.index << endl;
 		//		cout << "\tparsed index" << endl;
 				break;
 			case AUTOINDEX:
+				if ((double_direc_check & AUTOINDEX) == AUTOINDEX)
+					throw(DoubleDirective());
 				_parse_bool(new_loc.autoindex, it);
+				double_direc_check |= AUTOINDEX;
 		//		cout << "\tin data class: " << new_loc.autoindex << endl;
 		//		cout << "\tparsed autoindex" << endl;
 				break;
 			case METHODS:
+				if ((double_direc_check & METHODS) == METHODS)
+					throw(DoubleDirective());
 				_parse_methods(new_loc.accepted_methods, it);
+				double_direc_check |= METHODS;
 		//		cout << "\tin data class: " << new_loc.accepted_methods[1] << endl;
 		//		cout << "\tparsed methods" << endl;
 				break;
 			case DEFAULT_FILE:
+				if ((double_direc_check & DEFAULT_FILE) == DEFAULT_FILE)
+					throw(DoubleDirective());
 				_parse_string(new_loc.default_file, it);
+				double_direc_check |= DEFAULT_FILE;
 		//		cout << "\tin data class: " << new_loc.default_file << endl;
 		//		cout << "\tparsed default file" << endl;
 				break;
 			case CGI:
+				if ((double_direc_check & CGI) == CGI)
+					throw(DoubleDirective());
 				_parse_bool(new_loc.cgi, it);
+				double_direc_check |= CGI;
 				// std::cout << "\tin data class: " << new_loc.cgi << std::endl;
 				// std::cout << "\tparsed cgi path" << std::endl;
 				break;
 			case PATH_UPLOADS:
+				if ((double_direc_check & PATH_UPLOADS) == PATH_UPLOADS)
+					throw(DoubleDirective());
 				_parse_string(new_loc.path_uploads, it);
+				double_direc_check |= PATH_UPLOADS;
 		//		cout << "\tin data class: " << new_loc.path_uploads << endl;
 
 		//		cout << "\tparsed path uploads" << endl;
@@ -283,6 +303,7 @@ int	ConfigServer::parse_keyword(string::iterator &it)
 {
 	int	i;
 	map<int, string>::iterator	mapit;
+	int			double_direc_check = 0;
 
 	while (*it != '}' && *it != '\0')
 	{
@@ -290,20 +311,29 @@ int	ConfigServer::parse_keyword(string::iterator &it)
 		while (cmp_directive(it, keywords[i]) == 0)
 			i++;
 		//cout << "in server block: i: " << i << ", directive found: " << keywords[i] << endl;
-		switch (i)
+		switch (static_cast<int>(pow(2, i)))
 		{
 			case LISTEN:
+				if ((double_direc_check & LISTEN) == LISTEN)
+					throw(DoubleDirective());
 				_parse_number(listen_port, it);
-		//		cout << "in data class: " << listen_port << endl;
-		//		cout << "parsed listen" << endl;
+				double_direc_check |= LISTEN;
+				// cout << "in data class: " << listen_port << endl;
+				// cout << "parsed listen" << endl;
 				break;
 			case ROOT:
+				if ((double_direc_check & ROOT) == ROOT)
+					throw(DoubleDirective());
 				_parse_string(root, it);
+				double_direc_check |= ROOT;
 		//		cout << "in data class: " << root << endl;
 		//		cout << "parsed root" << endl;
 				break;
 			case SERVER_NAME:
+				if ((double_direc_check & SERVER_NAME) == SERVER_NAME)
+					throw(DoubleDirective());
 				_parse_string(server_name, it);
+				double_direc_check |= SERVER_NAME;
 		//		cout << "in data class: " << server_name << endl;
 		//		cout << "parsed server name" << endl;
 				break;
@@ -314,7 +344,10 @@ int	ConfigServer::parse_keyword(string::iterator &it)
 		//		cout << "parsed error pages" << endl;
 				break;
 			case CLIENT_BODY_SIZE:
+				if ((double_direc_check & CLIENT_BODY_SIZE) == CLIENT_BODY_SIZE)
+					throw(DoubleDirective());
 				_parse_number(size_content, it);
+				double_direc_check |= CLIENT_BODY_SIZE;
 		//		cout << "in data class: " << size_content << endl;
 		//		cout << "parsed client body size" << endl;
 				break;
