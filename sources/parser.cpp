@@ -13,6 +13,23 @@
 #include "webserver.h"
 #include "colors.h"
 
+bool	check_conf_ext(std::string	filename)
+{
+	std::string::iterator		fileit = filename.begin();
+	const	std::string			ext = ".conf";
+	std::string::const_iterator	extit = ext.begin();
+
+	for (; fileit != filename.end() && *fileit != '.'; fileit++);
+	while (*fileit == *extit && extit != ext.end() && fileit != filename.end())
+	{
+		extit++;
+		fileit++;
+	}
+	if (extit == ext.end() && fileit == filename.end())
+		return (true);
+	return (false);
+}
+
 int	parse_config(std::string config, std::vector<ConfigServer> &servers)
 {
 	std::string::iterator	it = config.begin();

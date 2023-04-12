@@ -36,6 +36,10 @@ int	main(int argc, char *argv[])
 	if (argc != 2)
 		error_message("Expected input: [./webserv] [config file]", EXIT_FAILURE);
 
+	// [INFO] check if conf file has right extesion
+	if (check_conf_ext(argv[1]) == false)
+		error_message("Invalid config file. Expected \"*.conf\".", EXIT_FAILURE);
+
 	// [INFO] checking for valid configFile.
 	if (configFile.good() == false)
 		error_message("Invalid config file. Try [data/config_tiemen.conf]", EXIT_FAILURE);
