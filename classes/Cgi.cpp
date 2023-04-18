@@ -6,9 +6,9 @@ void	Cgi::exiterr(std::string e)
 	exit(0);
 }
 
-char**	Cgi::_make_exec_arg(std::string program, std::string path_info, std::string body)
+char**	Cgi::_make_exec_arg(std::string program, std::string body)
 {
-	std::string	full_prog_path = path_info + program;
+	std::string	full_prog_path = program;
 	char**	ret = new char*[3];
 
 	ret[0] = strdup(full_prog_path.c_str());
@@ -24,17 +24,17 @@ char**	Cgi::_make_exec_arg(std::string program, std::string path_info, std::stri
 char**	Cgi::make_env(ConfigServer serv, Location loc, const std::string method)
 {
 	char**				env = new char*[5];
-	char*				protocol = strdup("HTTP/1.1");
+	char*				protocol = strdup("SERVER_PROTOCOL=HTTP/1.1");
 	std::stringstream	ss;
 	ss << serv.listen_port;
 	std::string			lstn_port_str = ss.str();
 
 	std::cout << "[INFO] Making environment variables" << std::endl;
-	env[SERVER] = const_cast<char *>(serv.server_name.c_str());
+	env[SERVER] = const_cast<char *>(("SERVER_NAME=" + serv.server_name).c_str());
 	env[SERVER_PROTOCOL] = protocol;
-	env[SERVER_PORT] = const_cast<char *>(lstn_port_str.c_str());
-	env[REQUEST_METHOD] = const_cast<char *>(method.c_str());
-	env[PATH_INFO] = const_cast<char *>(loc.index.c_str());
+	env[SERVER_PORT] = const_cast<char *>(("SERVER_PORT=" + lstn_port_str).c_str());
+	env[REQUEST_METHOD] = const_cast<char *>(("REQUEST_METHOD=" + method).c_str());
+	env[PATH_INFO] = const_cast<char *>(("PATH_INFO" + loc.index).c_str());
 	return (env);
 }
 
@@ -45,20 +45,24 @@ std::string	Cgi::cgi(std::string program, char** env, std::string body)
 	int			readret;
 	std::string	ret;
 	int			fds[2];
+	int			std_out_cpy;
 	int			status;
 
+	std::cout << "[INFO] executing cgi with path_info: " << env[SERVER_PROTOCOL] << std::endl;
+	std_out_cpy = dup(STDOUT_FILENO);
 	if (pipe(fds) == -1)
 		throw(CgiSystemFailure());
 	if ((pid = fork()) == -1)
 		throw(CgiSystemFailure());
 	if (pid == 0)
 	{
-		char**	args = _make_exec_arg(program, "path_info", body);
+		char**	args = _make_exec_arg(program, body);
 
 		close(fds[0]);
 		dup2(fds[1], STDOUT_FILENO);
 		//write(fds[1], &body, size);
 		execve(args[0], args, env);
+		dup2(std_out_cpy, STDOUT_FILENO);
 		throw(CgiSystemFailure());
 	}
 

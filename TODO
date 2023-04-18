@@ -37,6 +37,7 @@
 [x] add pass post content to cgi
 [] add cgi that can upload image
 [] add cgi the can processes and uploads a form
+[] figure out why error_page.css get requested when cgi is called
 
 	NEW: (Swenne)
 	DONE: (Swenne)
