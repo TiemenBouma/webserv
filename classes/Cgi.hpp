@@ -10,18 +10,27 @@
 #include "Config.hpp"
 #include "Connection.hpp"
 
-#define PATH_INFO ""
 #define CGI_READ_SIZE 100
 
 extern	char ** environ;
+
+enum	env_vars
+{
+	SERVER,
+	SERVER_PROTOCOL,
+	SERVER_PORT,
+	REQUEST_METHOD,
+	PATH_INFO
+};
 
 class	Cgi
 {
 	private:
 		char**		_make_exec_arg(std::string program, std::string path_info, std::string body);
 	public:
-		std::string	cgi(std::string program, std::string path_info, std::string body);
+		std::string	cgi(std::string program, char** env, std::string body);
 		void		exiterr(std::string e);
+		static char**	make_env(ConfigServer serv, Location loc, const std::string method);
 
 	class CgiSystemFailure: public std::exception
 	{

@@ -21,7 +21,24 @@ char**	Cgi::_make_exec_arg(std::string program, std::string path_info, std::stri
 	return (ret);
 }
 
-std::string	Cgi::cgi(std::string program, std::string path_info, std::string body)
+char**	Cgi::make_env(ConfigServer serv, Location loc, const std::string method)
+{
+	char**				env = new char*[5];
+	char*				protocol = strdup("HTTP/1.1");
+	std::stringstream	ss;
+	ss << serv.listen_port;
+	std::string			lstn_port_str = ss.str();
+
+	std::cout << "[INFO] Making environment variables" << std::endl;
+	env[SERVER] = const_cast<char *>(serv.server_name.c_str());
+	env[SERVER_PROTOCOL] = protocol;
+	env[SERVER_PORT] = const_cast<char *>(lstn_port_str.c_str());
+	env[REQUEST_METHOD] = const_cast<char *>(method.c_str());
+	env[PATH_INFO] = const_cast<char *>(loc.index.c_str());
+	return (env);
+}
+
+std::string	Cgi::cgi(std::string program, char** env, std::string body)
 {
 	int			pid;
 	char		buf[CGI_READ_SIZE];
@@ -36,12 +53,12 @@ std::string	Cgi::cgi(std::string program, std::string path_info, std::string bod
 		throw(CgiSystemFailure());
 	if (pid == 0)
 	{
-		char**	args = _make_exec_arg(program, path_info, body);
+		char**	args = _make_exec_arg(program, "path_info", body);
 
 		close(fds[0]);
 		dup2(fds[1], STDOUT_FILENO);
 		//write(fds[1], &body, size);
-		execve(args[0], args, environ);
+		execve(args[0], args, env);
 		throw(CgiSystemFailure());
 	}
 

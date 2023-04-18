@@ -105,5 +105,6 @@ int execute_request(Connection &connection) {
 	else if (connection._request.get_method() == "DELETE") {
 		delete_request(connection);
 	}
+	std::cout << "[DEBUG] status code before exiting cgi Get: " << connection._response._status_code << std::endl;
 	return 0;
 }
