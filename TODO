@@ -1,12 +1,12 @@
 	TEAM NAMES:
 
 	AUTOINDEX:
-[] autoidex of utils//uploads
-[] how to open/show files and dirs when clicking
-[] create temporary new locations on server
-[] when there is no index, show root
+[] autoidex of utils//uploads. [TIEMEN] This worked right?
+[x] how to open/show files and dirs when clicking
+[x] create temporary new locations on server
+[] when there is no index, show root.	[TIEMEN] what do we mean by index here? Show Root is a securety risk. If AI is on just show the location I think.
 [] empty uploads before eval
-[] read about behavior autoindex
+[x] read about behavior autoindex [TIEMEN] Done
 [] autoindex, displays listing of directories from root or location?
 
 	CGI:

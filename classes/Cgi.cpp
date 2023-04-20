@@ -1,4 +1,8 @@
 #include "Cgi.hpp"
+#include <stdlib.h>
+#include <string.h>
+#include <sys/wait.h>
+#include <sys/poll.h>
 
 void	Cgi::exiterr(std::string e)
 {
@@ -11,7 +15,7 @@ char**	Cgi::_make_exec_arg(std::string program, std::string path_info, std::stri
 	std::string	full_prog_path = path_info + program;
 	char**	ret = new char*[3];
 
-	ret[0] = strdup(full_prog_path.c_str());
+	ret[0] = strdup(full_prog_path.c_str()); //THis is a malloc right? So it can fail? do we need to free it?  What happens if you just c_str() it?(Tiemen)
 	if (ret[0] == NULL)
 		throw(CgiSystemFailure());
 	ret[1] = strdup(body.c_str());
@@ -47,6 +51,7 @@ std::string	Cgi::cgi(std::string program, std::string path_info, std::string bod
 
 	wait(&status);
 	close(fds[1]);
+	//Can you please explain this? Why do you use poll, what is the purpose of this code(Tiemen)
 	struct pollfd poll_fd = {fds[0], POLLIN, 0};
 	while (1)
 	{
