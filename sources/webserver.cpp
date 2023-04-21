@@ -33,7 +33,7 @@ int start_webserver(std::vector<ConfigServer> servers) {
 
 	// [INFO]handle connections
 	while (true) {
-		if (poll(&*fds.begin(), fds.size(), 0) < 0)
+		if (poll(&*fds.begin(), fds.size(), 1) < 0)
 			error_message("(Poll) protected, returned error. Exit webserver", 6);
 
 		//[INFO]listening and accepting to new connection comming in
