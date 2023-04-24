@@ -24,18 +24,25 @@ char**	Cgi::_make_exec_arg(std::string program, std::string body)
 char**	Cgi::make_env(ConfigServer serv, Location loc, const std::string method)
 {
 	char**				env = new char*[5];
-	char*				protocol = strdup("SERVER_PROTOCOL=HTTP/1.1");
 	std::stringstream	ss;
 	ss << serv.listen_port;
 	std::string			lstn_port_str = ss.str();
 
-	std::cout << "[INFO] Making environment variables" << std::endl;
-	env[SERVER] = const_cast<char *>(("SERVER_NAME=" + serv.server_name).c_str());
-	env[SERVER_PROTOCOL] = protocol;
-	env[SERVER_PORT] = const_cast<char *>(("SERVER_PORT=" + lstn_port_str).c_str());
-	env[REQUEST_METHOD] = const_cast<char *>(("REQUEST_METHOD=" + method).c_str());
-	env[PATH_INFO] = const_cast<char *>(("PATH_INFO" + loc.index).c_str());
+	env[SERVER] = strdup(("SERVER_NAME=" + serv.server_name).c_str());
+	env[SERVER_PROTOCOL] = strdup("SERVER_PROTOCOL=HTTP/1.1");
+	env[SERVER_PORT] = strdup(("SERVER_PORT=" + lstn_port_str).c_str());
+	env[REQUEST_METHOD] = strdup(("REQUEST_METHOD=" + method).c_str());
+	env[PATH_INFO] = strdup(("PATH_INFO=" + loc.index).c_str());
+	env[NULL_END] = NULL;
 	return (env);
+}
+
+void	print_env(char **env)
+{
+	for (int i = 0; env[i] != NULL; i++)
+	{
+		std::cout << env[i] << std::endl;
+	}
 }
 
 std::string	Cgi::cgi(std::string program, char** env, std::string body)
@@ -48,7 +55,6 @@ std::string	Cgi::cgi(std::string program, char** env, std::string body)
 	int			std_out_cpy;
 	int			status;
 
-	std::cout << "[INFO] executing cgi with path_info: " << env[SERVER_PROTOCOL] << std::endl;
 	std_out_cpy = dup(STDOUT_FILENO);
 	if (pipe(fds) == -1)
 		throw(CgiSystemFailure());

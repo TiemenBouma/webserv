@@ -25,10 +25,10 @@ void	cgi_get_request(Connection& connection)
 	}
 	else if (pid == 0)
 	{
-		std::cout << "[SERVER] executing GET cgi on: '" << connection._response._file_path << "'" << std::endl;
 		try {
 			if (access(connection._response._file_path.c_str(), X_OK) == -1)
 				throw(Cgi::CgiSystemFailure());
+			//[INFO] run cgi
 			std::string cgi_out = cgi.cgi(connection._response._file_path, Cgi::make_env(connection._server, *(connection._response._location_server), "GET"), "");
 			connection._response.set_header_content_length_string(cgi_out);
 			ssize_t ret = connection._response.write_to_socket(headers.c_str(), headers.size());
@@ -41,7 +41,6 @@ void	cgi_get_request(Connection& connection)
 				std::cout << "[ERROR] in cgi body" << std::endl;
 				exit(1);
 			}
-			std::cout << "[DEBUG] cgi has been written to client" << std::endl;
 		}
 		catch (std::exception& e) {
 			std::cout << "Cgi exception caught." << std::endl;

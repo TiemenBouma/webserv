@@ -20,7 +20,8 @@ enum	env_vars
 	SERVER_PROTOCOL,
 	SERVER_PORT,
 	REQUEST_METHOD,
-	PATH_INFO
+	PATH_INFO,
+	NULL_END
 };
 
 class	Cgi
