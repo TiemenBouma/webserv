@@ -1,7 +1,29 @@
 	TEAM NAMES:
 
+	POLL and protection:
+[] Check why poll hangs if I only one one poll.
+[] check all recv, read and send (check -1 and 0).
+
+	PARSER:
+[] Same poort nr in config file check double.
+[] add keyword redir that takes two values, number(statuscode) and webpage(index)
+
 	AUTOINDEX:
-[] autoidex of utils//uploads. [TIEMEN] This worked right?
+[] autoidex of utils//uploads. Need to show the files corectly?
+[] what if there is no index?
+
+	HOMEPAGE
+[] without username globals
+[] redir button also post cgi button
+
+	REDIRECTION
+[] if statement that checks for status 301 
+[] figure out how to make it work in the webserver_execute function. [TIEMEN] 
+
+
+______________________________________________________________________________
+
+	AUTOINDEX:
 [x] how to open/show files and dirs when clicking
 [x] create temporary new locations on server
 [] when there is no index, show root.	[TIEMEN] what do we mean by index here? Show Root is a securety risk. If AI is on we just show the location I think.
@@ -10,16 +32,15 @@
 [x] autoindex, displays listing of directories from root or location? [TIEMEN] Location
 
 	CGI:
-[] add environment variabes cgi
+[x] add environment variabes cgi
 	COMMENT: for now no, check other teams
 [x] add pass post content to cgi
-[] add cgi that can upload image
+[x] add cgi that can upload image
 [x] add cgi the can processes and uploads a form
-[] error page wrong header, not runnable script (necessary?)
+[x] error page wrong header, not runnable script (necessary?)
 [] 
 
 	PARSER:
-[] root utils; (without dash)
 [] not handling comments in config file
 [] define back slash standard 
 	root never ends with it and location always starts with it
@@ -27,10 +48,10 @@
 [] when printing locations, the code prints typo uploadss
 [] Check extensions. Give an exception "Invalid config file. Try [right_file]
 [] wrong exception caught for ./webserv [any other file]
-[] add all error pages in default folder,
-	if time is left or someone is bored, generate error pages.
+[] add all error pages in default folder,and check if it works.
 [] dont forget to change default error pages on config.cpp function check_req_direcs
 
+[] root utils; (without dash)
 
 	NEW: (Sietse)
 [] add environment variabes cgi
