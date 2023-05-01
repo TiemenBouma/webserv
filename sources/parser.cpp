@@ -33,18 +33,20 @@ bool	check_conf_ext(std::string	filename)
 int	parse_config(std::string config, std::vector<ConfigServer> &servers)
 {
 	std::string::iterator	it = config.begin();
+	ConfigServer	serv;
 
 	if (check_brackets(config) == 0)
 		throw(ConfigServer::UnbalancedBrackets());
 	while (true)
 	{
-		ConfigServer	serv;
-
 		if (*it == '}')
 			it += 1;
 		it += skipspace(it);
 		if (*it == '\0')
+		{
+			serv.check_double_ports(servers);
 			return (1);
+		}
 		if (serv.cmp_directive(it, "server") == 0)
 			throw(ConfigServer::UnknownKeyword());
 		it += strlen("server");
@@ -57,6 +59,7 @@ int	parse_config(std::string config, std::vector<ConfigServer> &servers)
 		serv.check_req_direcs();
 		servers.push_back(serv);
 	}
+	serv.check_double_ports(servers);
 	return (0);
 }
 

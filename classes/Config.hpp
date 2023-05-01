@@ -14,6 +14,8 @@ public:
 	std::string					default_file;
 	bool		 				cgi;
 	std::string					path_uploads;
+	bool						redir_bool;
+	std::map<int, std::string>	redir_dst;
 };
 
 class ConfigServer {
@@ -24,7 +26,7 @@ private:
 	void							_parse_number(T &dst, std::string::iterator it);
 	void							_parse_string(std::string &dst, std::string::iterator it);
 	void							_parse_location_value(std::string &dst, std::string::iterator it);
-	void							_parse_error_pages(std::map<int, std::string> &dst, std::string::iterator it);
+	void							_parse_int_str_map(std::map<int, std::string> &dst, std::string::iterator it);
 	void							_parse_bool(bool &dst, std::string::iterator it);
 	void							_parse_methods(std::vector<std::string> &dst, std::string::iterator it);
 	void							_parse_location(std::string &dst, std::string::iterator &it);
@@ -40,8 +42,6 @@ public:
 	std::string 					server_name;
 	std::map<int, std::string>		error_pages;
 	long							size_content;
-	//std::string						redir_src;
-	//std::string						redir_dst;
 	std::vector<Location>			locations;
 	int								server_soc; //special case, meybe need to be 
 	//somewhere else outside this class
@@ -58,6 +58,7 @@ public:
 	bool	all_num(std::string str);
 
 	void	check_req_direcs();
+	void	check_double_ports(std::vector<ConfigServer> servers);
 
 	class NoBracketAfterServer: public std::exception
 	{
@@ -161,6 +162,14 @@ public:
 			const char *	what() const throw()
 			{
 				return ("A directive cannot be specified twice. Except for error_pages");
+			}
+	};
+	class IdenticalPortNumbers: public std::exception
+	{
+		public:
+			const char *	what() const throw()
+			{
+				return ("Some servers have the same port numbers.");
 			}
 	};
 };

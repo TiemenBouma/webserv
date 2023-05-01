@@ -10,7 +10,7 @@
 [] autoindex, displays listing of directories from root or location?
 
 	CGI:
-[] add environment variabes cgi
+[x] add environment variabes cgi
 	COMMENT: for now no, check other teams
 [x] add pass post content to cgi
 [] add cgi that can upload image

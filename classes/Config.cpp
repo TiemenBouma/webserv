@@ -109,7 +109,7 @@ void	ConfigServer::_parse_location_value(string &dst, string::iterator it)
 	dst = value;
 }
 
-void	ConfigServer::_parse_error_pages(map<int, string> &dst, string::iterator it)
+void	ConfigServer::_parse_int_str_map(map<int, string> &dst, string::iterator it)
 {
 	string	value1 = "";
 	string	value2 = "";
@@ -338,7 +338,7 @@ int	ConfigServer::parse_keyword(string::iterator &it)
 		//		cout << "parsed server name" << endl;
 				break;
 			case ERROR_PAGE:
-				_parse_error_pages(error_pages, it);
+				_parse_int_str_map(error_pages, it);
 		//		for(mapit = error_pages.begin(); mapit != error_pages.end(); mapit++)
 		//			cout << "in error pages: " << mapit->first << ", " << mapit->second << endl;
 		//		cout << "parsed error pages" << endl;
@@ -397,6 +397,24 @@ bool	ConfigServer::case_ins_strcmp(const string s1, const string s2)
 	return (true);
 }
 
+void	ConfigServer::print_locations(vector<Location> locs)
+{
+	for (vector<Location>::iterator it = locs.begin(); it != locs.end(); it++)
+	{
+		cout << GREEN << endl;
+		cout << "\tLocation: '" << (*it).location << "'" << RESET << endl;
+		cout << "\tAccepted methods:" << "\t";
+		for (vector<string>::iterator vit = (*it).accepted_methods.begin(); vit != (*it).accepted_methods.end(); vit++)
+			cout << "'" << (*vit) << "' ";
+		cout << endl;
+		cout << "\tIndex: '" << (*it).index << "'" << endl;
+		cout << "\tPath uploadss: '" << (*it).path_uploads << "'" << endl;
+		cout << "\tDefault file: '" << (*it).default_file << "'" << endl;
+		cout << "\tAutoindex: '" << (*it).autoindex << "'" << endl;
+		cout << "\tCgi: '" << (*it).cgi << "'" << endl;
+	}
+}
+
 bool	ConfigServer::all_num(string str)
 {
 	for (string::iterator it = str.begin(); it != str.end(); it++)
@@ -429,20 +447,18 @@ void	ConfigServer::check_req_direcs()
 		throw(WrongSizeContent());
 }
 
-void	ConfigServer::print_locations(vector<Location> locs)
+void	ConfigServer::check_double_ports(std::vector<ConfigServer> servers)
 {
-	for (vector<Location>::iterator it = locs.begin(); it != locs.end(); it++)
+	std::vector<ConfigServer>::iterator it2;
+
+	for (std::vector<ConfigServer>::iterator it1 = servers.begin(); it1 != servers.end(); it1++)
 	{
-		cout << GREEN << endl;
-		cout << "\tLocation: '" << (*it).location << "'" << RESET << endl;
-		cout << "\tAccepted methods:" << "\t";
-		for (vector<string>::iterator vit = (*it).accepted_methods.begin(); vit != (*it).accepted_methods.end(); vit++)
-			cout << "'" << (*vit) << "' ";
-		cout << endl;
-		cout << "\tIndex: '" << (*it).index << "'" << endl;
-		cout << "\tPath uploadss: '" << (*it).path_uploads << "'" << endl;
-		cout << "\tDefault file: '" << (*it).default_file << "'" << endl;
-		cout << "\tAutoindex: '" << (*it).autoindex << "'" << endl;
-		cout << "\tCgi: '" << (*it).cgi << "'" << endl;
+		it2 = it1;
+		it2++;
+		for (; it2 != servers.end(); it2++)
+		{
+			if ((*it1).listen_port == (*it2).listen_port)
+				throw(IdenticalPortNumbers());
+		}
 	}
 }
