@@ -55,7 +55,7 @@ std::string	Cgi::cgi(std::string program, std::string path_info, std::string bod
 	struct pollfd poll_fd = {fds[0], POLLIN, 0};
 	while (1)
 	{
-		poll(&poll_fd, sizeof(struct pollfd), 0);
+		poll(&poll_fd, 1, 0);
 		readret = read(fds[0], buf, CGI_READ_SIZE);
 		if (readret == -1)
 			throw(CgiSystemFailure());

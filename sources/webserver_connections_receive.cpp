@@ -20,11 +20,11 @@ int check_if_done(Connection &connection) {
 void	receive_request(Connection &connection) {
 	char								buffer[1024 * 8] = {0};
 	std::string							value;
-	struct pollfd 						poll_fd;
+	//struct pollfd 						poll_fd;
 
-	poll_fd.events = POLLIN;
-	poll_fd.revents = 0;
-	poll_fd.fd = connection._socket;
+	//poll_fd.events = POLLIN;
+	//poll_fd.revents = 0;
+	//poll_fd.fd = connection._socket;
 
 	//checking on timeout, returning if time is over 30 sec
 	if (connection.check_time_out())
