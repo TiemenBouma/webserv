@@ -81,6 +81,7 @@ int start_webserver(std::vector<ConfigServer> servers) {
 					cout << "[SERVER] close connection: " << connections[i]._request.get_method() << " " << connections[i]._request.get_url()  << endl;
 					close(connections[i]._socket);
 					connections.erase(connections.begin() + i);
+					fds.erase(fds.begin() + fds_index); // Remove the corresponding entry from fds vector
 			}
 			// Update total_connections
             total_connections = connections.size();
@@ -88,3 +89,4 @@ int start_webserver(std::vector<ConfigServer> servers) {
 	}
 	return 0;
 }
+
