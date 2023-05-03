@@ -1,4 +1,8 @@
 #include "Cgi.hpp"
+#include <stdlib.h>
+#include <string.h>
+#include <sys/wait.h>
+#include <sys/poll.h>
 
 void	Cgi::exiterr(std::string e)
 {
@@ -11,7 +15,7 @@ char**	Cgi::_make_exec_arg(std::string program, std::string body)
 	std::string	full_prog_path = program;
 	char**	ret = new char*[3];
 
-	ret[0] = strdup(full_prog_path.c_str());
+	ret[0] = strdup(full_prog_path.c_str()); //THis is a malloc right? So it can fail? do we need to free it?  What happens if you just c_str() it?(Tiemen)
 	if (ret[0] == NULL)
 		throw(CgiSystemFailure());
 	ret[1] = strdup(body.c_str());

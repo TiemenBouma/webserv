@@ -2,7 +2,6 @@
 #include "typedef.h"
 #include "Cgi.hpp"
 #include <fstream>
-
 #include <unistd.h>
 
 /* 
@@ -100,7 +99,7 @@ int get_request(Connection &connection) {
     } 
 	else {//Server side error
         connection._response.set_status_code("500");
-		cerr << "[SERVER] error. Cant open file. check config" << endl;
+		cerr << "[SERVER] error. Cant open file: " << connection._response._file_path << " check config" << endl;
 		error_request(connection);
     }
     return 0;

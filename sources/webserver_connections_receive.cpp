@@ -41,7 +41,6 @@ void	receive_request(Connection &connection) {
 			connection._request._state = REQUEST_CANCELLED;
 		return;
 	}
-	
 	if (poll_fd.revents & POLLIN) {
 		int read_ret = read(connection._socket, buffer, 1024 * 8);
 		if (read_ret < 0) {
@@ -60,7 +59,7 @@ void	receive_request(Connection &connection) {
 			return;
 		}
 		connection._request._whole_request += std::string(buffer, buffer + read_ret);
-		//cout << "[DEBUG]whole request: " << connection._request._whole_request << endl;
+		cout << "[DEBUG]whole request: " << connection._request._whole_request << endl;
 	}
 	else
 		connection._request._state = REQUEST_CANCELLED;
