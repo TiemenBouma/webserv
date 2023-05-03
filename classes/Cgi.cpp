@@ -74,10 +74,8 @@ std::string	Cgi::cgi(std::string program, char** env, std::string body)
 
 	wait(&status);
 	close(fds[1]);
-	struct pollfd poll_fd = {fds[0], POLLIN, 0};
 	while (1)
 	{
-		poll(&poll_fd, sizeof(struct pollfd), 0);
 		readret = read(fds[0], buf, CGI_READ_SIZE);
 		if (readret == -1)
 			throw(CgiSystemFailure());
