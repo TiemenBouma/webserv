@@ -14,8 +14,7 @@ public:
 	std::string					default_file;
 	bool		 				cgi;
 	std::string					path_uploads;
-	bool						redir_bool;
-	std::map<int, std::string>	redir_dst;
+	std::map<int, std::string>	redir;
 };
 
 class ConfigServer {
@@ -30,7 +29,7 @@ private:
 	void							_parse_bool(bool &dst, std::string::iterator it);
 	void							_parse_methods(std::vector<std::string> &dst, std::string::iterator it);
 	void							_parse_location(std::string &dst, std::string::iterator &it);
-	void							_parse_redirect(std::vector<Location>	&dst, std::string::iterator &it, std::vector<std::string> keywords);
+	void							_parse_loc_keyword(std::vector<Location>	&dst, std::string::iterator &it, std::vector<std::string> keywords);
 	void							_next_directive(std::string::iterator &it);
 
 public:
@@ -92,12 +91,12 @@ public:
 				return ("No value found after keyword.");
 			}
 	};
-	class IncorrectErrorPage: public std::exception
+	class IncorrectMapFormat: public std::exception
 	{
 		public:
 			const char *	what() const throw()
 			{
-				return ("This error page is incorrect. Usage: error_page <error code> <path/to/errorpage>");
+				return ("Incorrect map directive format. Usage: error_page/redirection <error code;redir code> <path/to/errorpage;redir location>");
 			}
 	};
 	class IncorrectLocationBlock: public std::exception
@@ -187,13 +186,14 @@ enum	token_types
 	SERVER_NAME			= 0x4,
 	ERROR_PAGE			= 0x8,
 	CLIENT_BODY_SIZE	= 0x10,
-	REDIRECTION			= 0x20,
+	LOCATION			= 0x20,
 	INDEX				= 0x40,
 	AUTOINDEX			= 0x80,
 	METHODS				= 0x100,
 	DEFAULT_FILE		= 0x200,
 	CGI					= 0x400,
-	PATH_UPLOADS		= 0x800
+	PATH_UPLOADS		= 0x800,
+	REDIRECTION			= 0x1000
 };
 
 #endif

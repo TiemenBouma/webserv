@@ -23,8 +23,6 @@ ConfigServer &ConfigServer::operator=(ConfigServer const &other) {
 		this->server_name = other.server_name;
 		this->error_pages = other.error_pages;
 		this->size_content = other.size_content;
-		//this->redir_src = other.redir_src;
-		//this->redir_dst = other.redir_dst;
 		this->locations = other.locations;
 	}
 	return *this;
@@ -37,6 +35,8 @@ ConfigServer::~ConfigServer(){}
 	PRIVATE
 */
 
+
+//[INFO] The order of this vector must match with the enum token_types in Config.hpp.
 const vector<string>	ConfigServer::_init_keywords()
 {
 	vector<string> ret;
@@ -52,6 +52,7 @@ const vector<string>	ConfigServer::_init_keywords()
 	ret.push_back("default_file");
 	ret.push_back("cgi");
 	ret.push_back("path_uploads");
+	ret.push_back("redirection");
 	ret.push_back("invalid");
 	return (ret);
 }
@@ -92,7 +93,10 @@ void	ConfigServer::_parse_string(string &dst, string::iterator it)
 		value += *it;
 	dst = value;
 	if (*it != ';')
+	{
+		std::cout << "[DEBUG] found semicolon error in _parse_string." << std::endl;
 		throw(ExpectedSemicolon());
+	}
 }
 
 void	ConfigServer::_parse_location_value(string &dst, string::iterator it)
@@ -121,19 +125,19 @@ void	ConfigServer::_parse_int_str_map(map<int, string> &dst, string::iterator it
 	if ((*it == '\n' || *it == ';') && *it == '}')
 		throw(NoValueFound());
 	if (isdigit(*it) == 0)
-		throw(IncorrectErrorPage());
+		throw(IncorrectMapFormat());
 	for (; isdigit(*it) != 0; it++)
 		value1 += *it;
 	if (value1.size() == 0)
-		throw(IncorrectErrorPage());
+		throw(IncorrectMapFormat());
 	while (*it == '\t' || *it == ' ')
 		it++;
 	if (*it == '\n' || *it == ';' || *it == '}')
-		throw(IncorrectErrorPage());
+		throw(IncorrectMapFormat());
 	for (; isspace(*it) == 0 && *it != ';' && *it != '}'; it++)
 		value2 += *it;
 	if (value1.size() == 0)
-		throw(IncorrectErrorPage());
+		throw(IncorrectMapFormat());
 	if (*it != ';')
 		throw(ExpectedSemicolon());
 	stringstream ss(value1);
@@ -202,7 +206,7 @@ void	ConfigServer::_parse_location(string &dst, string::iterator &it)
 	dst = value;
 }
 
-void	ConfigServer::_parse_redirect(vector<Location> &dst, string::iterator &it, vector<string> keywords)
+void	ConfigServer::_parse_loc_keyword(vector<Location> &dst, string::iterator &it, vector<string> keywords)
 {
 	int			i;
 	Location	new_loc;
@@ -269,6 +273,15 @@ void	ConfigServer::_parse_redirect(vector<Location> &dst, string::iterator &it, 
 		//		cout << "\tin data class: " << new_loc.path_uploads << endl;
 
 		//		cout << "\tparsed path uploads" << endl;
+				break;
+			case REDIRECTION:
+				if ((double_direc_check & REDIRECTION) == REDIRECTION)
+					throw(DoubleDirective());
+				_parse_int_str_map(new_loc.redir, it);
+				double_direc_check |= REDIRECTION;
+		//		for(mapit = error_pages.begin(); mapit != error_pages.end(); mapit++)
+		//			cout << "in error pages: " << mapit->first << ", " << mapit->second << endl;
+		//		cout << "parsed error pages" << endl;
 				break;
 			default:
 				cout << "'" << it_to_str(it) << "'" << endl;
@@ -351,8 +364,8 @@ int	ConfigServer::parse_keyword(string::iterator &it)
 		//		cout << "in data class: " << size_content << endl;
 		//		cout << "parsed client body size" << endl;
 				break;
-			case REDIRECTION:
-				_parse_redirect(locations, it, keywords);
+			case LOCATION:
+				_parse_loc_keyword(locations, it, keywords);
 		//		prinLocations(locations);
 		//		cout << "parsed redirect" << endl;
 				break;
@@ -412,6 +425,9 @@ void	ConfigServer::print_locations(vector<Location> locs)
 		cout << "\tDefault file: '" << (*it).default_file << "'" << endl;
 		cout << "\tAutoindex: '" << (*it).autoindex << "'" << endl;
 		cout << "\tCgi: '" << (*it).cgi << "'" << endl;
+		cout << "\tRedirection: ";
+		for (std::map<int, std::string>::iterator mapit = (*it).redir.begin(); mapit != (*it).redir.end(); mapit++)
+			std::cout << "'" << (*mapit).first << ", " << (*mapit).second << "'" << std::endl;
 	}
 }
 
