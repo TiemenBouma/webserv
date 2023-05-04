@@ -5,8 +5,8 @@
 [] check all recv, read and send (check -1 and 0).
 
 	PARSER:
-[] Same poort nr in config file check double.
-[] add keyword redir that takes two values, number(statuscode) and webpage(index)
+[x] Same poort nr in config file check double.
+[x] add keyword redir that takes two values, number(statuscode) and webpage(index)
 
 	AUTOINDEX:
 [] autoidex of utils//uploads. Need to show the files corectly?
