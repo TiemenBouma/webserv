@@ -33,7 +33,8 @@ int start_webserver(std::vector<ConfigServer> servers) {
 
 	// [INFO]handle connections
 	while (true) {
-		if (poll(&*fds.begin(), fds.size(), 0) < 0)
+		int check = poll(&*fds.begin(), fds.size(), 1) < 0;
+		if (check == -1)
 			error_message("(Poll) protected, returned error. Exit webserver", 6);
 
 		//[INFO]listening and accepting to new connection comming in
@@ -51,13 +52,22 @@ int start_webserver(std::vector<ConfigServer> servers) {
 			if (fcntl(new_connection._socket, F_SETFL, O_NONBLOCK) == -1)
 				continue;
 			cout << endl << "[SERVER] new connection socket: " << new_connection._socket << endl;
+			
+			// Add the new connection to the fds vector
+            struct pollfd new_client_fd = {new_connection._socket, POLLIN, 0};
+            fds.push_back(new_client_fd);
+			
 			connections.push_back(new_connection);
 		}
 
 		//[INFO] Handeling current connections
 		int total_connections = connections.size();
 		for (int i = 0; i < total_connections; i++) {
-			if (!(fds[i].revents & POLLIN)) {
+
+			// Calculate the correct index in the fds vector
+            int fds_index = i + total_ports;
+
+			if (!(fds[fds_index].revents & POLLIN)) {
 				continue;
 			}
 			cout << "[SERVER] receiving request" << endl;
@@ -71,8 +81,12 @@ int start_webserver(std::vector<ConfigServer> servers) {
 					cout << "[SERVER] close connection: " << connections[i]._request.get_method() << " " << connections[i]._request.get_url()  << endl;
 					close(connections[i]._socket);
 					connections.erase(connections.begin() + i);
+					fds.erase(fds.begin() + fds_index); // Remove the corresponding entry from fds vector
 			}
+			// Update total_connections
+            total_connections = connections.size();
 		}
 	}
 	return 0;
 }
+

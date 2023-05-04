@@ -89,6 +89,12 @@ int execute_request(Connection &connection) {
 	connection._response.set_client_socket(connection._socket);
 	connection.set_location();
 	cout << "DEBUG 1"<< endl;
+
+	// if (connection._response._status_code != "301") {
+	// 	error_request(connection);
+	// 		cout << "DEBUG 2"<< endl;
+	// 	return 2;
+	// }
 	if (connection._response._status_code != "200") {
 		error_request(connection);
 			cout << "DEBUG 2"<< endl;

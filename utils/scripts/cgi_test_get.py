@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3.9
+
 import time
 import sys
 import os
