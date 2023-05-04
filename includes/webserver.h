@@ -48,6 +48,9 @@ int	    skipspace(std::string::iterator it);
 string	it_to_str(std::string::iterator it);
 bool	check_conf_ext(std::string	filename);
 
+//AUTOINDEX
+int		autoindex_get(Connection &connection, string &dir);
+
 
 
 #endif

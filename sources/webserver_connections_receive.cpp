@@ -59,12 +59,13 @@ void	receive_request(Connection &connection) {
 			return;
 		}
 		connection._request._whole_request += std::string(buffer, buffer + read_ret);
-		cout << "[DEBUG]whole request: " << connection._request._whole_request << endl;
+		
 	// }
 	// else
 	// 	connection._request._state = REQUEST_CANCELLED;
 	if (connection._request._state == REQUEST_START) {
 		connection.set_method_url_version();
+		cout << "[DEBUG]METHOD/URI: |" << connection._request.get_method() << "| |" << connection._request.get_url() << "|" << endl;
 	}
 
 	if (connection._request._state == REQUEST_READING_HEADERS) {

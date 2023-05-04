@@ -28,6 +28,7 @@ SRC = 	sources/main.cpp \
 		sources/request_post.cpp \
 		sources/request_error.cpp \
 		sources/request_delete.cpp \
+		sources/request_autoindex.cpp \
 		sources/webserver_init.cpp  \
 		sources/webserver_init_mime_types.cpp \
 		sources/webserver_connections_execute.cpp \

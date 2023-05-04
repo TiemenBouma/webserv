@@ -38,7 +38,12 @@ void Connection::set_location() {
 	for (size_t i = 0; i < _server.locations.size(); i++) {
 		if (_server.locations[i].location == uri) {
 			_response._location_server = &_server.locations[i];
-			_response._file_path = _server.root + _response._location_server->index;
+			if (_response._location_server->redir.size() > 0)
+				_response._file_path = _server.root + _response._location_server->index;
+			else {
+				_response._file_path = _server.root + _response._location_server->redir[301];
+				_response._status_code = "301";
+			}
 			return;
 		}
 	}
@@ -47,6 +52,14 @@ void Connection::set_location() {
 	_response.set_status_message("not found");
 
 	//maybe send error page here?
+}
+
+bool Connection::check_response_status_error() {
+	if (_response._status_code == "200")
+		return 0;
+	if (_response._status_code == "301")
+		return 0;
+	return 1;
 }
 
 int	Connection::check_method() {
