@@ -20,6 +20,7 @@ public:
 	Request				_request;
 	Response			_response;
 	ConfigServer 		&_server;
+	time_t				_last_active;
 	
 	Connection();
 	Connection(const Connection &other);

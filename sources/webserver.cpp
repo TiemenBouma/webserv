@@ -59,10 +59,19 @@ int start_webserver(std::vector<ConfigServer> servers) {
 			
 			connections.push_back(new_connection);
 		}
-
 		//[INFO] Handeling current connections
-		int total_connections = connections.size();
-		for (int i = 0; i < total_connections; i++) {
+		size_t total_connections = connections.size();
+		for (size_t i = 0; i < total_connections; i++) {
+			//TIMEOUT CHECK
+			if (connections[i].check_time_out()) {
+				close(connections[i]._socket);
+				connections.erase(connections.begin() + i);
+				fds.erase(fds.begin() + i + total_ports);
+				total_connections = connections.size();
+				i--; // Adjust the loop counter after removing a connection
+				continue;
+			}
+			cout << "DEBUG: connections: " << total_connections << endl;
 
 			// Calculate the correct index in the fds vector
             int fds_index = i + total_ports;

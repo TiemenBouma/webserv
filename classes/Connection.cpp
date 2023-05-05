@@ -2,19 +2,23 @@
 #include <iostream>
 #include <sstream>
 
+
 Connection::Connection(ConfigServer &server, map_str_vec_str &mime_types, map_str_str &mime_types_rev) 
 :	_port(server.listen_port), 
 	_socket(-1),
 	_request(Request(mime_types)),
 	_response(Response(mime_types, mime_types_rev)),
-	_server(server) {}
+	_server(server) {
+	_last_active = time(NULL);
+	}
 
 Connection::Connection(const Connection &other) 
 :	_port(other._port),
 	_socket(other._socket),
 	_request(other._request),
 	_response(other._response),
-	_server(other._server) {}
+	_server(other._server),
+	_last_active(other._last_active) {}
 
 Connection &Connection::operator=(const Connection &other) {
 	if (this != &other) {
@@ -22,13 +26,14 @@ Connection &Connection::operator=(const Connection &other) {
 		this->_socket = other._socket;
 		this->_request = other._request;
 		this->_response = other._response;
+		this->_last_active = other._last_active;
 	}
 	return *this;
 }
 
 Connection::~Connection() {}
 
-
+//CHECK THIS FUNCTION, redir comparion not working.
 void Connection::set_location() {
 
 	Location loc;
@@ -38,10 +43,14 @@ void Connection::set_location() {
 	for (size_t i = 0; i < _server.locations.size(); i++) {
 		if (_server.locations[i].location == uri) {
 			_response._location_server = &_server.locations[i];
-			if (_response._location_server->redir.size() > 0)
+			if (_response._location_server->redir.begin() == _response._location_server->redir.end()){
 				_response._file_path = _server.root + _response._location_server->index;
+				cout << "DEBUG: set location index: " <<  _response._file_path << endl;
+
+			}
 			else {
 				_response._file_path = _server.root + _response._location_server->redir[301];
+				cout << "DEBUG: set location redir: " <<  _response._file_path << endl;
 				_response._status_code = "301";
 			}
 			return;
@@ -75,14 +84,16 @@ int	Connection::check_method() {
 }
 
 int Connection::check_time_out() {
-	time_t current_time;
-	time(&current_time);
-	double diff_time = difftime(_request._start_time, current_time);
-	if (diff_time > 30) {
+	const int TIMEOUT_THRESHOLD = 60;
+	time_t current_time = time(NULL);
+
+	if (current_time - _last_active > TIMEOUT_THRESHOLD) {
+		cout << "[SERVER] closing idle connection" << endl;
 		_response._status_code = "408";
 		_response.set_status_message("request timeout");
 		_request._state = REQUEST_CANCELLED;
 		return 1;
+		
 	}
 	return 0;
 }
@@ -174,3 +185,4 @@ void Connection::set_body() {
 		_response.set_status_message("bad request");
 	}
 }
+

@@ -48,6 +48,7 @@ void	receive_request(Connection &connection) {
 			connection._request._state = REQUEST_CANCELLED;
 			return;
 		}
+		connection._last_active = time(NULL); // Update last_active
 		if (read_ret == 0) {
 			if (connection._request._state == REQUEST_READING_DONE) {
 				connection._request._state = REQUEST_DONE;
