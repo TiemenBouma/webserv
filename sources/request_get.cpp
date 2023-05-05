@@ -90,6 +90,7 @@ int get_request(Connection &connection) {
         while ((n = file.read(buffer, BUFFER_SIZE_8K).gcount()) > 0) {
             ret = connection._response.write_to_socket(buffer, n);
 			if (ret == -1) {
+				file.close();
 				return 1;
 		}
         }

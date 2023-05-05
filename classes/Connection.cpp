@@ -84,11 +84,11 @@ int	Connection::check_method() {
 }
 
 int Connection::check_time_out() {
-	const int TIMEOUT_THRESHOLD = 60;
+	const int TIMEOUT_THRESHOLD = 10;
 	time_t current_time = time(NULL);
 
 	if (current_time - _last_active > TIMEOUT_THRESHOLD) {
-		cout << "[SERVER] closing idle connection" << endl;
+		cout << "[SERVER] closing idle connection" << _request.get_method() << " " << _request.get_url() << endl;
 		_response._status_code = "408";
 		_response.set_status_message("request timeout");
 		_request._state = REQUEST_CANCELLED;

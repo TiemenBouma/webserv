@@ -81,5 +81,6 @@ void	receive_request(Connection &connection) {
 		if (connection._request._whole_request_at < connection._request._whole_request.size()) {
 			connection.set_body();
 		}
+		cout << "DEBUG: body set finish" << endl;
 	}
 }

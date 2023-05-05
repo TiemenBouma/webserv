@@ -68,6 +68,7 @@ std::string	Response::serialize_headers() const {
 
 ssize_t Response::write_to_socket(const char *buffer, size_t size) const {
 	ssize_t ret = write(_client_socket, buffer, size);
+	cout << "DEBUG: write to socket return: " << ret << endl;
 	if (ret == -1)
 		std::cout << "[SERVER] Error writing to socket" << std::endl;
 	return ret;

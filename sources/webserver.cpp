@@ -62,24 +62,27 @@ int start_webserver(std::vector<ConfigServer> servers) {
 		//[INFO] Handeling current connections
 		size_t total_connections = connections.size();
 		for (size_t i = 0; i < total_connections; i++) {
+            int fds_index = i + total_ports;
 			//TIMEOUT CHECK
 			if (connections[i].check_time_out()) {
 				close(connections[i]._socket);
 				connections.erase(connections.begin() + i);
-				fds.erase(fds.begin() + i + total_ports);
+				fds.erase(fds.begin() + fds_index);
 				total_connections = connections.size();
-				i--; // Adjust the loop counter after removing a connection
+				//i--; // Adjust the loop counter after removing a connection
+            	total_connections = connections.size();
+				
 				continue;
 			}
-			cout << "DEBUG: connections: " << total_connections << endl;
+			//cout << "DEBUG: connections: " << total_connections <<  endl;
+			//cout << "DEBUG: connection state: " << connections[i]._request._state <<  endl;
 
 			// Calculate the correct index in the fds vector
-            int fds_index = i + total_ports;
 
 			if (!(fds[fds_index].revents & POLLIN)) {
 				continue;
 			}
-			cout << "[SERVER] receiving request" << endl;
+			cout << "[SERVER] receiving request on fd: " << connections[i]._socket << endl;
 			receive_request(connections[i]);
 			if (connections[i]._request._state == REQUEST_DONE) {
 				cout << "[SERVER] execute request: " << connections[i]._request.get_method() << " " << connections[i]._request.get_url() <<  endl;
@@ -91,6 +94,7 @@ int start_webserver(std::vector<ConfigServer> servers) {
 					close(connections[i]._socket);
 					connections.erase(connections.begin() + i);
 					fds.erase(fds.begin() + fds_index); // Remove the corresponding entry from fds vector
+					//i--;
 			}
 			// Update total_connections
             total_connections = connections.size();
@@ -98,4 +102,3 @@ int start_webserver(std::vector<ConfigServer> servers) {
 	}
 	return 0;
 }
-
