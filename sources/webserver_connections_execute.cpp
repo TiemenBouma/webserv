@@ -49,7 +49,19 @@ int autoindex_get(Connection &connection, string &dir) {
     struct dirent* dp;
 	vector<string> dir_content;
     while ((dp = readdir(dirp)) != NULL) {
-		 dir_content.push_back(dp->d_name);
+		dir_content.push_back(dp->d_name);
+		Location temp_location;
+		temp_location.accepted_methods.push_back("GET");
+		temp_location.autoindex = 0;
+		temp_location.cgi = 0;
+		temp_location.index = connection._response._location_server->location;
+		temp_location.index += "/";
+		temp_location.index += dp->d_name;
+
+		temp_location.location = "/";
+		temp_location.location += dp->d_name;
+		connection._server.locations.push_back(temp_location);
+		cout << "DEBUG: " << temp_location.index << endl;
 	}
     string response = autoindex_response(dir, dir_content); 
     closedir(dirp);
@@ -76,25 +88,31 @@ int execute_request(Connection &connection) {
 	//[INFO] Preparing response, error checking
 	connection._response.set_client_socket(connection._socket);
 	connection.set_location();
+	cout << "DEBUG 1"<< endl;
 	if (connection._response._status_code != "200") {
 		error_request(connection);
+			cout << "DEBUG 2"<< endl;
 		return 1;
 	}
 	connection.check_method();
 	if (connection._response._status_code != "200") {
 		error_request(connection);
+			cout << "DEBUG 3"<< endl;
 		return 1;
 	}
-
+		cout << "DEBUG 4"<< endl;
 	if (connection._request.get_method() == "GET") {
+		cout << "DEBUG 5"<< endl;
 		if (connection._response._location_server->autoindex == 1) {
 			string index_location = connection._server.root + connection._response._location_server->location;
 			autoindex_get(connection, index_location);
 		}
-		if (connection._response._location_server->cgi == 1)
+		else if (connection._response._location_server->cgi == 1)
 			cgi_get_request(connection);
-		else
+		else {
+			cout << "DEBUG 6"<< endl;
 			get_request(connection);
+		}
 	}
 	else if (connection._request.get_method() == "POST") {
 		if (connection._response._location_server->cgi == 1)

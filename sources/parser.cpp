@@ -13,21 +13,40 @@
 #include "webserver.h"
 #include "colors.h"
 
+bool	check_conf_ext(std::string	filename)
+{
+	std::string::iterator		fileit = filename.begin();
+	const	std::string			ext = ".conf";
+	std::string::const_iterator	extit = ext.begin();
+
+	for (; fileit != filename.end() && *fileit != '.'; fileit++);
+	while (*fileit == *extit && extit != ext.end() && fileit != filename.end())
+	{
+		extit++;
+		fileit++;
+	}
+	if (extit == ext.end() && fileit == filename.end())
+		return (true);
+	return (false);
+}
+
 int	parse_config(std::string config, std::vector<ConfigServer> &servers)
 {
 	std::string::iterator	it = config.begin();
+	ConfigServer	serv;
 
 	if (check_brackets(config) == 0)
 		throw(ConfigServer::UnbalancedBrackets());
 	while (true)
 	{
-		ConfigServer	serv;
-
 		if (*it == '}')
 			it += 1;
 		it += skipspace(it);
 		if (*it == '\0')
+		{
+			serv.check_double_ports(servers);
 			return (1);
+		}
 		if (serv.cmp_directive(it, "server") == 0)
 			throw(ConfigServer::UnknownKeyword());
 		it += strlen("server");
@@ -40,6 +59,7 @@ int	parse_config(std::string config, std::vector<ConfigServer> &servers)
 		serv.check_req_direcs();
 		servers.push_back(serv);
 	}
+	serv.check_double_ports(servers);
 	return (0);
 }
 
@@ -108,6 +128,6 @@ void	print_servers(std::vector<ConfigServer> servers)
 			std::cout << "'" << (*mapit).first << ", " << (*mapit).second << "'" << std::endl;
 		std::cout << "Size content: '" << (*it).size_content << "'" << std::endl;
         // [DEBUG] if you want to print locations check above fun on Config.cpp 
-		//(*it).print_locations((*it).locations);
+		(*it).print_locations((*it).locations);
 	}
 }

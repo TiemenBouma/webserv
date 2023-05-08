@@ -36,7 +36,7 @@ int start_webserver(std::vector<ConfigServer> servers) {
 		if (poll(&*fds.begin(), fds.size(), 0) < 0)
 			error_message("(Poll) protected, returned error. Exit webserver", 6);
 
-		//[INFO]listening  and accepting to new connection comming in
+		//[INFO]listening and accepting to new connection comming in
 		for (size_t i = 0; i < total_ports; i++) {
 			if (!(fds[i].revents & POLLIN)) {
 				continue;

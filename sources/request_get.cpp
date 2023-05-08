@@ -2,7 +2,6 @@
 #include "typedef.h"
 #include "Cgi.hpp"
 #include <fstream>
-
 #include <unistd.h>
 
 /* 
@@ -25,11 +24,12 @@ void	cgi_get_request(Connection& connection)
 	}
 	else if (pid == 0)
 	{
-		std::cout << "[SERVER] executing GET cgi on: '" << connection._response._file_path << "'" << std::endl;
 		try {
 			if (access(connection._response._file_path.c_str(), X_OK) == -1)
 				throw(Cgi::CgiSystemFailure());
-			std::string	cgi_out = cgi.cgi(connection._response._file_path, PATH_INFO);
+			//[INFO] run cgi
+			std::string cgi_out = cgi.cgi(connection._response._file_path, Cgi::make_env(connection._server, *(connection._response._location_server), "GET"), "");
+			connection._response.set_header_content_length_string(cgi_out);
 			ssize_t ret = connection._response.write_to_socket(headers.c_str(), headers.size());
 			if (ret == -1) {
 				std::cout << "[ERROR] in cgi headers" << std::endl;
@@ -99,7 +99,7 @@ int get_request(Connection &connection) {
     } 
 	else {//Server side error
         connection._response.set_status_code("500");
-		cerr << "[SERVER] error. Cant open file. check config" << endl;
+		cerr << "[SERVER] error. Cant open file: " << connection._response._file_path << " check config" << endl;
 		error_request(connection);
     }
     return 0;

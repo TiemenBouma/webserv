@@ -3,6 +3,7 @@
 #include <stack>
 #include <sstream>
 #include <cstring>
+#include <cmath>
 
 #include "Config.hpp"
 #include "webserver.h"
@@ -22,8 +23,6 @@ ConfigServer &ConfigServer::operator=(ConfigServer const &other) {
 		this->server_name = other.server_name;
 		this->error_pages = other.error_pages;
 		this->size_content = other.size_content;
-		//this->redir_src = other.redir_src;
-		//this->redir_dst = other.redir_dst;
 		this->locations = other.locations;
 	}
 	return *this;
@@ -36,6 +35,8 @@ ConfigServer::~ConfigServer(){}
 	PRIVATE
 */
 
+
+//[INFO] The order of this vector must match with the enum token_types in Config.hpp.
 const vector<string>	ConfigServer::_init_keywords()
 {
 	vector<string> ret;
@@ -51,6 +52,7 @@ const vector<string>	ConfigServer::_init_keywords()
 	ret.push_back("default_file");
 	ret.push_back("cgi");
 	ret.push_back("path_uploads");
+	ret.push_back("redirection");
 	ret.push_back("invalid");
 	return (ret);
 }
@@ -91,7 +93,10 @@ void	ConfigServer::_parse_string(string &dst, string::iterator it)
 		value += *it;
 	dst = value;
 	if (*it != ';')
+	{
+		std::cout << "[DEBUG] found semicolon error in _parse_string." << std::endl;
 		throw(ExpectedSemicolon());
+	}
 }
 
 void	ConfigServer::_parse_location_value(string &dst, string::iterator it)
@@ -108,7 +113,7 @@ void	ConfigServer::_parse_location_value(string &dst, string::iterator it)
 	dst = value;
 }
 
-void	ConfigServer::_parse_error_pages(map<int, string> &dst, string::iterator it)
+void	ConfigServer::_parse_int_str_map(map<int, string> &dst, string::iterator it)
 {
 	string	value1 = "";
 	string	value2 = "";
@@ -120,19 +125,19 @@ void	ConfigServer::_parse_error_pages(map<int, string> &dst, string::iterator it
 	if ((*it == '\n' || *it == ';') && *it == '}')
 		throw(NoValueFound());
 	if (isdigit(*it) == 0)
-		throw(IncorrectErrorPage());
+		throw(IncorrectMapFormat());
 	for (; isdigit(*it) != 0; it++)
 		value1 += *it;
 	if (value1.size() == 0)
-		throw(IncorrectErrorPage());
+		throw(IncorrectMapFormat());
 	while (*it == '\t' || *it == ' ')
 		it++;
 	if (*it == '\n' || *it == ';' || *it == '}')
-		throw(IncorrectErrorPage());
+		throw(IncorrectMapFormat());
 	for (; isspace(*it) == 0 && *it != ';' && *it != '}'; it++)
 		value2 += *it;
 	if (value1.size() == 0)
-		throw(IncorrectErrorPage());
+		throw(IncorrectMapFormat());
 	if (*it != ';')
 		throw(ExpectedSemicolon());
 	stringstream ss(value1);
@@ -201,11 +206,13 @@ void	ConfigServer::_parse_location(string &dst, string::iterator &it)
 	dst = value;
 }
 
-void	ConfigServer::_parse_redirect(vector<Location> &dst, string::iterator &it, vector<string> keywords)
+void	ConfigServer::_parse_loc_keyword(vector<Location> &dst, string::iterator &it, vector<string> keywords)
 {
-	int	i;
+	int			i;
 	Location	new_loc;
+	int			double_direc_check = 0;
 
+	new_loc.cgi = 0;
 	new_loc.autoindex = 0;
 	_parse_location(new_loc.location, it);
 	//cout << "\tin data class: " << new_loc.location << endl;
@@ -216,38 +223,65 @@ void	ConfigServer::_parse_redirect(vector<Location> &dst, string::iterator &it, 
 		while (cmp_directive(it, keywords[i]) == 0)
 			i++;
 	//	cout << "\tin location block: i: " << i << ", directive found: " << keywords[i] << endl;
-		switch (i)
+		switch (static_cast<int>(pow(2, i)))
 		{
 			case INDEX:
+				if ((double_direc_check & INDEX) == INDEX)
+					throw(DoubleDirective());
 				_parse_string(new_loc.index, it);
+				double_direc_check |= INDEX;
 		//		cout << "\tin data class: " << new_loc.index << endl;
 		//		cout << "\tparsed index" << endl;
 				break;
 			case AUTOINDEX:
+				if ((double_direc_check & AUTOINDEX) == AUTOINDEX)
+					throw(DoubleDirective());
 				_parse_bool(new_loc.autoindex, it);
+				double_direc_check |= AUTOINDEX;
 		//		cout << "\tin data class: " << new_loc.autoindex << endl;
 		//		cout << "\tparsed autoindex" << endl;
 				break;
 			case METHODS:
+				if ((double_direc_check & METHODS) == METHODS)
+					throw(DoubleDirective());
 				_parse_methods(new_loc.accepted_methods, it);
+				double_direc_check |= METHODS;
 		//		cout << "\tin data class: " << new_loc.accepted_methods[1] << endl;
 		//		cout << "\tparsed methods" << endl;
 				break;
 			case DEFAULT_FILE:
+				if ((double_direc_check & DEFAULT_FILE) == DEFAULT_FILE)
+					throw(DoubleDirective());
 				_parse_string(new_loc.default_file, it);
+				double_direc_check |= DEFAULT_FILE;
 		//		cout << "\tin data class: " << new_loc.default_file << endl;
 		//		cout << "\tparsed default file" << endl;
 				break;
 			case CGI:
+				if ((double_direc_check & CGI) == CGI)
+					throw(DoubleDirective());
 				_parse_bool(new_loc.cgi, it);
-		//		std::cout << "\tin data class: " << new_loc.cgi_path << std::endl;
-		//		std::cout << "\tparsed cgi path" << std::endl;
+				double_direc_check |= CGI;
+				// std::cout << "\tin data class: " << new_loc.cgi << std::endl;
+				// std::cout << "\tparsed cgi path" << std::endl;
 				break;
 			case PATH_UPLOADS:
+				if ((double_direc_check & PATH_UPLOADS) == PATH_UPLOADS)
+					throw(DoubleDirective());
 				_parse_string(new_loc.path_uploads, it);
+				double_direc_check |= PATH_UPLOADS;
 		//		cout << "\tin data class: " << new_loc.path_uploads << endl;
 
 		//		cout << "\tparsed path uploads" << endl;
+				break;
+			case REDIRECTION:
+				if ((double_direc_check & REDIRECTION) == REDIRECTION)
+					throw(DoubleDirective());
+				_parse_int_str_map(new_loc.redir, it);
+				double_direc_check |= REDIRECTION;
+		//		for(mapit = error_pages.begin(); mapit != error_pages.end(); mapit++)
+		//			cout << "in error pages: " << mapit->first << ", " << mapit->second << endl;
+		//		cout << "parsed error pages" << endl;
 				break;
 			default:
 				cout << "'" << it_to_str(it) << "'" << endl;
@@ -282,6 +316,7 @@ int	ConfigServer::parse_keyword(string::iterator &it)
 {
 	int	i;
 	map<int, string>::iterator	mapit;
+	int			double_direc_check = 0;
 
 	while (*it != '}' && *it != '\0')
 	{
@@ -289,36 +324,48 @@ int	ConfigServer::parse_keyword(string::iterator &it)
 		while (cmp_directive(it, keywords[i]) == 0)
 			i++;
 		//cout << "in server block: i: " << i << ", directive found: " << keywords[i] << endl;
-		switch (i)
+		switch (static_cast<int>(pow(2, i)))
 		{
 			case LISTEN:
+				if ((double_direc_check & LISTEN) == LISTEN)
+					throw(DoubleDirective());
 				_parse_number(listen_port, it);
-		//		cout << "in data class: " << listen_port << endl;
-		//		cout << "parsed listen" << endl;
+				double_direc_check |= LISTEN;
+				// cout << "in data class: " << listen_port << endl;
+				// cout << "parsed listen" << endl;
 				break;
 			case ROOT:
+				if ((double_direc_check & ROOT) == ROOT)
+					throw(DoubleDirective());
 				_parse_string(root, it);
+				double_direc_check |= ROOT;
 		//		cout << "in data class: " << root << endl;
 		//		cout << "parsed root" << endl;
 				break;
 			case SERVER_NAME:
+				if ((double_direc_check & SERVER_NAME) == SERVER_NAME)
+					throw(DoubleDirective());
 				_parse_string(server_name, it);
+				double_direc_check |= SERVER_NAME;
 		//		cout << "in data class: " << server_name << endl;
 		//		cout << "parsed server name" << endl;
 				break;
 			case ERROR_PAGE:
-				_parse_error_pages(error_pages, it);
+				_parse_int_str_map(error_pages, it);
 		//		for(mapit = error_pages.begin(); mapit != error_pages.end(); mapit++)
 		//			cout << "in error pages: " << mapit->first << ", " << mapit->second << endl;
 		//		cout << "parsed error pages" << endl;
 				break;
 			case CLIENT_BODY_SIZE:
+				if ((double_direc_check & CLIENT_BODY_SIZE) == CLIENT_BODY_SIZE)
+					throw(DoubleDirective());
 				_parse_number(size_content, it);
+				double_direc_check |= CLIENT_BODY_SIZE;
 		//		cout << "in data class: " << size_content << endl;
 		//		cout << "parsed client body size" << endl;
 				break;
-			case REDIRECTION:
-				_parse_redirect(locations, it, keywords);
+			case LOCATION:
+				_parse_loc_keyword(locations, it, keywords);
 		//		prinLocations(locations);
 		//		cout << "parsed redirect" << endl;
 				break;
@@ -363,6 +410,27 @@ bool	ConfigServer::case_ins_strcmp(const string s1, const string s2)
 	return (true);
 }
 
+void	ConfigServer::print_locations(vector<Location> locs)
+{
+	for (vector<Location>::iterator it = locs.begin(); it != locs.end(); it++)
+	{
+		cout << GREEN << endl;
+		cout << "\tLocation: '" << (*it).location << "'" << RESET << endl;
+		cout << "\tAccepted methods:" << "\t";
+		for (vector<string>::iterator vit = (*it).accepted_methods.begin(); vit != (*it).accepted_methods.end(); vit++)
+			cout << "'" << (*vit) << "' ";
+		cout << endl;
+		cout << "\tIndex: '" << (*it).index << "'" << endl;
+		cout << "\tPath uploadss: '" << (*it).path_uploads << "'" << endl;
+		cout << "\tDefault file: '" << (*it).default_file << "'" << endl;
+		cout << "\tAutoindex: '" << (*it).autoindex << "'" << endl;
+		cout << "\tCgi: '" << (*it).cgi << "'" << endl;
+		cout << "\tRedirection: ";
+		for (std::map<int, std::string>::iterator mapit = (*it).redir.begin(); mapit != (*it).redir.end(); mapit++)
+			std::cout << "'" << (*mapit).first << ", " << (*mapit).second << "'" << std::endl;
+	}
+}
+
 bool	ConfigServer::all_num(string str)
 {
 	for (string::iterator it = str.begin(); it != str.end(); it++)
@@ -380,28 +448,33 @@ void	ConfigServer::check_req_direcs()
 	if (root == "")
 		throw(NoRoot());
 	// [CHECK] keeping these error pages bellow ?
+	if (error_pages.find(400) == error_pages.end())
+		error_pages.insert(pair<int, string>(400, "utils/default_error_pages/400bad_request.html"));
 	if (error_pages.find(404) == error_pages.end())
-		error_pages.insert(pair<int, string>(404, "../data/webpages/default_error_pages/not_found2.html"));
+		error_pages.insert(pair<int, string>(404, "utils/default_error_pages/404not_found.html"));
 	if (error_pages.find(405) == error_pages.end())
-		error_pages.insert(pair<int, string>(405, "../data/webpages/default_error_pages/method_not_allowed2.html"));
+		error_pages.insert(pair<int, string>(405, "utils/default_error_pages/405method_not_allowed.html"));
+	if (error_pages.find(431) == error_pages.end())
+		error_pages.insert(pair<int, string>(431, "utils/default_error_pages/431request_header_fields_too_large.html"));
+	if (error_pages.find(500) == error_pages.end())
+		error_pages.insert(pair<int, string>(500, "utils/default_error_pages/500internal_error.html"));
+
 	if (size_content <= 0)
 		throw(WrongSizeContent());
 }
 
-void	ConfigServer::print_locations(vector<Location> locs)
+void	ConfigServer::check_double_ports(std::vector<ConfigServer> servers)
 {
-	for (vector<Location>::iterator it = locs.begin(); it != locs.end(); it++)
+	std::vector<ConfigServer>::iterator it2;
+
+	for (std::vector<ConfigServer>::iterator it1 = servers.begin(); it1 != servers.end(); it1++)
 	{
-		cout << GREEN << endl;
-		cout << "\tLocation: '" << (*it).location << "'" << RESET << endl;
-		cout << "\tAccepted methods:" << "\t";
-		for (vector<string>::iterator vit = (*it).accepted_methods.begin(); vit != (*it).accepted_methods.end(); vit++)
-			cout << "'" << (*vit) << "' ";
-		cout << endl;
-		cout << "\tIndex: '" << (*it).index << "'" << endl;
-		cout << "\tPath uploadss: '" << (*it).path_uploads << "'" << endl;
-		cout << "\tDefault file: '" << (*it).default_file << "'" << endl;
-		cout << "\tAutoindex: '" << (*it).autoindex << "'" << endl;
-		cout << "\tCgi path: '" << (*it).cgi << "'" << endl;
+		it2 = it1;
+		it2++;
+		for (; it2 != servers.end(); it2++)
+		{
+			if ((*it1).listen_port == (*it2).listen_port)
+				throw(IdenticalPortNumbers());
+		}
 	}
 }

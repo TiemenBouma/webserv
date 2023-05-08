@@ -19,6 +19,7 @@ int error_request(Connection &connection) {
     std::ifstream file;
     std::string error_page;
 
+	std::cout << "[DEBUG] found error" << std::endl;
 	//[INFO] find the error page
 	error_page = find_error_page(connection);
 

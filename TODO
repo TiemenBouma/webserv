@@ -1,34 +1,86 @@
+	TEAM NAMES:
 
-Testing parser:
+	POLL and protection:
+[] Check why poll hangs if I only one one poll.
+[] check all recv, read and send (check -1 and 0).
 
-	OLD: (SIETSE)
-[] duplicate keywords (two times autoindex)
+	PARSER:
+[] Same poort nr in config file check double.
+[] add keyword redir that takes two values, number(statuscode) and webpage(index)
+
+	AUTOINDEX:
+[] autoidex of utils//uploads. Need to show the files corectly?
+[] what if there is no index?
+
+	HOMEPAGE
+[] without username globals
+[] redir button also post cgi button
+
+	REDIRECTION
+[] if statement that checks for status 301 
+[] figure out how to make it work in the webserver_execute function. [TIEMEN] 
+
+
+______________________________________________________________________________
+
+	AUTOINDEX:
+[x] how to open/show files and dirs when clicking
+[x] create temporary new locations on server
+[] when there is no index, show root.	[TIEMEN] what do we mean by index here? Show Root is a securety risk. If AI is on we just show the location I think.
+[] empty uploads before eval
+[x] read about behavior autoindex [TIEMEN] Done
+[x] autoindex, displays listing of directories from root or location? [TIEMEN] Location
+
+	CGI:
+[x] add environment variabes cgi
+	COMMENT: for now no, check other teams
+[x] add pass post content to cgi
+[x] add cgi that can upload image
+[x] add cgi the can processes and uploads a form
+[x] error page wrong header, not runnable script (necessary?)
+[] 
+
+	PARSER:
 [] not handling comments in config file
+[] define back slash standard 
+	root never ends with it and location always starts with it
+[x] no exception called for double keywords
+[] when printing locations, the code prints typo uploadss
+[x] Check extensions. Give an exception "Invalid config file. Try [right_file]
+[] wrong exception caught for ./webserv [any other file]
+[] add all error pages in default folder,and check if it works.
+[] dont forget to change default error pages on config.cpp function check_req_direcs
+
+[] root utils; (without dash)
+
+	NEW: (Sietse)
+[] add environment variabes cgi
+[x] add pass post content to cgi
+[] add cgi that can upload image
+[] add cgi the can processes and uploads a form
+[] figure out why error_page.css get requested when cgi is called
 
 	NEW: (Swenne)
+	DONE: (Swenne)
 [x] moved non-member functions from Config.cpp to parser.cpp
-[] autoindex, displays listing of directories from root or location?
-[] wrong exception caught for ./webserv [any other file]
 [] Check error behavior for ./webserv utils/error.conf
 [] Check behavior when accepting request GETT or POOST (typos)
+
 
 	DONE: (Tiemen) 
 [x] no segfault when using ./webserv wrong_file.html (accepts as config)
 [x] added exit(1); in main in line 41 for the program to exit.
+[x] getting no error page for wrong urls, I changed te config - need help getting css to work again.
+[x] Check if it works without css. (Tiemen)
 
 	DONE: (Sietse)
 [x] Invalid file, invalid extension
 [x] Invalid input , too few or too many files
 [x] makefile in root
 [x] two config.hpp header files?
-
-	ERRORS: (Swenne)
-[x]in DELETE request getting 500 internal server error when changing the homepage html extension. 
-[x] Check if it works without css. (Tiemen)
-[x] getting no error page for wrong urls, I changed te config - need help getting css to work again.
+[x] in DELETE request getting 500 internal server error when changing the homepage html extension. 
 
 	Team discussion:
-
 [] discuss with other teams what redirection is.
 	[]Setup routes in a server to different directories. 301 status
 [] Check poll() timelimit 
@@ -36,9 +88,9 @@ Testing parser:
 [] check if control+Z is an issue (killing terminal problem)
 [x] discuss file permission error	
 	[]check CGI error page, what number
+	[] check if cgi returns content type header
 [] Check if we are going to do the NONBLOCKING method
-	COMMENT: (Tiemen) Whas was this again?
-	ANSWER: If cgi runs with a while(1) script, it should not block other sockets/requests
+	If cgi runs with a while(1) script, it should not block other sockets/requests
 [] Protected fcntl() for < 0 or not necessary?
 
 	SOLVED:
