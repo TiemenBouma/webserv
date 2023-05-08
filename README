@@ -1,4 +1,17 @@
+
+CONFIG SINTAX
+
+- every server is openned and closed by '{}'
+- key values closed by semicolumns ';'
+- tabs and spaces allowed
+
+KEYWORDS
+listen = port number (can only be int)
+root = directory path (pretected with open)
+
+
 ERROR PAGES
+
 400 Bad Request
 404 Not found
 405 Method not allowed
