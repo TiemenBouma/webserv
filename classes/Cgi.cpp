@@ -70,7 +70,6 @@ std::string	Cgi::cgi(std::string program, char** env, std::string body)
 
 		close(fds[0]);
 		dup2(fds[1], STDOUT_FILENO);
-		//write(fds[1], &body, size);
 		execve(args[0], args, env);
 		dup2(std_out_cpy, STDOUT_FILENO);
 		throw(CgiSystemFailure());
