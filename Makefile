@@ -3,7 +3,7 @@ include includes/colors.mk
 NAME 	:= webserv
 INC		:= -I includes
 FLAGS 	:= -Wall -Werror -Wextra -std=c++98
-CONF 	:= utils/configs/swenne.conf
+CONF 	:= utils/configs/tiemen.conf
 
 HEADERS 		:=	includes/typedef.h \
 					classes/Config.hpp \
