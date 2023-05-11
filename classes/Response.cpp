@@ -90,16 +90,42 @@ void  Response::set_header_content_type(const std::string &file_dir) {
 	}
 }
 
-void  Response::set_header_content_length_file(std::ifstream &file) {
-	file.seekg(0, std::ios::end);
-	std::streamsize size = file.tellg();
-	file.seekg(0, std::ios::beg);
-	
-	_header_content_length = "Content-Length: ";
-	std::stringstream ss;
-	ss << size;
-	_header_content_length += ss.str();
-	add_header(_header_content_length);
+void Response::set_header_content_length_file(std::ifstream &file) {
+    if (!file.is_open()) {
+        cout << "[SERVER]File is not open" << endl;
+    }
+
+    file.seekg(0, std::ios::end);
+
+    if (file.fail()) {
+        cout << "[SERVER]Failed to seek to end of file" << endl;
+    }
+
+    std::streamsize size = file.tellg();
+
+    if (size == -1) {
+       cout << "[SERVER]Failed to tell file size" << endl;
+    }
+
+    file.seekg(0, std::ios::beg);
+
+    if (file.fail()) {
+        cout << "[SERVER]Failed to seek to beginning of file" << endl;
+    }
+
+    _header_content_length = "Content-Length: " + std::to_string(size);
+    add_header(_header_content_length);
+}
+
+void Response::set_content_from_file(std::ifstream &file)
+{
+	string str;
+	char * buffer;
+	std::streamsize n;
+	while ((n = file.read(buffer, BUFFER_SIZE_8K).gcount()) > 0) {
+		str += buffer;
+	}
+	set_body(str);
 }
 
 

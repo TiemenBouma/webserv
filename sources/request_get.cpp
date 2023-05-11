@@ -4,6 +4,8 @@
 #include <fstream>
 #include <unistd.h>
 
+#include <sys/socket.h>
+
 /* 
 questions:
 Is content length neccesary?
@@ -57,6 +59,19 @@ void	cgi_get_request(Connection& connection)
 
 // }
 
+ssize_t demo_send_all(int socket, const void *buffer, long length, int flags) {
+    ssize_t total_sent = 0;
+    while (total_sent < length) {
+        ssize_t sent = send(socket, (char*)buffer + total_sent, length - total_sent, flags);
+		cout << "BEGUG: send() return: " << sent << endl;
+        if (sent == -1) {
+            return -1;
+        }
+        total_sent += sent;
+    }
+    return total_sent; // total_sent should be equal to length
+}
+
 int get_request(Connection &connection) {
     std::ifstream	file;
     std::string		file_dir;
@@ -88,12 +103,18 @@ int get_request(Connection &connection) {
         char buffer[BUFSIZE];
         std::streamsize n;
         while ((n = file.read(buffer, BUFFER_SIZE_8K).gcount()) > 0) {
-            ret = connection._response.write_to_socket(buffer, n);
-			if (ret == -1) {
-				file.close();
-				return 1;
+			cout << "DEBUG: read() return: " << n << endl;
+          //  ret = connection._response.write_to_socket(buffer, n);
+			ssize_t bytes_to_send = n;
+			while (bytes_to_send > 0) {
+				ret = demo_send_all(connection._socket, buffer, bytes_to_send, 0);
+				if (ret == -1) {
+					file.close();
+					return 1;
+				}
+				bytes_to_send -= ret;
+			}
 		}
-        }
 
 		//[INFO] END OF GET REQUEST
         file.close();

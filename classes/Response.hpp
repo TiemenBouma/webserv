@@ -46,6 +46,7 @@ public:
 	void	set_header_content_type(const std::string &file_dir);//[INFO] deciding content type
 	void	set_header_content_length_file(std::ifstream &file);//[INFO] calculating content length
 	void 	set_header_content_length_string(string &data);
+	void	set_content_from_file(std::ifstream &file);
 	std::string	serialize_all() const; //general serialize
 	std::string	serialize_headers() const; //for get request
 	ssize_t write_to_socket(const char *buffer, size_t size) const;
