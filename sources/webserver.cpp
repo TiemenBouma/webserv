@@ -88,7 +88,7 @@ int start_webserver(std::vector<ConfigServer> servers) {
 				cout << "[SERVER] execute request: " << connections[i]._request.get_method() << " " << connections[i]._request.get_url() <<  endl;
 				execute_request(connections[i]);
 			}
-			if (connections[i]._request._state == REQUEST_DONE ||
+			if ((connections[i]._request._state == REQUEST_DONE && connections[i]._response._body.size() == connections[i]._response._total_send_body) ||
 				connections[i]._request._state == REQUEST_CANCELLED) {
 					cout << "[SERVER] close connection: " << connections[i]._request.get_method() << " " << connections[i]._request.get_url()  << endl;
 					close(connections[i]._socket);

@@ -14,6 +14,7 @@ Response::Response(map_str_vec_str &mime_types, map_str_str &mime_types_rev)
 	_header_content_type(""), 
 	_header_content_length(""), 
 	_body(""),
+	_total_send_body(0),
 	_client_socket(-1),
 	_mime_types(mime_types),
 	_mime_types_rev(mime_types_rev) 
@@ -28,6 +29,7 @@ Response::Response(const Response &other)
 	_header_content_type(other._header_content_type),
 	_header_content_length(other._header_content_length),
 	_body(other._body),
+	_total_send_body(other._total_send_body),
 	_client_socket(other._client_socket),
 	_mime_types(other._mime_types),
 	_mime_types_rev(other._mime_types_rev) 
@@ -40,7 +42,8 @@ Response &Response::operator=(const Response &other) {
 	_headers = other._headers;
 	_header_content_type = other._header_content_type;
 	_header_content_length = other._header_content_length;
-	_body = other._body;
+	_body = other._body,
+	_total_send_body = other._total_send_body,
 	_client_socket = other._client_socket;
 	return *this;
 }
@@ -119,13 +122,17 @@ void Response::set_header_content_length_file(std::ifstream &file) {
 
 void Response::set_content_from_file(std::ifstream &file)
 {
-	string str;
-	char * buffer;
-	std::streamsize n;
-	while ((n = file.read(buffer, BUFFER_SIZE_8K).gcount()) > 0) {
-		str += buffer;
-	}
-	set_body(str);
+    std::string str;
+    char buffer[BUFFER_SIZE_8K];
+    std::streamsize ret;
+    while ((ret = file.read(buffer, BUFFER_SIZE_8K).gcount()) > 0) {
+        str.append(buffer, ret);
+        if (ret == -1)
+            return;
+    }
+    cout << "DEBUG string set" << endl;
+    set_body(str);
+	file.close();
 }
 
 
@@ -135,4 +142,19 @@ void  Response::set_header_content_length_string(string &data) {
 	ss << data.size();
 	_header_content_length += ss.str();
 	add_header(_header_content_length);
+}
+
+ssize_t Response::body_send_all(int socket, const void *buffer, ssize_t length, int flags) {
+	ssize_t total_sent = _total_send_body;
+	while (total_sent < length) {
+		ssize_t sent = send(socket, (char*)buffer + total_sent, length - total_sent, flags);
+		if (sent == -1) {
+			// send would block, return how much was sent
+			_total_send_body = total_sent;
+			return total_sent;
+		}
+		total_sent += sent;
+	}
+	_total_send_body = total_sent;
+	return total_sent; // total_sent should be equal to length
 }

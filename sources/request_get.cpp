@@ -59,18 +59,19 @@ void	cgi_get_request(Connection& connection)
 
 // }
 
-ssize_t demo_send_all(int socket, const void *buffer, long length, int flags) {
-    ssize_t total_sent = 0;
-    while (total_sent < length) {
-        ssize_t sent = send(socket, (char*)buffer + total_sent, length - total_sent, flags);
-		cout << "BEGUG: send() return: " << sent << endl;
-        if (sent == -1) {
-            return -1;
-        }
-        total_sent += sent;
-    }
-    return total_sent; // total_sent should be equal to length
-}
+
+// ssize_t demo_send_all(int socket, const void *buffer, size_t length, int flags) {
+// 	ssize_t total_sent = 0;
+// 	while (total_sent < length) {
+// 		ssize_t sent = send(socket, (char*)buffer + total_sent, length - total_sent, flags);
+// 		if (sent == -1) {
+// 			// send would block, return how much was sent
+// 			return total_sent;
+// 		}
+// 		total_sent += sent;
+// 	}
+// 	return total_sent; // total_sent should be equal to length
+// }
 
 int get_request(Connection &connection) {
     std::ifstream	file;
@@ -89,6 +90,9 @@ int get_request(Connection &connection) {
         //[INFO] Get the file size
 		connection._response.set_header_content_length_file(file);
 
+		connection._response.set_content_from_file(file);
+		file.seekg(0, std::ios::beg);
+
 		//[INFO] WRITE/SEND THE HEADERS
 		//std::cout << "SERVER: Sending GET response: \n" << std::endl;
 		std::string response_string = connection._response.serialize_headers();
@@ -99,25 +103,34 @@ int get_request(Connection &connection) {
 		}
 
 		//[INFO] write/send the body of the response in chunks for speed
-        const std::streamsize BUFSIZE = BUFFER_SIZE_8K;
-        char buffer[BUFSIZE];
-        std::streamsize n;
-        while ((n = file.read(buffer, BUFFER_SIZE_8K).gcount()) > 0) {
-			cout << "DEBUG: read() return: " << n << endl;
-          //  ret = connection._response.write_to_socket(buffer, n);
-			ssize_t bytes_to_send = n;
-			while (bytes_to_send > 0) {
-				ret = demo_send_all(connection._socket, buffer, bytes_to_send, 0);
-				if (ret == -1) {
-					file.close();
-					return 1;
-				}
-				bytes_to_send -= ret;
-			}
-		}
+		//-------------------------------
+		ret = connection._response.body_send_all(connection._socket, connection._response._body.c_str(), connection._response._body.size(), 0);
+		// if (ret != connection._response._body.size())
+		// 	dfd;
+		// else
+		cout << "DEBUG: body send: " << ret << endl;
+		cout << "DEBUG size body: " << connection._response._header_content_length << endl;
+		//-------------------------------
+		// const std::streamsize BUFSIZE = BUFFER_SIZE_8K;
+		// char buffer[BUFSIZE];
+		// std::streamsize n;
+		// while ((n = file.read(buffer, BUFFER_SIZE_8K).gcount()) > 0) {
+		// 	cout << "DEBUG: read() return: " << n << endl;
+		// 	//  ret = connection._response.write_to_socket(buffer, n);
+		// 	ssize_t bytes_to_send = n;
+		// 	while (bytes_to_send > 0) {
+		// 		ret = demo_send_all(connection._socket, buffer, bytes_to_send, 0);
+		// 		if (ret == -1) {
+		// 			file.close();
+		// 			return 1;
+		// 		}
+		// 		bytes_to_send -= ret;
+		// 	}
+		// }
+		//-------------------------------
 
 		//[INFO] END OF GET REQUEST
-        file.close();
+        //file.close();
     } 
 	else {//Server side error
         connection._response.set_status_code("500");

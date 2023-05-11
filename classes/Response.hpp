@@ -8,6 +8,7 @@
 #include <map>
 #include <vector>
 #include <sys/types.h>
+#include <sys/socket.h>
 
 class Response {
 public:
@@ -19,6 +20,7 @@ public:
 	std::string _header_content_type;
 	std::string _header_content_length;
 	std::string _body;
+	size_t		_total_send_body;
 
 	//MEMBERS FOR INTERNAL USE
 	Location	*_location_server;//relevant location on server
@@ -50,6 +52,7 @@ public:
 	std::string	serialize_all() const; //general serialize
 	std::string	serialize_headers() const; //for get request
 	ssize_t write_to_socket(const char *buffer, size_t size) const;
+	ssize_t	body_send_all(int socket, const void *buffer, ssize_t length, int flags);
 
 
 
