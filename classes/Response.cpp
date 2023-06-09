@@ -144,10 +144,31 @@ void  Response::set_header_content_length_string(string &data) {
 	add_header(_header_content_length);
 }
 
+// ssize_t Response::body_send_all(int socket, const void *buffer, ssize_t length, int flags) {
+	
+// 	ssize_t sent = send(socket, (char*)buffer, length, flags);
+// 	cout << "DEBUG: body_send_all() length input: " << length << endl;
+// 	cout << "DEBUG: body_send_all() return send(): " << sent << endl;
+// 	if (sent == -1) {
+// 		// send would block, return how much was sent
+// 		return -1;
+// 	}
+
+
+// 	return sent; // total_sent should be equal to length
+// }
 ssize_t Response::body_send_all(int socket, const void *buffer, ssize_t length, int flags) {
 	ssize_t total_sent = _total_send_body;
-	while (total_sent < length) {
-		ssize_t sent = send(socket, (char*)buffer + total_sent, length - total_sent, flags);
+	size_t buff_size;
+	if (total_sent + BUFFER_SIZE_8K > length) {
+		buff_size = length - total_sent;
+	} else {
+		buff_size = BUFFER_SIZE_8K;
+	}
+	if (total_sent < length) {
+		
+		ssize_t sent = send(socket, (char*)buffer + total_sent, buff_size, flags);
+		cout << "DEBUG: write to socket return: " << sent << endl;
 		if (sent == -1) {
 			// send would block, return how much was sent
 			_total_send_body = total_sent;

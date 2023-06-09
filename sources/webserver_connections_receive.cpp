@@ -27,8 +27,12 @@ void	receive_request(Connection &connection) {
 	//poll_fd.fd = connection._socket;
 
 	//checking on timeout, returning if time is over 30 sec
-	if (connection.check_time_out())
+	if (check_if_done(connection))
 		return;
+	if (connection.check_time_out()){
+		cout << "SERVER: TIMEOUT ACTIVATED: " << connection._request._url << endl;
+		return;
+	}
 
 	//TIMEOUT 1ms for poll might not be good or allowed.
 	// if (poll(&poll_fd, 1, 1) == -1)

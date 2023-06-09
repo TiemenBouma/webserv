@@ -39,6 +39,7 @@ public:
 	void reading_headers();
 	void set_headers();
 	void set_body();
+	// void calc_req_state();
 
 };
 
