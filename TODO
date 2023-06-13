@@ -2,10 +2,19 @@
 TEST TEST TEST:
 
 Sietse found this:
-cgi, trees and leaves location not working with ./webserv utils/configs/config_tiemen.conf and http://localhost:8080
 
 Swenne found this:
 
+- GET request wrong url /dogg
+[SERVER] close connection: GET /favicon.ico
+DEBUG: i in check ports server: 0
+[SERVER] new connection socket: 5
+SERVER: POLL not ready
+DEBUG: relative con index: 1
+DEBUG: connections: 1
+[DEBUG]METHOD/URI: |GET| |/dogg|
+[SERVER] execute request: GET /dogg
+[DEBUG] found error
 
 
 ______________________________________________________________________________
