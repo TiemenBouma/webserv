@@ -46,12 +46,10 @@ void Connection::set_location() {
 			_response._location_server = &_server.locations[i];
 			if (_response._location_server->redir.begin() == _response._location_server->redir.end()){
 				_response._file_path = _server.root + _response._location_server->index;
-				cout << "DEBUG: set location index: " <<  _response._file_path << endl;
 
 			}
 			else {
 				_response._file_path = _server.root + _response._location_server->redir[301];
-				cout << "DEBUG: set location redir: " <<  _response._file_path << endl;
 				_response._status_code = "301";
 			}
 			return;

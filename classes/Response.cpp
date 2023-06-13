@@ -84,7 +84,6 @@ std::string	Response::serialize_headers() const {
 
 ssize_t Response::write_to_socket(const char *buffer, size_t size) const {
 	ssize_t ret = write(_client_socket, buffer, size);
-	cout << "DEBUG: write to socket return: " << ret << endl;
 	if (ret == -1)
 		std::cout << "[SERVER] Error writing to socket" << std::endl;
 	return ret;
@@ -130,9 +129,9 @@ void Response::set_header_content_length_file(std::ifstream &file) {
     }
 
     _header_content_length = "Content-Length: " + std::to_string(size);
-	cout << "DEBUG3" << endl;
+
 	_content_length = (size >= 0) ? static_cast<size_t>(size) : 0;
-	cout << "DEBUG4" << endl;
+
 
     add_header(_header_content_length);
 }
@@ -182,7 +181,6 @@ ssize_t Response::body_send_all(int socket, const void *buffer, ssize_t length, 
 	if (total_sent < length) {
 		
 		ssize_t sent = send(socket, (char*)buffer + total_sent, buff_size, flags);
-		cout << "DEBUG: write to socket return: " << sent << endl;
 		if (sent == -1) {
 			// send would block, return how much was sent
 			_total_send_body = total_sent;

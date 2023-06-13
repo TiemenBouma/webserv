@@ -1,7 +1,7 @@
 	TEAM NAMES:
 
 	POLL and protection:
-[] Check why poll hangs if I only one one poll.
+[x] Check why poll hangs if I only one one poll.
 [] check all recv, read and send (check -1 and 0).
 
 	PARSER:
@@ -19,6 +19,7 @@
 	REDIRECTION
 [] if statement that checks for status 301 
 [] figure out how to make it work in the webserver_execute function. [TIEMEN] 
+	//[TIEMEN] I think it works? not sure what the spesific question was.
 
 
 ______________________________________________________________________________
@@ -38,7 +39,6 @@ ______________________________________________________________________________
 [x] add cgi that can upload image
 [x] add cgi the can processes and uploads a form
 [x] error page wrong header, not runnable script (necessary?)
-[] 
 
 	PARSER:
 [] not handling comments in config file

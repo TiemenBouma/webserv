@@ -43,7 +43,6 @@ int start_webserver(std::vector<ConfigServer> servers) {
 			if (!(poll_fds[i].revents & POLLIN)) {
 				continue;
 			}
-			cout << "DEBUG: i in check ports server: " << i << endl;
 			Connection new_connection(servers[i], mime_types, mime_types_rev);
 			new_connection._socket = accept_new_connection(servers[i].server_soc);
 			
@@ -88,8 +87,6 @@ int start_webserver(std::vector<ConfigServer> servers) {
 
 			if (!(poll_fds[relative_con_index].revents & POLLOUT) && !(poll_fds[relative_con_index].revents & POLLIN)) {
 				cout << "SERVER: POLL not ready" << endl;
-				cout << "DEBUG: relative con index: " << relative_con_index << endl;
-				cout << "DEBUG: connections: " << connections.size() << endl;
 				continue;
 			}
 
@@ -97,11 +94,11 @@ int start_webserver(std::vector<ConfigServer> servers) {
 			if ((poll_fds[relative_con_index].revents & POLLIN))
 				receive_request(connections[con_index]);
 			if (connections[con_index]._request._state == REQUEST_DONE && (poll_fds[relative_con_index].revents & POLLOUT)) {
-				cout << "[SERVER] execute request: " << connections[con_index]._request.get_method() << " " << connections[con_index]._request.get_url() <<  endl;
+				if (connections[con_index]._response._total_send_body == 0)
+					cout << "[SERVER] execute request: " << connections[con_index]._request.get_method() << " " << connections[con_index]._request.get_url() <<  endl;
 				execute_request(connections[con_index]);
 			}
 			if (connections[con_index]._request._state == REQUEST_DONE && connections[con_index]._response._content_length == connections[con_index]._response._total_send_body) {
-				cout << "DEBUG: set REQUEST_DONE_AND_SEND" << endl;
 				connections[con_index]._request._state = REQUEST_DONE_AND_SEND;
 			}
 			if (connections[con_index]._request._state == REQUEST_DONE_AND_SEND ||

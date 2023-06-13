@@ -81,21 +81,18 @@ int get_request(Connection &connection) {
 
     //[INFO] Open the file in binary mode
 	if (!connection._response._ifstream_response.is_open()) {
-		cout << "DEBUG: Opening file" << endl;
-
     	connection._response._ifstream_response.open(connection._response._file_path.c_str(), std::ios::binary);
-       
 		if (!connection._response._ifstream_response.is_open()) {
 			connection._response.set_status_code("500");
 			cerr << "[SERVER] error. Cant open file: " << connection._response._file_path << " check config" << endl;
 			error_request(connection);
 			return 1;
     	}
-	   	cout << "DEBUG1" << endl;
+
 	    //[INFO] Determine the MIME type of the file
         connection._response.set_header_content_type(connection._response._file_path);
 
-	   	cout << "DEBUG2" << endl;
+
         //[INFO] Get the file size
 		connection._response.set_header_content_length_file(connection._response._ifstream_response);
 	
@@ -119,10 +116,6 @@ int get_request(Connection &connection) {
 		//[INFO] write/send the body of the response in chunks
 
 		ret = connection._response.body_send_all(connection._socket, connection._response._body.c_str(), connection._response._body.size(), 0);
-
-		cout << "DEBUG: body send: " << ret << endl;
-		cout << "DEBUG size body: " << connection._response._header_content_length << endl;
-
     } 
 	else {//Server side error
         connection._response.set_status_code("500");
