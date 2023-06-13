@@ -56,7 +56,7 @@ int post_request(Connection &connection) {
 	file_receive.open(upload_file_location.c_str(), std::ios::app);
 	if (!file_receive.is_open()) {
 		std::cerr << "Error open: " << strerror(errno) << std::endl;
-			connection._response.set_status_code("500");
+		connection._response.set_status_code("500");
 		return (1);
 	}
 	file_receive << body;

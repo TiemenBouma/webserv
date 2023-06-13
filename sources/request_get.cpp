@@ -77,60 +77,52 @@ int get_request(Connection &connection) {
     std::ifstream	file;
     std::string		file_dir;
 	Location		currect_loc;
+	ssize_t ret;
 
     //[INFO] Open the file in binary mode
+	if (!connection._response._ifstream_response.is_open()) {
+		cout << "DEBUG: Opening file" << endl;
 
-    file.open(connection._response._file_path.c_str(), std::ios::binary);
-
-    if (file.is_open()) {
-
-        //[INFO] Determine the MIME type of the file
+    	connection._response._ifstream_response.open(connection._response._file_path.c_str(), std::ios::binary);
+       
+		if (!connection._response._ifstream_response.is_open()) {
+			connection._response.set_status_code("500");
+			cerr << "[SERVER] error. Cant open file: " << connection._response._file_path << " check config" << endl;
+			error_request(connection);
+			return 1;
+    	}
+	   	cout << "DEBUG1" << endl;
+	    //[INFO] Determine the MIME type of the file
         connection._response.set_header_content_type(connection._response._file_path);
 
+	   	cout << "DEBUG2" << endl;
         //[INFO] Get the file size
-		connection._response.set_header_content_length_file(file);
-
-		connection._response.set_content_from_file(file);
-		file.seekg(0, std::ios::beg);
-
+		connection._response.set_header_content_length_file(connection._response._ifstream_response);
+	
 		//[INFO] WRITE/SEND THE HEADERS
 		//std::cout << "SERVER: Sending GET response: \n" << std::endl;
 		std::string response_string = connection._response.serialize_headers();
 		//std::cout << "DEBUG send response:\n" << response_string << std::endl;
-		ssize_t ret = connection._response.write_to_socket(response_string.c_str(), response_string.size());
+		ret = connection._response.write_to_socket(response_string.c_str(), response_string.size());
 		if (ret == -1) {
 			return 1;
 		}
+	}
 
-		//[INFO] write/send the body of the response in chunks for speed
-		//-------------------------------
+    if (connection._response._ifstream_response.is_open()) {
+
+
+		connection._response.set_content_from_file();
+		//connection._response._ifstream_response.seekg(0, std::ios::beg);
+
+
+		//[INFO] write/send the body of the response in chunks
+
 		ret = connection._response.body_send_all(connection._socket, connection._response._body.c_str(), connection._response._body.size(), 0);
-		// if (ret != connection._response._body.size())
-		// 	dfd;
-		// else
+
 		cout << "DEBUG: body send: " << ret << endl;
 		cout << "DEBUG size body: " << connection._response._header_content_length << endl;
-		//-------------------------------
-		// const std::streamsize BUFSIZE = BUFFER_SIZE_8K;
-		// char buffer[BUFSIZE];
-		// std::streamsize n;
-		// while ((n = file.read(buffer, BUFFER_SIZE_8K).gcount()) > 0) {
-		// 	cout << "DEBUG: read() return: " << n << endl;
-		// 	//  ret = connection._response.write_to_socket(buffer, n);
-		// 	ssize_t bytes_to_send = n;
-		// 	while (bytes_to_send > 0) {
-		// 		ret = demo_send_all(connection._socket, buffer, bytes_to_send, 0);
-		// 		if (ret == -1) {
-		// 			file.close();
-		// 			return 1;
-		// 		}
-		// 		bytes_to_send -= ret;
-		// 	}
-		// }
-		//-------------------------------
 
-		//[INFO] END OF GET REQUEST
-        //file.close();
     } 
 	else {//Server side error
         connection._response.set_status_code("500");

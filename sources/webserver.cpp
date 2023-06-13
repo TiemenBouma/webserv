@@ -46,13 +46,19 @@ int start_webserver(std::vector<ConfigServer> servers) {
 			cout << "DEBUG: i in check ports server: " << i << endl;
 			Connection new_connection(servers[i], mime_types, mime_types_rev);
 			new_connection._socket = accept_new_connection(servers[i].server_soc);
-
-			if (new_connection._socket < 0) { //[INFO]if accepts fail Connection will not be added to connection list.
+			
+			//[INFO]if accepts() call fail Connection will not be added to connection list.
+			if (new_connection._socket < 0) { 
 				cout << "[SERVER] accept() call failed" << endl;
 				continue;
 			}
-			if (fcntl(new_connection._socket, F_SETFL, O_NONBLOCK) == -1)
+
+			//[INFO]if fcntl() call fail Connection will not be added to connection list.
+			if (fcntl(new_connection._socket, F_SETFL, O_NONBLOCK) == -1) {
+				cout << "[SERVER] fcntl() call failed" << endl;
 				continue;
+			}
+			
 			cout << endl << "[SERVER] new connection socket: " << new_connection._socket << endl;
 			
 			// Add the new connection to the poll_fds vector
@@ -69,33 +75,32 @@ int start_webserver(std::vector<ConfigServer> servers) {
 			size_t relative_con_index = con_index + total_ports;
 			//TIMEOUT CHECK
 			if (connections[con_index].check_time_out()) {
-				cout << "SERVER: TIMEOUT ACTIVATED: " << connections[con_index]._request._url << endl;
+				cout << "[SERVER] TIMEOUT ACTIVATED: " << connections[con_index]._request._url << endl;
 				close(connections[con_index]._socket);
 				connections.erase(connections.begin() + con_index);
 				poll_fds.erase(poll_fds.begin() + relative_con_index);
 				total_connections = connections.size();
-				con_index--; // Adjust the loop counter after removing a connection
+				con_index--;
 				continue;
 			}
 			//cout << "DEBUG: connections: " << total_connections <<  endl;
 			//cout << "DEBUG: connection state: " << connections[i]._request._state <<  endl;
 
-			// Calculate the correct index in the poll_fds vector
 			if (!(poll_fds[relative_con_index].revents & POLLOUT) && !(poll_fds[relative_con_index].revents & POLLIN)) {
-				cout << "SERVER: POLL ERROR" << endl;
+				cout << "SERVER: POLL not ready" << endl;
 				cout << "DEBUG: relative con index: " << relative_con_index << endl;
-				cout << "DEBUG: connectios: " << connections.size() << endl;
+				cout << "DEBUG: connections: " << connections.size() << endl;
 				continue;
 			}
 
-			cout << "[SERVER] receiving request on fd: " << connections[con_index]._socket << endl;
-			if (!(poll_fds[relative_con_index].revents & POLLIN))
+			//cout << "[SERVER] receiving request on fd: " << connections[con_index]._socket << endl;
+			if ((poll_fds[relative_con_index].revents & POLLIN))
 				receive_request(connections[con_index]);
-			if (connections[con_index]._request._state == REQUEST_DONE && !(poll_fds[relative_con_index].revents & POLLOUT)) {
+			if (connections[con_index]._request._state == REQUEST_DONE && (poll_fds[relative_con_index].revents & POLLOUT)) {
 				cout << "[SERVER] execute request: " << connections[con_index]._request.get_method() << " " << connections[con_index]._request.get_url() <<  endl;
 				execute_request(connections[con_index]);
 			}
-			if (connections[con_index]._request._state == REQUEST_DONE && connections[con_index]._response._body.size() == connections[con_index]._response._total_send_body) {
+			if (connections[con_index]._request._state == REQUEST_DONE && connections[con_index]._response._content_length == connections[con_index]._response._total_send_body) {
 				cout << "DEBUG: set REQUEST_DONE_AND_SEND" << endl;
 				connections[con_index]._request._state = REQUEST_DONE_AND_SEND;
 			}

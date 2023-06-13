@@ -38,7 +38,8 @@ void Connection::set_location() {
 
 	Location loc;
 	string uri = _request.get_url();
-	_response._location_server = NULL;
+	if (_response._location_server != NULL)
+		return;
 
 	for (size_t i = 0; i < _server.locations.size(); i++) {
 		if (_server.locations[i].location == uri) {

@@ -9,6 +9,7 @@
 #include <vector>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <fstream>
 
 class Response {
 public:
@@ -19,12 +20,14 @@ public:
 	std::string _headers;
 	std::string _header_content_type;
 	std::string _header_content_length;
+	size_t		_content_length;
 	std::string _body;
 	size_t		_total_send_body;
 
 	//MEMBERS FOR INTERNAL USE
 	Location	*_location_server;//relevant location on server
 	string 		_file_path;	//path to file requested send back to client
+	std::ifstream	_ifstream_response;
 	int			_client_socket; //socket to client where to send response
 
 	//REFERENCE TO GLOBAL MIME TYPES
@@ -48,7 +51,7 @@ public:
 	void	set_header_content_type(const std::string &file_dir);//[INFO] deciding content type
 	void	set_header_content_length_file(std::ifstream &file);//[INFO] calculating content length
 	void 	set_header_content_length_string(string &data);
-	void	set_content_from_file(std::ifstream &file);
+	void	set_content_from_file();
 	std::string	serialize_all() const; //general serialize
 	std::string	serialize_headers() const; //for get request
 	ssize_t write_to_socket(const char *buffer, size_t size) const;

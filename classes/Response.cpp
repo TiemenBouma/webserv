@@ -5,6 +5,7 @@
 // //#include <map>
 #include <unistd.h>
 
+
 Response::Response(map_str_vec_str &mime_types, map_str_str &mime_types_rev)
 :	 
 	_http_version("HTTP/1.1"), 
@@ -12,9 +13,13 @@ Response::Response(map_str_vec_str &mime_types, map_str_str &mime_types_rev)
 	_status_message("OK"), 
 	_headers(""), 
 	_header_content_type(""), 
-	_header_content_length(""), 
+	_header_content_length(""),
+	_content_length(0),
 	_body(""),
 	_total_send_body(0),
+	_location_server(NULL),
+	_file_path(""),
+	_ifstream_response(NULL),
 	_client_socket(-1),
 	_mime_types(mime_types),
 	_mime_types_rev(mime_types_rev) 
@@ -28,8 +33,11 @@ Response::Response(const Response &other)
 	_headers(other._headers),
 	_header_content_type(other._header_content_type),
 	_header_content_length(other._header_content_length),
+	_content_length(other._content_length),
 	_body(other._body),
 	_total_send_body(other._total_send_body),
+	_location_server(other._location_server),
+	_file_path(other._file_path),
 	_client_socket(other._client_socket),
 	_mime_types(other._mime_types),
 	_mime_types_rev(other._mime_types_rev) 
@@ -42,9 +50,14 @@ Response &Response::operator=(const Response &other) {
 	_headers = other._headers;
 	_header_content_type = other._header_content_type;
 	_header_content_length = other._header_content_length;
-	_body = other._body,
-	_total_send_body = other._total_send_body,
+	_content_length = other._content_length;
+	_body = other._body;
+	_total_send_body = other._total_send_body;
+	_location_server = other._location_server;
+	_file_path = other._file_path;
 	_client_socket = other._client_socket;
+	_mime_types = other._mime_types;
+	_mime_types_rev = other._mime_types_rev;
 	return *this;
 }
 
@@ -117,22 +130,22 @@ void Response::set_header_content_length_file(std::ifstream &file) {
     }
 
     _header_content_length = "Content-Length: " + std::to_string(size);
+	cout << "DEBUG3" << endl;
+	_content_length = (size >= 0) ? static_cast<size_t>(size) : 0;
+	cout << "DEBUG4" << endl;
+
     add_header(_header_content_length);
 }
 
-void Response::set_content_from_file(std::ifstream &file)
+void Response::set_content_from_file()
 {
     std::string str;
     char buffer[BUFFER_SIZE_8K];
     std::streamsize ret;
-    while ((ret = file.read(buffer, BUFFER_SIZE_8K).gcount()) > 0) {
-        str.append(buffer, ret);
-        if (ret == -1)
-            return;
-    }
-    cout << "DEBUG string set" << endl;
-    set_body(str);
-	file.close();
+	ret = _ifstream_response.read(buffer, BUFFER_SIZE_8K).gcount();
+	_body.append(buffer, ret);
+	if (ret < BUFFER_SIZE_8K)
+		_ifstream_response.close();
 }
 
 
@@ -141,6 +154,7 @@ void  Response::set_header_content_length_string(string &data) {
 	std::stringstream ss;
 	ss << data.size();
 	_header_content_length += ss.str();
+	_content_length = data.size();
 	add_header(_header_content_length);
 }
 

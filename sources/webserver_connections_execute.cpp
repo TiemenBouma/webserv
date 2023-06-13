@@ -26,16 +26,15 @@ int execute_request(Connection &connection) {
 
 	if (connection.check_response_status_error()) {
 		error_request(connection);
-		cout << "DEBUG 2"<< endl;
+		cout << "[SERVER] Error request returned"<< endl;
 		return 1;
 	}
 	connection.check_method();
 	if (connection.check_response_status_error()) {
 		error_request(connection);
-		cout << "DEBUG 3"<< endl;
+		cout << "[SERVER] Error request returned"<< endl;
 		return 1;
 	}
-	cout << "DEBUG 4"<< endl;
 	if (connection._request.get_method() == "GET") {
 		// cout << "DEBUG 5"<< endl;
 		if (connection._response._location_server->autoindex == 1) {
@@ -45,7 +44,7 @@ int execute_request(Connection &connection) {
 		else if (connection._response._location_server->cgi == 1)
 			cgi_get_request(connection);
 		else {
-			// cout << "DEBUG 6"<< endl;
+			//cout << "DEBUG 6"<< endl;
 			get_request(connection);
 		}
 	}
