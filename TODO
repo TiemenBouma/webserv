@@ -1,11 +1,94 @@
 	
 TEST TEST TEST:
 
-Sietse found this:
 
-Swenne found this:
+______________________________________________________________________________ bug 7
+#   multiple requests GET + DELETE (submitting empty form):
 
-- GET request wrong url /dogg
+	Location: '/uploads/upload_2023-6-13_16:43:4.form'
+	Accepted methods:	'GET' 'DELETE'
+	Index: '/uploads/upload_2023-6-13_16:43:4.form'
+	Path uploadss: ''
+	Default file: ''
+	Autoindex: '0'
+	Cgi: '0'
+	Redirection: DEBUG3
+DEBUG4
+DEBUG: write to socket return: 61
+DEBUG: write to socket return: 243
+[SERVER] execute request: POST /uploads
+[DEBUG] found error
+make: *** [run] Segmentation fault: 11
+
+page on browser:
+Successfully uploaded file!
+Back to Homepage
+
+______________________________________________________________________________ bug 6
+#   cgi form autoindex click, endless loop:
+
+[SERVER] new connection socket: 6
+SERVER: POLL not ready
+DEBUG: relative con index: 2
+DEBUG: connections: 2
+[DEBUG]METHOD/URI: |GET| |/favicon.ico|
+[SERVER] execute request: GET /favicon.ico
+DEBUG: set location index: utils/webpages/tiemen/favicon.ico
+DEBUG: Opening file
+DEBUG1
+DEBUG2
+DEBUG3
+DEBUG4
+DEBUG: write to socket return: 64
+DEBUG: write to socket return: 318
+DEBUG: body send: 318
+DEBUG size body: Content-Length: 318
+DEBUG: set REQUEST_DONE_AND_SEND
+[SERVER] close connection: GET /favicon.ico
+[DEBUG]METHOD/URI: |POST| |/cgi_uploads|
+DEBUG: body set finish
+[SERVER] execute request: POST /cgi_uploads
+DEBUG: set location index: utils/webpages/tiemen/cgi-bin/cgi_test.py
+DEBUG: set REQUEST_DONE_AND_SEND
+[SERVER] close connection: POST /cgi_uploads
+DEBUG: i in check ports server: 0
+
+[SERVER] new connection socket: 5
+SERVER: POLL not ready
+DEBUG: relative con index: 1
+DEBUG: connections: 1
+[SERVER] executing POST cgi on: 'utils/webpages/tiemen/cgi-bin/cgi_test.py'
+DEBUG: write to socket return: 16
+[SERVER] closing idle connection
+[SERVER] TIMEOUT ACTIVATED:
+/
+/
+/
+/
+/
+/ looping on empty page
+
+______________________________________________________________________________ bug 5
+#   cgi, not able to open uploads
+
+DEBUG: i in check ports server: 0
+[SERVER] new connection socket: 5
+SERVER: POLL not ready
+DEBUG: relative con index: 1
+DEBUG: connections: 1
+DEBUG: i in check ports server: 0
+[SERVER] new connection socket: 6
+[DEBUG]METHOD/URI: |GET| |/upload_2023-4-4_15:29:23.cgi|
+[SERVER] execute request: GET /upload_2023-4-4_15:29:23.cgi
+[DEBUG] found error
+make: *** [run] Segmentation fault: 11
+
+______________________________________________________________________________ bug 4
+#  changed redirection to index img/dog.png
+got a segfault 
+
+______________________________________________________________________________ bug 3
+#  GET request wrong url /dogg
 [SERVER] close connection: GET /favicon.ico
 DEBUG: i in check ports server: 0
 [SERVER] new connection socket: 5
@@ -15,12 +98,111 @@ DEBUG: connections: 1
 [DEBUG]METHOD/URI: |GET| |/dogg|
 [SERVER] execute request: GET /dogg
 [DEBUG] found error
+______________________________________________________________________________ bug 2
+#  first time compiling server, going to /leaves doesn't redirect
+broken pipe [exit error 13]
+
+#  second time running server, leaves works but POLL is weird
+like 1000x this:
+SERVER: POLL not ready
+DEBUG: relative con index: 1
+DEBUG: connections: 2
+SERVER: POLL not ready
+DEBUG: relative con index: 1
+DEBUG: connections: 2
+SERVER: POLL not ready
+DEBUG: relative con index: 1
+DEBUG: connections: 2
+SERVER: POLL not ready
+DEBUG: relative con index: 1
+DEBUG: connections: 2
+
+[SERVER] execute request: GET /leaves
+DEBUG: write to socket return: 4180
+DEBUG: body send: 1453696
+DEBUG size body: Content-Length: 1453696
+DEBUG: set REQUEST_DONE_AND_SEND
+[SERVER] close connection: GET /leaves
+[DEBUG]METHOD/URI: |GET| |/favicon.ico|
+[SERVER] execute request: GET /favicon.ico
+DEBUG: set location index: utils/webpages/tiemen/favicon.ico
+DEBUG: Opening file
+DEBUG1
+DEBUG2
+DEBUG3
+DEBUG4
+DEBUG: write to socket return: 64
+DEBUG: write to socket return: 318
+>>> DEBUG: body send: 318
+DEBUG size body: Content-Length: 318
+DEBUG: set REQUEST_DONE_AND_SEND
+[SERVER] close connection: GET /favicon.ico
+DEBUG: i in check ports server: 0
+
+[SERVER] new connection socket: 5
+>>> SERVER: POLL not ready
+DEBUG: relative con index: 1
+DEBUG: connections: 1
+[DEBUG]METHOD/URI: |GET| |/leaves|
+[SERVER] execute request: GET /leaves
+DEBUG: set location redir: utils/webpages/tiemen/img/leaves.png
+DEBUG: Opening file
+DEBUG1
+DEBUG2
+DEBUG3
+DEBUG4
+DEBUG: write to socket return: 65
+DEBUG: write to socket return: 8192
+>>> DEBUG: body send: 8192
+DEBUG size body: Content-Length: 1453696
+DEBUG: i in check ports server: 0
+
+[SERVER] new connection socket: 7
+[SERVER] execute request: GET /leaves
+DEBUG: write to socket return: 8192
+>>> DEBUG: body send: 16384
+DEBUG size body: Content-Length: 1453696
+SERVER: POLL not ready
+DEBUG: relative con index: 2
+DEBUG: connections: 2
+[SERVER] execute request: GET /leaves
+DEBUG: write to socket return: 8192
+DEBUG: body send: 24576
+DEBUG size body: Content-Length: 1453696
+[SERVER] execute request: GET /leaves
+DEBUG: write to socket return: 8192
+DEBUG: body send: 32768
+DEBUG size body: Content-Length: 1453696
+[SERVER] execute request: GET /leaves
+DEBUG: write to socket return: 8192
+DEBUG: body send: 40960
+DEBUG size body: Content-Length: 1453696
+[SERVER] execute request: GET /leaves
+DEBUG: write to socket return: 8192
+DEBUG: body send: 49152
+(continues until 1454696)
+
+______________________________________________________________________________ BUG 1
+#  changed to /leavess, got segfault
+
+[SERVER] new connection socket: 5
+SERVER: POLL not ready
+DEBUG: relative con indeDEBUG: i in check ports server: 0
+
+[SERVER] new connection socket: 5
+SERVER: POLL not ready
+DEBUG: relative con index: 1
+DEBUG: connections: 1
+[DEBUG]METHOD/URI: |GET| |/leavess|
+[SERVER] execute request: GET /leavess
+[DEBUG] found error
+make: *** [run] Segmentation fault: 11
 
 
 ______________________________________________________________________________
 
-	
-	Otter Server:
+
+	TEAM NAMES: the otter server
 
 	POLL and protection:
 [] Check why poll hangs if I only one one poll.
@@ -109,7 +291,7 @@ ______________________________________________________________________________
 	COMMENT: (Tiemen) Someowhat related: we can use Poll() only once, So I need to remove 1 poll() in the server.
 [] check if control+Z is an issue (killing terminal problem)
 [x] discuss file permission error	
-	[]check CGI error page, what number
+	[] check CGI error page, what number
 	[] check if cgi returns content type header
 [] Check if we are going to do the NONBLOCKING method
 	If cgi runs with a while(1) script, it should not block other sockets/requests
