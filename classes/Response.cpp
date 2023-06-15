@@ -149,7 +149,7 @@ void Response::set_content_from_file()
     char buffer[BUFFER_SIZE_8K];
     std::streamsize ret;
 	ret = _ifstream_response.read(buffer, BUFFER_SIZE_8K).gcount();
-	_body.append(buffer, ret);
+	_body.assign(buffer, ret);
 	if (ret < BUFFER_SIZE_8K)
 		_ifstream_response.close();
 }
@@ -187,7 +187,7 @@ ssize_t Response::body_send_all(int socket, const void *buffer, ssize_t length, 
 	}
 	if (total_sent < length) {
 		
-		ssize_t sent = send(socket, (char*)buffer + total_sent, buff_size, flags);
+		ssize_t sent = send(socket, (char*)buffer, buff_size, flags);
 		cout << "DEBUG: write to socket return: " << sent << endl;
 		if (sent == -1) {
 			// send would block, return how much was sent
