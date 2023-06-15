@@ -74,9 +74,6 @@ void	cgi_get_request(Connection& connection)
 // }
 
 int get_request(Connection &connection) {
-    std::ifstream	file;
-    std::string		file_dir;
-	Location		currect_loc;
 	ssize_t ret;
 
     //[INFO] Open the file in binary mode

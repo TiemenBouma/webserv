@@ -14,12 +14,10 @@
 #include <string>	   // string
 #include <vector>	   // vector
 
-
-
-
-int execute_request(Connection &connection) {
-
-	//[INFO] Preparing response, error checking
+int init_response(Connection &connection) {
+	if (connection._response._initialized)
+		return 0;
+		//[INFO] Preparing response, error checking
 	connection._response.set_client_socket(connection._socket);
 	connection.set_location();
 //	cout << "DEBUG 1"<< endl;
@@ -35,6 +33,12 @@ int execute_request(Connection &connection) {
 		cout << "[SERVER] Error request returned"<< endl;
 		return 1;
 	}
+	connection._response._initialized = true;
+	return 0;
+}
+
+
+int execute_request(Connection &connection) {
 	if (connection._request.get_method() == "GET") {
 		// cout << "DEBUG 5"<< endl;
 		if (connection._response._location_server->autoindex == 1) {

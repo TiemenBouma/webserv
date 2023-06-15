@@ -98,12 +98,11 @@ int start_webserver(std::vector<ConfigServer> servers) {
 				receive_request(connections[con_index]);
 			if (connections[con_index]._request._state == REQUEST_DONE && (poll_fds[relative_con_index].revents & POLLOUT)) {
 				cout << "[SERVER] execute request: " << connections[con_index]._request.get_method() << " " << connections[con_index]._request.get_url() <<  endl;
+				init_response(connections[con_index]);
 				execute_request(connections[con_index]);
 			}
-			if (connections[con_index]._request._state == REQUEST_DONE && connections[con_index]._response._content_length == connections[con_index]._response._total_send_body) {
-				cout << "DEBUG: set REQUEST_DONE_AND_SEND" << endl;
-				connections[con_index]._request._state = REQUEST_DONE_AND_SEND;
-			}
+			connections[con_index].check_finished();
+			
 			if (connections[con_index]._request._state == REQUEST_DONE_AND_SEND ||
 				connections[con_index]._request._state == REQUEST_CANCELLED) {
 					cout << "[SERVER] close connection: " << connections[con_index]._request.get_method() << " " << connections[con_index]._request.get_url()  << endl;

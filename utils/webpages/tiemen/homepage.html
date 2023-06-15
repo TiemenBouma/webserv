@@ -33,7 +33,7 @@
     <input type="submit" value="Submit">
 </form>
 
-<button onclick="showForm()">Submit CGI Form</button>
+<button onclick="showFormCGI()">Submit CGI Form</button>
 
 <br>
 <br>
@@ -51,6 +51,8 @@
   <script>
     function showForm() {
       document.getElementById("myForm").style.display = "block";
+    }
+	function showFormCGI() {
       document.getElementById("cgiForm").style.display = "block";
     }
   </script>

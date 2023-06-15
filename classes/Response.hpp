@@ -34,6 +34,9 @@ public:
 	map_str_vec_str & _mime_types;
 	map_str_str  & _mime_types_rev;
 
+	bool			_initialized;
+	bool			_response_send;
+
 
 	Response(map_str_vec_str &mime_types, map_str_str &mime_types_rev);
 	Response(const Response &other);

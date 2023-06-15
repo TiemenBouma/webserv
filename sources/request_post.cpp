@@ -16,8 +16,7 @@ void add_location_to_server(Connection &connection, std::string loc) {
 	location.accepted_methods.push_back("DELETE");
 	location.index = loc;
 	connection._server.locations.push_back(location);
-	//DEBUG ADD LOCATION
-	connection._server.print_locations(connection._server.locations);
+
 }
 
 string get_time() {
@@ -61,54 +60,61 @@ int post_request(Connection &connection) {
 	}
 	file_receive << body;
 	file_receive.close();
+	connection._response._total_send_body = body.size();
 
 	//Add location to server for Delete to work
 	string loc = path_upload + upload_file_name;
 	add_location_to_server(connection, loc);
 
-	//[INFO] SENDING RESPONSE
-	ifstream file_send;
- 	file_send.open(connection._response._file_path.c_str(), std::ios::binary);
+	if (connection._response._location_server->index.size() > 0)
+		get_request(connection);
+	else
+		connection._response._response_send = true;
+	
 
-	//[CHECK] wrong extenttion in config
 
-    if (file_send.is_open()) {
+	// //[INFO] SENDING RESPONSE
+ 	// connection._response._ifstream_response.open(connection._response._file_path.c_str(), std::ios::binary);
 
-        //[INFO] Determine the MIME type of the file
-        connection._response.set_header_content_type(connection._response._file_path);
+	// //[CHECK] wrong extenttion in config
 
-        //[INFO] Get the file size
-		connection._response.set_header_content_length_file(file_send);
+    // if (connection._response._ifstream_response.is_open()) {
 
-		//[INFO] WRITE/SEND THE HEADERS
-		//std::cout << "SERVER: Sending POST response: \n" << std::endl;
-		std::string response_string = connection._response.serialize_headers();
-		//std::cout << "DEBUG send response:\n" << response_string << std::endl;
-		ssize_t ret = connection._response.write_to_socket(response_string.c_str(), response_string.size());
-		if (ret == -1) {
-			return 1;
-		}
-		//[INFO] write/send the body of the response in chunks for speed
-        const std::streamsize BUFSIZE = BUFFER_SIZE_8K;
-        char buffer[BUFSIZE];
-        std::streamsize n;
-        while ((n = file_send.read(buffer, BUFSIZE).gcount()) > 0) {
-			//std::cout << "DEBUG: writing body: " << std::string(buffer).substr(0, n) <<  std::endl;
-            ret = connection._response.write_to_socket(buffer, n);
-			if (ret == -1) {
-				return 1;
-			}
-        }
+    //     //[INFO] Determine the MIME type of the file
+    //     connection._response.set_header_content_type(connection._response._file_path);
 
-		//[INFO] END OF GET REQUEST
-        file_send.close();
-    } 
-	else {//Server side error
-       //std::cout << "DEBUG: Error opening file 500 error" << std::endl; 
-        connection._response.set_status_code("500");
-		cerr << "[SERVER]Cant open file. check config" << endl;
-		error_request(connection);
-    }
+    //     //[INFO] Get the file size
+	// 	connection._response.set_header_content_length_file(connection._response._ifstream_response);
+
+	// 	//[INFO] WRITE/SEND THE HEADERS
+	// 	//std::cout << "SERVER: Sending POST response: \n" << std::endl;
+	// 	std::string response_string = connection._response.serialize_headers();
+	// 	//std::cout << "DEBUG send response:\n" << response_string << std::endl;
+	// 	ssize_t ret = connection._response.write_to_socket(response_string.c_str(), response_string.size());
+	// 	if (ret == -1) {
+	// 		return 1;
+	// 	}
+	// 	//[INFO] write/send the body of the response in chunks for speed
+    //     const std::streamsize BUFSIZE = BUFFER_SIZE_8K;
+    //     char buffer[BUFSIZE];
+    //     std::streamsize n;
+    //     while ((n = connection._response._ifstream_response.read(buffer, BUFSIZE).gcount()) > 0) {
+	// 		//std::cout << "DEBUG: writing body: " << std::string(buffer).substr(0, n) <<  std::endl;
+    //         ret = connection._response.write_to_socket(buffer, n);
+	// 		if (ret == -1) {
+	// 			return 1;
+	// 		}
+    //     }
+
+	// 	//[INFO] END OF GET REQUEST
+    //     connection._response._ifstream_response.close();
+    // } 
+	// else {//Server side error
+    //    //std::cout << "DEBUG: Error opening file 500 error" << std::endl; 
+    //     connection._response.set_status_code("500");
+	// 	cerr << "[SERVER]Cant open file. check config" << endl;
+	// 	error_request(connection);
+    // }
 	return (0);
 }
 

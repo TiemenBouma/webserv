@@ -67,6 +67,8 @@ public:
 	//REFFERENCE TO GLOBAL MIME TYPES
 	map_str_vec_str &_mime_types;
 
+	bool		_req_recieved;
+
 
 };
 std::ostream & operator<<(std::ostream &os, const Request &other);

@@ -22,6 +22,7 @@ Request::Request(map_str_vec_str &mime_types)
 	_body = "";
 	_header_content_type = "";
 	_header_content_length = "";
+	_req_recieved = false;
 
 
 }
@@ -43,6 +44,8 @@ Request &Request::operator=(const Request &other) {
 	_body = other._body;
 	_header_content_type = other._header_content_type;
 	_header_content_length = other._header_content_length;
+	_mime_types = other._mime_types;
+	_req_recieved = other._req_recieved;
 	return *this;
 }
 

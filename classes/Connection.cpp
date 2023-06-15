@@ -187,6 +187,12 @@ void Connection::set_body() {
 	}
 }
 
+void Connection::check_finished() {
+	if (_response._response_send)
+		_request._state = REQUEST_DONE_AND_SEND;
+	
+}
+
 // void Connection::calc_req_state() {
 
 // 	if (_request._state == REQUEST_DONE && _response._body.size() == _response._total_send_body)

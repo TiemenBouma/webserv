@@ -29,6 +29,7 @@ int		parse_config(std::string config, std::vector<ConfigServer> &servers);
 int	    accept_new_connection(int server_sock);
 void	receive_request(Connection &connection);
 void    handle_connection(Connection &connection);
+int		init_response(Connection &connection);
 int     execute_request(Connection &connection);
 
 //GET POST DELETE

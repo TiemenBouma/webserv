@@ -22,7 +22,9 @@ Response::Response(map_str_vec_str &mime_types, map_str_str &mime_types_rev)
 	_ifstream_response(NULL),
 	_client_socket(-1),
 	_mime_types(mime_types),
-	_mime_types_rev(mime_types_rev) 
+	_mime_types_rev(mime_types_rev),
+	_initialized(0),
+	_response_send(0)
 	{}
 
 Response::Response(const Response &other) 
@@ -40,7 +42,9 @@ Response::Response(const Response &other)
 	_file_path(other._file_path),
 	_client_socket(other._client_socket),
 	_mime_types(other._mime_types),
-	_mime_types_rev(other._mime_types_rev) 
+	_mime_types_rev(other._mime_types_rev),
+	_initialized(other._initialized),
+	_response_send(other._response_send)
 	{}
 
 Response &Response::operator=(const Response &other) {
@@ -58,6 +62,8 @@ Response &Response::operator=(const Response &other) {
 	_client_socket = other._client_socket;
 	_mime_types = other._mime_types;
 	_mime_types_rev = other._mime_types_rev;
+	_initialized = other._initialized;
+	_response_send = other._response_send;
 	return *this;
 }
 
@@ -191,5 +197,8 @@ ssize_t Response::body_send_all(int socket, const void *buffer, ssize_t length, 
 		total_sent += sent;
 	}
 	_total_send_body = total_sent;
+	if (_total_send_body >= _content_length) {
+		_response_send = true;
+	}
 	return total_sent; // total_sent should be equal to length
 }
